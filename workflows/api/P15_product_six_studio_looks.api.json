@@ -1,0 +1,1106 @@
+{
+ "1": {
+  "class_type": "UNETLoader",
+  "inputs": {
+   "unet_name": "flux-2-klein-4b-fp8.safetensors",
+   "weight_dtype": "default"
+  },
+  "_meta": {
+   "title": "Load FLUX.2 [klein] 4B"
+  }
+ },
+ "2": {
+  "class_type": "CLIPLoader",
+  "inputs": {
+   "clip_name": "qwen_3_4b.safetensors",
+   "type": "flux2",
+   "device": "default"
+  },
+  "_meta": {
+   "title": "Load text encoder (Qwen3-4B)"
+  }
+ },
+ "3": {
+  "class_type": "VAELoader",
+  "inputs": {
+   "vae_name": "flux2-vae.safetensors"
+  },
+  "_meta": {
+   "title": "Load FLUX.2 VAE"
+  }
+ },
+ "6": {
+  "class_type": "LoadImage",
+  "inputs": {
+   "image": "product.png"
+  },
+  "_meta": {
+   "title": "Product photo"
+  }
+ },
+ "7": {
+  "class_type": "ImageScaleToTotalPixels",
+  "inputs": {
+   "image": [
+    "6",
+    0
+   ],
+   "upscale_method": "lanczos",
+   "megapixels": 1.0,
+   "resolution_steps": 16
+  },
+  "_meta": {
+   "title": "Scale to ~1.0 MP"
+  }
+ },
+ "8": {
+  "class_type": "CLIPTextEncode",
+  "inputs": {
+   "text": "Create a world-class premium commercial product photograph of the product from the reference image. Preserve the exact visible geometry, proportions, materials, color, functional components, and distinctive physical characteristics of the product. Present the product as the central hero object. Sophisticated futuristic studio, deep midnight-blue environment, elegant cobalt-blue rim lighting, volumetric light beams, subtle haze. Polished commercial photography, physically plausible reflections and shadows, strong visual hierarchy, premium material realism, generous clean negative space for future marketing typography. Do not invent new product features, logos, trademarks or branding.",
+   "clip": [
+    "2",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Instruction 1"
+  }
+ },
+ "9": {
+  "class_type": "VAEEncode",
+  "inputs": {
+   "pixels": [
+    "7",
+    0
+   ],
+   "vae": [
+    "3",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Encode reference 1 1"
+  }
+ },
+ "10": {
+  "class_type": "ReferenceLatent",
+  "inputs": {
+   "conditioning": [
+    "8",
+    0
+   ],
+   "latent": [
+    "9",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Set Reference Latent 1 1"
+  }
+ },
+ "11": {
+  "class_type": "ConditioningZeroOut",
+  "inputs": {
+   "conditioning": [
+    "8",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Negative (empty) 1"
+  }
+ },
+ "12": {
+  "class_type": "EmptyFlux2LatentImage",
+  "inputs": {
+   "width": 896,
+   "height": 1120,
+   "batch_size": 1
+  },
+  "_meta": {
+   "title": "Canvas 1"
+  }
+ },
+ "13": {
+  "class_type": "Flux2Scheduler",
+  "inputs": {
+   "steps": 4,
+   "width": 896,
+   "height": 1120
+  },
+  "_meta": {
+   "title": "Scheduler (4 steps) 1"
+  }
+ },
+ "14": {
+  "class_type": "CFGGuider",
+  "inputs": {
+   "model": [
+    "1",
+    0
+   ],
+   "positive": [
+    "10",
+    0
+   ],
+   "negative": [
+    "11",
+    0
+   ],
+   "cfg": 1.0
+  },
+  "_meta": {
+   "title": "Guider (cfg 1) 1"
+  }
+ },
+ "15": {
+  "class_type": "KSamplerSelect",
+  "inputs": {
+   "sampler_name": "euler"
+  },
+  "_meta": {
+   "title": "Sampler type 1"
+  }
+ },
+ "16": {
+  "class_type": "RandomNoise",
+  "inputs": {
+   "noise_seed": 15501
+  },
+  "_meta": {
+   "title": "Seed 1"
+  }
+ },
+ "17": {
+  "class_type": "SamplerCustomAdvanced",
+  "inputs": {
+   "noise": [
+    "16",
+    0
+   ],
+   "guider": [
+    "14",
+    0
+   ],
+   "sampler": [
+    "15",
+    0
+   ],
+   "sigmas": [
+    "13",
+    0
+   ],
+   "latent_image": [
+    "12",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Sample 1"
+  }
+ },
+ "18": {
+  "class_type": "VAEDecode",
+  "inputs": {
+   "samples": [
+    "17",
+    0
+   ],
+   "vae": [
+    "3",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Decode 1"
+  }
+ },
+ "19": {
+  "class_type": "SaveImage",
+  "inputs": {
+   "images": [
+    "18",
+    0
+   ],
+   "filename_prefix": "book/P15_product/1_midnight_blue"
+  },
+  "_meta": {
+   "title": "Save midnight_blue"
+  }
+ },
+ "20": {
+  "class_type": "CLIPTextEncode",
+  "inputs": {
+   "text": "Create a world-class premium commercial product photograph of the product from the reference image. Preserve the exact visible geometry, proportions, materials, color, functional components, and distinctive physical characteristics of the product. Present the product as the central hero object. Warm champagne luxury studio, soft golden light, satin backdrop, refined warm reflections. Polished commercial photography, physically plausible reflections and shadows, strong visual hierarchy, premium material realism, generous clean negative space for future marketing typography. Do not invent new product features, logos, trademarks or branding.",
+   "clip": [
+    "2",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Instruction 2"
+  }
+ },
+ "21": {
+  "class_type": "VAEEncode",
+  "inputs": {
+   "pixels": [
+    "7",
+    0
+   ],
+   "vae": [
+    "3",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Encode reference 1 2"
+  }
+ },
+ "22": {
+  "class_type": "ReferenceLatent",
+  "inputs": {
+   "conditioning": [
+    "20",
+    0
+   ],
+   "latent": [
+    "21",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Set Reference Latent 1 2"
+  }
+ },
+ "23": {
+  "class_type": "ConditioningZeroOut",
+  "inputs": {
+   "conditioning": [
+    "20",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Negative (empty) 2"
+  }
+ },
+ "24": {
+  "class_type": "EmptyFlux2LatentImage",
+  "inputs": {
+   "width": 896,
+   "height": 1120,
+   "batch_size": 1
+  },
+  "_meta": {
+   "title": "Canvas 2"
+  }
+ },
+ "25": {
+  "class_type": "Flux2Scheduler",
+  "inputs": {
+   "steps": 4,
+   "width": 896,
+   "height": 1120
+  },
+  "_meta": {
+   "title": "Scheduler (4 steps) 2"
+  }
+ },
+ "26": {
+  "class_type": "CFGGuider",
+  "inputs": {
+   "model": [
+    "1",
+    0
+   ],
+   "positive": [
+    "22",
+    0
+   ],
+   "negative": [
+    "23",
+    0
+   ],
+   "cfg": 1.0
+  },
+  "_meta": {
+   "title": "Guider (cfg 1) 2"
+  }
+ },
+ "27": {
+  "class_type": "KSamplerSelect",
+  "inputs": {
+   "sampler_name": "euler"
+  },
+  "_meta": {
+   "title": "Sampler type 2"
+  }
+ },
+ "28": {
+  "class_type": "RandomNoise",
+  "inputs": {
+   "noise_seed": 15502
+  },
+  "_meta": {
+   "title": "Seed 2"
+  }
+ },
+ "29": {
+  "class_type": "SamplerCustomAdvanced",
+  "inputs": {
+   "noise": [
+    "28",
+    0
+   ],
+   "guider": [
+    "26",
+    0
+   ],
+   "sampler": [
+    "27",
+    0
+   ],
+   "sigmas": [
+    "25",
+    0
+   ],
+   "latent_image": [
+    "24",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Sample 2"
+  }
+ },
+ "30": {
+  "class_type": "VAEDecode",
+  "inputs": {
+   "samples": [
+    "29",
+    0
+   ],
+   "vae": [
+    "3",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Decode 2"
+  }
+ },
+ "31": {
+  "class_type": "SaveImage",
+  "inputs": {
+   "images": [
+    "30",
+    0
+   ],
+   "filename_prefix": "book/P15_product/2_champagne"
+  },
+  "_meta": {
+   "title": "Save champagne"
+  }
+ },
+ "32": {
+  "class_type": "CLIPTextEncode",
+  "inputs": {
+   "text": "Create a world-class premium commercial product photograph of the product from the reference image. Preserve the exact visible geometry, proportions, materials, color, functional components, and distinctive physical characteristics of the product. Present the product as the central hero object. Futuristic violet and cyan neon environment, glossy reflective floor, dramatic colored rim lights. Polished commercial photography, physically plausible reflections and shadows, strong visual hierarchy, premium material realism, generous clean negative space for future marketing typography. Do not invent new product features, logos, trademarks or branding.",
+   "clip": [
+    "2",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Instruction 3"
+  }
+ },
+ "33": {
+  "class_type": "VAEEncode",
+  "inputs": {
+   "pixels": [
+    "7",
+    0
+   ],
+   "vae": [
+    "3",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Encode reference 1 3"
+  }
+ },
+ "34": {
+  "class_type": "ReferenceLatent",
+  "inputs": {
+   "conditioning": [
+    "32",
+    0
+   ],
+   "latent": [
+    "33",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Set Reference Latent 1 3"
+  }
+ },
+ "35": {
+  "class_type": "ConditioningZeroOut",
+  "inputs": {
+   "conditioning": [
+    "32",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Negative (empty) 3"
+  }
+ },
+ "36": {
+  "class_type": "EmptyFlux2LatentImage",
+  "inputs": {
+   "width": 896,
+   "height": 1120,
+   "batch_size": 1
+  },
+  "_meta": {
+   "title": "Canvas 3"
+  }
+ },
+ "37": {
+  "class_type": "Flux2Scheduler",
+  "inputs": {
+   "steps": 4,
+   "width": 896,
+   "height": 1120
+  },
+  "_meta": {
+   "title": "Scheduler (4 steps) 3"
+  }
+ },
+ "38": {
+  "class_type": "CFGGuider",
+  "inputs": {
+   "model": [
+    "1",
+    0
+   ],
+   "positive": [
+    "34",
+    0
+   ],
+   "negative": [
+    "35",
+    0
+   ],
+   "cfg": 1.0
+  },
+  "_meta": {
+   "title": "Guider (cfg 1) 3"
+  }
+ },
+ "39": {
+  "class_type": "KSamplerSelect",
+  "inputs": {
+   "sampler_name": "euler"
+  },
+  "_meta": {
+   "title": "Sampler type 3"
+  }
+ },
+ "40": {
+  "class_type": "RandomNoise",
+  "inputs": {
+   "noise_seed": 15503
+  },
+  "_meta": {
+   "title": "Seed 3"
+  }
+ },
+ "41": {
+  "class_type": "SamplerCustomAdvanced",
+  "inputs": {
+   "noise": [
+    "40",
+    0
+   ],
+   "guider": [
+    "38",
+    0
+   ],
+   "sampler": [
+    "39",
+    0
+   ],
+   "sigmas": [
+    "37",
+    0
+   ],
+   "latent_image": [
+    "36",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Sample 3"
+  }
+ },
+ "42": {
+  "class_type": "VAEDecode",
+  "inputs": {
+   "samples": [
+    "41",
+    0
+   ],
+   "vae": [
+    "3",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Decode 3"
+  }
+ },
+ "43": {
+  "class_type": "SaveImage",
+  "inputs": {
+   "images": [
+    "42",
+    0
+   ],
+   "filename_prefix": "book/P15_product/3_neon"
+  },
+  "_meta": {
+   "title": "Save neon"
+  }
+ },
+ "44": {
+  "class_type": "CLIPTextEncode",
+  "inputs": {
+   "text": "Create a world-class premium commercial product photograph of the product from the reference image. Preserve the exact visible geometry, proportions, materials, color, functional components, and distinctive physical characteristics of the product. Present the product as the central hero object. Natural daylight lifestyle environment, light oak desk by a window, soft morning sun, plants softly out of focus. Polished commercial photography, physically plausible reflections and shadows, strong visual hierarchy, premium material realism, generous clean negative space for future marketing typography. Do not invent new product features, logos, trademarks or branding.",
+   "clip": [
+    "2",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Instruction 4"
+  }
+ },
+ "45": {
+  "class_type": "VAEEncode",
+  "inputs": {
+   "pixels": [
+    "7",
+    0
+   ],
+   "vae": [
+    "3",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Encode reference 1 4"
+  }
+ },
+ "46": {
+  "class_type": "ReferenceLatent",
+  "inputs": {
+   "conditioning": [
+    "44",
+    0
+   ],
+   "latent": [
+    "45",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Set Reference Latent 1 4"
+  }
+ },
+ "47": {
+  "class_type": "ConditioningZeroOut",
+  "inputs": {
+   "conditioning": [
+    "44",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Negative (empty) 4"
+  }
+ },
+ "48": {
+  "class_type": "EmptyFlux2LatentImage",
+  "inputs": {
+   "width": 896,
+   "height": 1120,
+   "batch_size": 1
+  },
+  "_meta": {
+   "title": "Canvas 4"
+  }
+ },
+ "49": {
+  "class_type": "Flux2Scheduler",
+  "inputs": {
+   "steps": 4,
+   "width": 896,
+   "height": 1120
+  },
+  "_meta": {
+   "title": "Scheduler (4 steps) 4"
+  }
+ },
+ "50": {
+  "class_type": "CFGGuider",
+  "inputs": {
+   "model": [
+    "1",
+    0
+   ],
+   "positive": [
+    "46",
+    0
+   ],
+   "negative": [
+    "47",
+    0
+   ],
+   "cfg": 1.0
+  },
+  "_meta": {
+   "title": "Guider (cfg 1) 4"
+  }
+ },
+ "51": {
+  "class_type": "KSamplerSelect",
+  "inputs": {
+   "sampler_name": "euler"
+  },
+  "_meta": {
+   "title": "Sampler type 4"
+  }
+ },
+ "52": {
+  "class_type": "RandomNoise",
+  "inputs": {
+   "noise_seed": 15504
+  },
+  "_meta": {
+   "title": "Seed 4"
+  }
+ },
+ "53": {
+  "class_type": "SamplerCustomAdvanced",
+  "inputs": {
+   "noise": [
+    "52",
+    0
+   ],
+   "guider": [
+    "50",
+    0
+   ],
+   "sampler": [
+    "51",
+    0
+   ],
+   "sigmas": [
+    "49",
+    0
+   ],
+   "latent_image": [
+    "48",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Sample 4"
+  }
+ },
+ "54": {
+  "class_type": "VAEDecode",
+  "inputs": {
+   "samples": [
+    "53",
+    0
+   ],
+   "vae": [
+    "3",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Decode 4"
+  }
+ },
+ "55": {
+  "class_type": "SaveImage",
+  "inputs": {
+   "images": [
+    "54",
+    0
+   ],
+   "filename_prefix": "book/P15_product/4_daylight"
+  },
+  "_meta": {
+   "title": "Save daylight"
+  }
+ },
+ "56": {
+  "class_type": "CLIPTextEncode",
+  "inputs": {
+   "text": "Create a world-class premium commercial product photograph of the product from the reference image. Preserve the exact visible geometry, proportions, materials, color, functional components, and distinctive physical characteristics of the product. Present the product as the central hero object. Minimalist white architectural studio, curved white walls, soft diffused light, gentle shadows. Polished commercial photography, physically plausible reflections and shadows, strong visual hierarchy, premium material realism, generous clean negative space for future marketing typography. Do not invent new product features, logos, trademarks or branding.",
+   "clip": [
+    "2",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Instruction 5"
+  }
+ },
+ "57": {
+  "class_type": "VAEEncode",
+  "inputs": {
+   "pixels": [
+    "7",
+    0
+   ],
+   "vae": [
+    "3",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Encode reference 1 5"
+  }
+ },
+ "58": {
+  "class_type": "ReferenceLatent",
+  "inputs": {
+   "conditioning": [
+    "56",
+    0
+   ],
+   "latent": [
+    "57",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Set Reference Latent 1 5"
+  }
+ },
+ "59": {
+  "class_type": "ConditioningZeroOut",
+  "inputs": {
+   "conditioning": [
+    "56",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Negative (empty) 5"
+  }
+ },
+ "60": {
+  "class_type": "EmptyFlux2LatentImage",
+  "inputs": {
+   "width": 896,
+   "height": 1120,
+   "batch_size": 1
+  },
+  "_meta": {
+   "title": "Canvas 5"
+  }
+ },
+ "61": {
+  "class_type": "Flux2Scheduler",
+  "inputs": {
+   "steps": 4,
+   "width": 896,
+   "height": 1120
+  },
+  "_meta": {
+   "title": "Scheduler (4 steps) 5"
+  }
+ },
+ "62": {
+  "class_type": "CFGGuider",
+  "inputs": {
+   "model": [
+    "1",
+    0
+   ],
+   "positive": [
+    "58",
+    0
+   ],
+   "negative": [
+    "59",
+    0
+   ],
+   "cfg": 1.0
+  },
+  "_meta": {
+   "title": "Guider (cfg 1) 5"
+  }
+ },
+ "63": {
+  "class_type": "KSamplerSelect",
+  "inputs": {
+   "sampler_name": "euler"
+  },
+  "_meta": {
+   "title": "Sampler type 5"
+  }
+ },
+ "64": {
+  "class_type": "RandomNoise",
+  "inputs": {
+   "noise_seed": 15505
+  },
+  "_meta": {
+   "title": "Seed 5"
+  }
+ },
+ "65": {
+  "class_type": "SamplerCustomAdvanced",
+  "inputs": {
+   "noise": [
+    "64",
+    0
+   ],
+   "guider": [
+    "62",
+    0
+   ],
+   "sampler": [
+    "63",
+    0
+   ],
+   "sigmas": [
+    "61",
+    0
+   ],
+   "latent_image": [
+    "60",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Sample 5"
+  }
+ },
+ "66": {
+  "class_type": "VAEDecode",
+  "inputs": {
+   "samples": [
+    "65",
+    0
+   ],
+   "vae": [
+    "3",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Decode 5"
+  }
+ },
+ "67": {
+  "class_type": "SaveImage",
+  "inputs": {
+   "images": [
+    "66",
+    0
+   ],
+   "filename_prefix": "book/P15_product/5_white_arch"
+  },
+  "_meta": {
+   "title": "Save white_arch"
+  }
+ },
+ "68": {
+  "class_type": "CLIPTextEncode",
+  "inputs": {
+   "text": "Create a world-class premium commercial product photograph of the product from the reference image. Preserve the exact visible geometry, proportions, materials, color, functional components, and distinctive physical characteristics of the product. Present the product as the central hero object. Dramatic charcoal-black premium campaign, single hard key light, deep shadows, subtle smoke. Polished commercial photography, physically plausible reflections and shadows, strong visual hierarchy, premium material realism, generous clean negative space for future marketing typography. Do not invent new product features, logos, trademarks or branding.",
+   "clip": [
+    "2",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Instruction 6"
+  }
+ },
+ "69": {
+  "class_type": "VAEEncode",
+  "inputs": {
+   "pixels": [
+    "7",
+    0
+   ],
+   "vae": [
+    "3",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Encode reference 1 6"
+  }
+ },
+ "70": {
+  "class_type": "ReferenceLatent",
+  "inputs": {
+   "conditioning": [
+    "68",
+    0
+   ],
+   "latent": [
+    "69",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Set Reference Latent 1 6"
+  }
+ },
+ "71": {
+  "class_type": "ConditioningZeroOut",
+  "inputs": {
+   "conditioning": [
+    "68",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Negative (empty) 6"
+  }
+ },
+ "72": {
+  "class_type": "EmptyFlux2LatentImage",
+  "inputs": {
+   "width": 896,
+   "height": 1120,
+   "batch_size": 1
+  },
+  "_meta": {
+   "title": "Canvas 6"
+  }
+ },
+ "73": {
+  "class_type": "Flux2Scheduler",
+  "inputs": {
+   "steps": 4,
+   "width": 896,
+   "height": 1120
+  },
+  "_meta": {
+   "title": "Scheduler (4 steps) 6"
+  }
+ },
+ "74": {
+  "class_type": "CFGGuider",
+  "inputs": {
+   "model": [
+    "1",
+    0
+   ],
+   "positive": [
+    "70",
+    0
+   ],
+   "negative": [
+    "71",
+    0
+   ],
+   "cfg": 1.0
+  },
+  "_meta": {
+   "title": "Guider (cfg 1) 6"
+  }
+ },
+ "75": {
+  "class_type": "KSamplerSelect",
+  "inputs": {
+   "sampler_name": "euler"
+  },
+  "_meta": {
+   "title": "Sampler type 6"
+  }
+ },
+ "76": {
+  "class_type": "RandomNoise",
+  "inputs": {
+   "noise_seed": 15506
+  },
+  "_meta": {
+   "title": "Seed 6"
+  }
+ },
+ "77": {
+  "class_type": "SamplerCustomAdvanced",
+  "inputs": {
+   "noise": [
+    "76",
+    0
+   ],
+   "guider": [
+    "74",
+    0
+   ],
+   "sampler": [
+    "75",
+    0
+   ],
+   "sigmas": [
+    "73",
+    0
+   ],
+   "latent_image": [
+    "72",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Sample 6"
+  }
+ },
+ "78": {
+  "class_type": "VAEDecode",
+  "inputs": {
+   "samples": [
+    "77",
+    0
+   ],
+   "vae": [
+    "3",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Decode 6"
+  }
+ },
+ "79": {
+  "class_type": "SaveImage",
+  "inputs": {
+   "images": [
+    "78",
+    0
+   ],
+   "filename_prefix": "book/P15_product/6_charcoal"
+  },
+  "_meta": {
+   "title": "Save charcoal"
+  }
+ }
+}

@@ -1,0 +1,511 @@
+{
+ "1": {
+  "class_type": "UNETLoader",
+  "inputs": {
+   "unet_name": "z_image_turbo_bf16.safetensors",
+   "weight_dtype": "fp8_e4m3fn"
+  },
+  "_meta": {
+   "title": "Load Z-Image-Turbo"
+  }
+ },
+ "2": {
+  "class_type": "CLIPLoader",
+  "inputs": {
+   "clip_name": "qwen_3_4b.safetensors",
+   "type": "lumina2",
+   "device": "default"
+  },
+  "_meta": {
+   "title": "Load text encoder (Qwen3-4B)"
+  }
+ },
+ "3": {
+  "class_type": "VAELoader",
+  "inputs": {
+   "vae_name": "ae.safetensors"
+  },
+  "_meta": {
+   "title": "Load VAE"
+  }
+ },
+ "4": {
+  "class_type": "ModelSamplingAuraFlow",
+  "inputs": {
+   "model": [
+    "1",
+    0
+   ],
+   "shift": 3.0
+  },
+  "_meta": {
+   "title": "Model sampling (shift 3)"
+  }
+ },
+ "6": {
+  "class_type": "CLIPTextEncode",
+  "inputs": {
+   "text": "Create an original sophisticated seamless repeating geometric pattern inspired by classical decorative geometry. Elegant interlocking arches, stylized fan-shaped elements, rhythmic curves, refined symmetrical ornamentation, precise geometric construction. Deep emerald green, warm ivory, muted jade, and subtle antique-brass color accents. Perfectly balanced motif distribution, consistent decorative line thickness, clean edges, excellent visual rhythm, harmonious spacing. Premium decorative surface design suitable for wallpaper, luxury packaging, textile printing, and stationery. Flat two-dimensional artwork, no perspective, no shadows, no photographic objects, no fabric mockup. Design the geometric elements to connect continuously across all four tile boundaries. Original ornament design, no recognizable branded patterns, no typography, no logos, no watermarks. Square format.",
+   "clip": [
+    "2",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Prompt"
+  }
+ },
+ "7": {
+  "class_type": "ConditioningZeroOut",
+  "inputs": {
+   "conditioning": [
+    "6",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Negative (empty)"
+  }
+ },
+ "8": {
+  "class_type": "EmptySD3LatentImage",
+  "inputs": {
+   "width": 1024,
+   "height": 1024,
+   "batch_size": 1
+  },
+  "_meta": {
+   "title": "Canvas 1024×1024"
+  }
+ },
+ "9": {
+  "class_type": "KSampler",
+  "inputs": {
+   "model": [
+    "4",
+    0
+   ],
+   "seed": 3301,
+   "steps": 8,
+   "cfg": 1.0,
+   "sampler_name": "res_multistep",
+   "scheduler": "simple",
+   "positive": [
+    "6",
+    0
+   ],
+   "negative": [
+    "7",
+    0
+   ],
+   "latent_image": [
+    "8",
+    0
+   ],
+   "denoise": 1.0
+  },
+  "_meta": {
+   "title": "Sampler"
+  }
+ },
+ "10": {
+  "class_type": "VAEDecode",
+  "inputs": {
+   "samples": [
+    "9",
+    0
+   ],
+   "vae": [
+    "3",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Decode"
+  }
+ },
+ "12": {
+  "class_type": "ImageCrop",
+  "inputs": {
+   "image": [
+    "10",
+    0
+   ],
+   "width": 512,
+   "height": 1024,
+   "x": 0,
+   "y": 0
+  },
+  "_meta": {
+   "title": "Left half"
+  }
+ },
+ "13": {
+  "class_type": "ImageCrop",
+  "inputs": {
+   "image": [
+    "10",
+    0
+   ],
+   "width": 512,
+   "height": 1024,
+   "x": 512,
+   "y": 0
+  },
+  "_meta": {
+   "title": "Right half"
+  }
+ },
+ "14": {
+  "class_type": "ImageStitch",
+  "inputs": {
+   "image1": [
+    "13",
+    0
+   ],
+   "direction": "right",
+   "match_image_size": false,
+   "spacing_width": 0,
+   "spacing_color": "white",
+   "image2": [
+    "12",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Swap halves (X)"
+  }
+ },
+ "15": {
+  "class_type": "ImageCrop",
+  "inputs": {
+   "image": [
+    "14",
+    0
+   ],
+   "width": 1024,
+   "height": 512,
+   "x": 0,
+   "y": 0
+  },
+  "_meta": {
+   "title": "Top half"
+  }
+ },
+ "16": {
+  "class_type": "ImageCrop",
+  "inputs": {
+   "image": [
+    "14",
+    0
+   ],
+   "width": 1024,
+   "height": 512,
+   "x": 0,
+   "y": 512
+  },
+  "_meta": {
+   "title": "Bottom half"
+  }
+ },
+ "17": {
+  "class_type": "ImageStitch",
+  "inputs": {
+   "image1": [
+    "16",
+    0
+   ],
+   "direction": "down",
+   "match_image_size": false,
+   "spacing_width": 0,
+   "spacing_color": "white",
+   "image2": [
+    "15",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Swap halves (Y)"
+  }
+ },
+ "18": {
+  "class_type": "SolidMask",
+  "inputs": {
+   "value": 0.0,
+   "width": 1024,
+   "height": 1024
+  },
+  "_meta": {
+   "title": "Empty mask"
+  }
+ },
+ "19": {
+  "class_type": "SolidMask",
+  "inputs": {
+   "value": 1.0,
+   "width": 160,
+   "height": 1024
+  },
+  "_meta": {
+   "title": "Vertical seam band"
+  }
+ },
+ "20": {
+  "class_type": "SolidMask",
+  "inputs": {
+   "value": 1.0,
+   "width": 1024,
+   "height": 160
+  },
+  "_meta": {
+   "title": "Horizontal seam band"
+  }
+ },
+ "21": {
+  "class_type": "MaskComposite",
+  "inputs": {
+   "destination": [
+    "18",
+    0
+   ],
+   "source": [
+    "19",
+    0
+   ],
+   "x": 432,
+   "y": 0,
+   "operation": "add"
+  },
+  "_meta": {
+   "title": "Add vertical band"
+  }
+ },
+ "22": {
+  "class_type": "MaskComposite",
+  "inputs": {
+   "destination": [
+    "21",
+    0
+   ],
+   "source": [
+    "20",
+    0
+   ],
+   "x": 0,
+   "y": 432,
+   "operation": "add"
+  },
+  "_meta": {
+   "title": "Add horizontal band"
+  }
+ },
+ "23": {
+  "class_type": "VAEEncode",
+  "inputs": {
+   "pixels": [
+    "17",
+    0
+   ],
+   "vae": [
+    "3",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Encode offset tile"
+  }
+ },
+ "24": {
+  "class_type": "SetLatentNoiseMask",
+  "inputs": {
+   "samples": [
+    "23",
+    0
+   ],
+   "mask": [
+    "22",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Only repaint the seam cross"
+  }
+ },
+ "25": {
+  "class_type": "CLIPTextEncode",
+  "inputs": {
+   "text": "Create an original sophisticated seamless repeating geometric pattern inspired by classical decorative geometry. Elegant interlocking arches, stylized fan-shaped elements, rhythmic curves, refined symmetrical ornamentation, precise geometric construction. Deep emerald green, warm ivory, muted jade, and subtle antique-brass color accents. Perfectly balanced motif distribution, consistent decorative line thickness, clean edges, excellent visual rhythm, harmonious spacing. Premium decorative surface design suitable for wallpaper, luxury packaging, textile printing, and stationery. Flat two-dimensional artwork, no perspective, no shadows, no photographic objects, no fabric mockup. Design the geometric elements to connect continuously across all four tile boundaries. Original ornament design, no recognizable branded patterns, no typography, no logos, no watermarks. Square format.",
+   "clip": [
+    "2",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Prompt (heal)"
+  }
+ },
+ "26": {
+  "class_type": "ConditioningZeroOut",
+  "inputs": {
+   "conditioning": [
+    "25",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Negative (empty) (heal)"
+  }
+ },
+ "27": {
+  "class_type": "KSampler",
+  "inputs": {
+   "model": [
+    "4",
+    0
+   ],
+   "seed": 3302,
+   "steps": 8,
+   "cfg": 1.0,
+   "sampler_name": "res_multistep",
+   "scheduler": "simple",
+   "positive": [
+    "25",
+    0
+   ],
+   "negative": [
+    "26",
+    0
+   ],
+   "latent_image": [
+    "24",
+    0
+   ],
+   "denoise": 0.7
+  },
+  "_meta": {
+   "title": "Sampler (heal)"
+  }
+ },
+ "28": {
+  "class_type": "VAEDecode",
+  "inputs": {
+   "samples": [
+    "27",
+    0
+   ],
+   "vae": [
+    "3",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Decode (heal)"
+  }
+ },
+ "29": {
+  "class_type": "SaveImage",
+  "inputs": {
+   "images": [
+    "28",
+    0
+   ],
+   "filename_prefix": "book/P03_pattern/tile"
+  },
+  "_meta": {
+   "title": "Save seamless tile"
+  }
+ },
+ "30": {
+  "class_type": "ImageStitch",
+  "inputs": {
+   "image1": [
+    "28",
+    0
+   ],
+   "direction": "right",
+   "match_image_size": false,
+   "spacing_width": 0,
+   "spacing_color": "white",
+   "image2": [
+    "28",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Row: 2 tiles"
+  }
+ },
+ "31": {
+  "class_type": "ImageStitch",
+  "inputs": {
+   "image1": [
+    "30",
+    0
+   ],
+   "direction": "right",
+   "match_image_size": false,
+   "spacing_width": 0,
+   "spacing_color": "white",
+   "image2": [
+    "28",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Row: 3 tiles"
+  }
+ },
+ "32": {
+  "class_type": "ImageStitch",
+  "inputs": {
+   "image1": [
+    "31",
+    0
+   ],
+   "direction": "down",
+   "match_image_size": false,
+   "spacing_width": 0,
+   "spacing_color": "white",
+   "image2": [
+    "31",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "2 rows"
+  }
+ },
+ "33": {
+  "class_type": "ImageStitch",
+  "inputs": {
+   "image1": [
+    "32",
+    0
+   ],
+   "direction": "down",
+   "match_image_size": false,
+   "spacing_width": 0,
+   "spacing_color": "white",
+   "image2": [
+    "31",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "3 rows = 3×3 preview"
+  }
+ },
+ "34": {
+  "class_type": "SaveImage",
+  "inputs": {
+   "images": [
+    "33",
+    0
+   ],
+   "filename_prefix": "book/P03_pattern/preview_3x3"
+  },
+  "_meta": {
+   "title": "Save 3×3 preview"
+  }
+ }
+}

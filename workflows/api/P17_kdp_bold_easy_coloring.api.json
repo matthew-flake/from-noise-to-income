@@ -1,0 +1,250 @@
+{
+ "1": {
+  "class_type": "UNETLoader",
+  "inputs": {
+   "unet_name": "z_image_turbo_bf16.safetensors",
+   "weight_dtype": "fp8_e4m3fn"
+  },
+  "_meta": {
+   "title": "Load Z-Image-Turbo"
+  }
+ },
+ "2": {
+  "class_type": "CLIPLoader",
+  "inputs": {
+   "clip_name": "qwen_3_4b.safetensors",
+   "type": "lumina2",
+   "device": "default"
+  },
+  "_meta": {
+   "title": "Load text encoder (Qwen3-4B)"
+  }
+ },
+ "3": {
+  "class_type": "VAELoader",
+  "inputs": {
+   "vae_name": "ae.safetensors"
+  },
+  "_meta": {
+   "title": "Load VAE"
+  }
+ },
+ "4": {
+  "class_type": "ModelSamplingAuraFlow",
+  "inputs": {
+   "model": [
+    "1",
+    0
+   ],
+   "shift": 3.0
+  },
+  "_meta": {
+   "title": "Model sampling (shift 3)"
+  }
+ },
+ "7": {
+  "class_type": "CLIPTextEncode",
+  "inputs": {
+   "text": "bold and easy coloring book page for adults, a cute cat sleeping in a cozy armchair with a cup of tea and a potted plant, very thick clean black outlines, large simple shapes, no shading, no grey, no hatching, pure white background, black and white line art, no text",
+   "clip": [
+    "2",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Prompt"
+  }
+ },
+ "8": {
+  "class_type": "ConditioningZeroOut",
+  "inputs": {
+   "conditioning": [
+    "7",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Negative (empty)"
+  }
+ },
+ "9": {
+  "class_type": "EmptySD3LatentImage",
+  "inputs": {
+   "width": 896,
+   "height": 1168,
+   "batch_size": 1
+  },
+  "_meta": {
+   "title": "Canvas 896×1168"
+  }
+ },
+ "10": {
+  "class_type": "KSampler",
+  "inputs": {
+   "model": [
+    "4",
+    0
+   ],
+   "seed": 17017,
+   "steps": 8,
+   "cfg": 1.0,
+   "sampler_name": "res_multistep",
+   "scheduler": "simple",
+   "positive": [
+    "7",
+    0
+   ],
+   "negative": [
+    "8",
+    0
+   ],
+   "latent_image": [
+    "9",
+    0
+   ],
+   "denoise": 1.0
+  },
+  "_meta": {
+   "title": "Sampler"
+  }
+ },
+ "11": {
+  "class_type": "VAEDecode",
+  "inputs": {
+   "samples": [
+    "10",
+    0
+   ],
+   "vae": [
+    "3",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Decode"
+  }
+ },
+ "12": {
+  "class_type": "UpscaleModelLoader",
+  "inputs": {
+   "model_name": "4x_NMKD-Siax_200k.pth"
+  },
+  "_meta": {
+   "title": "Load upscaler"
+  }
+ },
+ "13": {
+  "class_type": "ImageUpscaleWithModel",
+  "inputs": {
+   "upscale_model": [
+    "12",
+    0
+   ],
+   "image": [
+    "11",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Upscale ×4"
+  }
+ },
+ "14": {
+  "class_type": "ImageToMask",
+  "inputs": {
+   "image": [
+    "13",
+    0
+   ],
+   "channel": "red"
+  },
+  "_meta": {
+   "title": "Take luminance"
+  }
+ },
+ "15": {
+  "class_type": "ThresholdMask",
+  "inputs": {
+   "mask": [
+    "14",
+    0
+   ],
+   "value": 0.6
+  },
+  "_meta": {
+   "title": "Threshold 0.6"
+  }
+ },
+ "16": {
+  "class_type": "MaskToImage",
+  "inputs": {
+   "mask": [
+    "15",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Pure black & white"
+  }
+ },
+ "17": {
+  "class_type": "ResizeAndPadImage",
+  "inputs": {
+   "image": [
+    "16",
+    0
+   ],
+   "target_width": 2288,
+   "target_height": 3075,
+   "padding_color": "white",
+   "interpolation": "lanczos"
+  },
+  "_meta": {
+   "title": "Fit into safe area 2288×3075"
+  }
+ },
+ "18": {
+  "class_type": "EmptyImage",
+  "inputs": {
+   "width": 2588,
+   "height": 3375,
+   "batch_size": 1,
+   "color": 16777215
+  },
+  "_meta": {
+   "title": "White page 2588×3375"
+  }
+ },
+ "19": {
+  "class_type": "ImageCompositeMasked",
+  "inputs": {
+   "destination": [
+    "18",
+    0
+   ],
+   "source": [
+    "17",
+    0
+   ],
+   "x": 150,
+   "y": 150,
+   "resize_source": false
+  },
+  "_meta": {
+   "title": "Place artwork with margins"
+  }
+ },
+ "21": {
+  "class_type": "SaveImage",
+  "inputs": {
+   "images": [
+    "19",
+    0
+   ],
+   "filename_prefix": "book/P17_kdp_coloring/page"
+  },
+  "_meta": {
+   "title": "Save page"
+  }
+ }
+}

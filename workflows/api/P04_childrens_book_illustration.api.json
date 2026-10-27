@@ -1,0 +1,178 @@
+{
+ "1": {
+  "class_type": "UNETLoader",
+  "inputs": {
+   "unet_name": "z_image_turbo_bf16.safetensors",
+   "weight_dtype": "fp8_e4m3fn"
+  },
+  "_meta": {
+   "title": "Load Z-Image-Turbo"
+  }
+ },
+ "2": {
+  "class_type": "CLIPLoader",
+  "inputs": {
+   "clip_name": "qwen_3_4b.safetensors",
+   "type": "lumina2",
+   "device": "default"
+  },
+  "_meta": {
+   "title": "Load text encoder (Qwen3-4B)"
+  }
+ },
+ "3": {
+  "class_type": "VAELoader",
+  "inputs": {
+   "vae_name": "ae.safetensors"
+  },
+  "_meta": {
+   "title": "Load VAE"
+  }
+ },
+ "4": {
+  "class_type": "ModelSamplingAuraFlow",
+  "inputs": {
+   "model": [
+    "1",
+    0
+   ],
+   "shift": 3.0
+  },
+  "_meta": {
+   "title": "Model sampling (shift 3)"
+  }
+ },
+ "7": {
+  "class_type": "CLIPTextEncode",
+  "inputs": {
+   "text": "Create an original enchanting children's picture-book illustration. A small curious red fox with bright amber eyes, soft orange fur, a fluffy tail, and a distinctive hand-knitted teal scarf discovers a magical woodland clearing. The fox stands beside enormous softly glowing mushrooms while tiny golden fireflies float through the air. Ancient trees, delicate flowers, lush moss, whimsical forest vegetation, and warm sunlight filtering gently through the leaves. Expressive character design, charming proportions, emotional storytelling, delicate watercolor washes combined with textured gouache brushwork. A harmonious palette of forest green, warm amber, muted teal, dusty peach, and soft gold. Beautifully composed illustration with gentle depth, atmospheric perspective, intricate environmental details, and a magical but comforting atmosphere. Reserve an uncluttered area in the upper-right portion for future story text. Original fictional character and environment, no existing franchise characters, no artist signatures, no typography, no logos. Landscape orientation, 16:9.",
+   "clip": [
+    "2",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Prompt"
+  }
+ },
+ "8": {
+  "class_type": "ConditioningZeroOut",
+  "inputs": {
+   "conditioning": [
+    "7",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Negative (empty)"
+  }
+ },
+ "9": {
+  "class_type": "EmptySD3LatentImage",
+  "inputs": {
+   "width": 1344,
+   "height": 768,
+   "batch_size": 1
+  },
+  "_meta": {
+   "title": "Canvas 1344×768"
+  }
+ },
+ "10": {
+  "class_type": "KSampler",
+  "inputs": {
+   "model": [
+    "4",
+    0
+   ],
+   "seed": 4401,
+   "steps": 8,
+   "cfg": 1.0,
+   "sampler_name": "res_multistep",
+   "scheduler": "simple",
+   "positive": [
+    "7",
+    0
+   ],
+   "negative": [
+    "8",
+    0
+   ],
+   "latent_image": [
+    "9",
+    0
+   ],
+   "denoise": 1.0
+  },
+  "_meta": {
+   "title": "Sampler"
+  }
+ },
+ "11": {
+  "class_type": "VAEDecode",
+  "inputs": {
+   "samples": [
+    "10",
+    0
+   ],
+   "vae": [
+    "3",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Decode"
+  }
+ },
+ "12": {
+  "class_type": "SaveImage",
+  "inputs": {
+   "images": [
+    "11",
+    0
+   ],
+   "filename_prefix": "book/P04_kidsbook/clearing"
+  },
+  "_meta": {
+   "title": "Save page"
+  }
+ },
+ "13": {
+  "class_type": "UpscaleModelLoader",
+  "inputs": {
+   "model_name": "4x_NMKD-Siax_200k.pth"
+  },
+  "_meta": {
+   "title": "Load upscaler"
+  }
+ },
+ "14": {
+  "class_type": "ImageUpscaleWithModel",
+  "inputs": {
+   "upscale_model": [
+    "13",
+    0
+   ],
+   "image": [
+    "11",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Upscale ×4"
+  }
+ },
+ "15": {
+  "class_type": "SaveImage",
+  "inputs": {
+   "images": [
+    "14",
+    0
+   ],
+   "filename_prefix": "book/P04_kidsbook/clearing_print"
+  },
+  "_meta": {
+   "title": "Save print file (5376 × 3072)"
+  }
+ }
+}

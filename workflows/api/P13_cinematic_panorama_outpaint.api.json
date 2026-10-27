@@ -1,0 +1,328 @@
+{
+ "1": {
+  "class_type": "UNETLoader",
+  "inputs": {
+   "unet_name": "flux-2-klein-4b-fp8.safetensors",
+   "weight_dtype": "default"
+  },
+  "_meta": {
+   "title": "Load FLUX.2 [klein] 4B"
+  }
+ },
+ "2": {
+  "class_type": "CLIPLoader",
+  "inputs": {
+   "clip_name": "qwen_3_4b.safetensors",
+   "type": "flux2",
+   "device": "default"
+  },
+  "_meta": {
+   "title": "Load text encoder (Qwen3-4B)"
+  }
+ },
+ "3": {
+  "class_type": "VAELoader",
+  "inputs": {
+   "vae_name": "flux2-vae.safetensors"
+  },
+  "_meta": {
+   "title": "Load FLUX.2 VAE"
+  }
+ },
+ "6": {
+  "class_type": "LoadImage",
+  "inputs": {
+   "image": "landscape.png"
+  },
+  "_meta": {
+   "title": "Landscape photo (16:9)"
+  }
+ },
+ "7": {
+  "class_type": "ImageScale",
+  "inputs": {
+   "image": [
+    "6",
+    0
+   ],
+   "upscale_method": "lanczos",
+   "width": 1344,
+   "height": 768,
+   "crop": "center"
+  },
+  "_meta": {
+   "title": "Normalise to 1344×768"
+  }
+ },
+ "8": {
+  "class_type": "MaskToImage",
+  "inputs": {
+   "mask": [
+    "6",
+    1
+   ]
+  },
+  "_meta": {
+   "title": "Painted mask → image"
+  }
+ },
+ "9": {
+  "class_type": "ImageScale",
+  "inputs": {
+   "image": [
+    "8",
+    0
+   ],
+   "upscale_method": "bilinear",
+   "width": 1344,
+   "height": 768,
+   "crop": "center"
+  },
+  "_meta": {
+   "title": "Mask to 1344×768"
+  }
+ },
+ "10": {
+  "class_type": "ImageToMask",
+  "inputs": {
+   "image": [
+    "9",
+    0
+   ],
+   "channel": "red"
+  },
+  "_meta": {
+   "title": "Image → mask"
+  }
+ },
+ "11": {
+  "class_type": "AILab_LamaRemover",
+  "inputs": {
+   "images": [
+    "7",
+    0
+   ],
+   "masks": [
+    "10",
+    0
+   ],
+   "removal_strength": 230,
+   "edge_smoothness": 8,
+   "unload_model": true
+  },
+  "_meta": {
+   "title": "Remove painted defects (LaMa)"
+  }
+ },
+ "12": {
+  "class_type": "ImagePadForOutpaint",
+  "inputs": {
+   "image": [
+    "11",
+    0
+   ],
+   "left": 224,
+   "top": 0,
+   "right": 224,
+   "bottom": 0,
+   "feathering": 0
+  },
+  "_meta": {
+   "title": "Add 224 px left & right"
+  }
+ },
+ "13": {
+  "class_type": "CLIPTextEncode",
+  "inputs": {
+   "text": "Extend the supplied original landscape image into a breathtaking ultra-wide cinematic panorama. Fill the plain grey areas on the left and right. Continue the visible landscape naturally beyond the existing image boundaries: majestic rugged alpine mountain peaks, a pristine turquoise glacial lake, subtle morning mist, natural vegetation, atmospheric perspective. Beautiful golden sunrise illuminating the mountain slopes with warm directional light. Highly realistic geological formations, natural reflections in the lake, subtle clouds. Match the original image's horizon line, perspective, camera position, lens characteristics, color temperature, lighting direction, and photographic grain. Create seamless visual transitions between the existing image and newly generated areas. Preserve the original image content in the middle without alteration. Professional landscape photography, natural color grading. Do not introduce recognizable buildings, people, text, logos, or artificial landmarks.",
+   "clip": [
+    "2",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Instruction"
+  }
+ },
+ "14": {
+  "class_type": "VAEEncode",
+  "inputs": {
+   "pixels": [
+    "12",
+    0
+   ],
+   "vae": [
+    "3",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Encode reference 1"
+  }
+ },
+ "15": {
+  "class_type": "ReferenceLatent",
+  "inputs": {
+   "conditioning": [
+    "13",
+    0
+   ],
+   "latent": [
+    "14",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Set Reference Latent 1"
+  }
+ },
+ "16": {
+  "class_type": "ConditioningZeroOut",
+  "inputs": {
+   "conditioning": [
+    "13",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Negative (empty)"
+  }
+ },
+ "17": {
+  "class_type": "EmptyFlux2LatentImage",
+  "inputs": {
+   "width": 1792,
+   "height": 768,
+   "batch_size": 1
+  },
+  "_meta": {
+   "title": "Canvas"
+  }
+ },
+ "18": {
+  "class_type": "Flux2Scheduler",
+  "inputs": {
+   "steps": 4,
+   "width": 1792,
+   "height": 768
+  },
+  "_meta": {
+   "title": "Scheduler (4 steps)"
+  }
+ },
+ "19": {
+  "class_type": "CFGGuider",
+  "inputs": {
+   "model": [
+    "1",
+    0
+   ],
+   "positive": [
+    "15",
+    0
+   ],
+   "negative": [
+    "16",
+    0
+   ],
+   "cfg": 1.0
+  },
+  "_meta": {
+   "title": "Guider (cfg 1)"
+  }
+ },
+ "20": {
+  "class_type": "KSamplerSelect",
+  "inputs": {
+   "sampler_name": "euler"
+  },
+  "_meta": {
+   "title": "Sampler type"
+  }
+ },
+ "21": {
+  "class_type": "RandomNoise",
+  "inputs": {
+   "noise_seed": 13301
+  },
+  "_meta": {
+   "title": "Seed"
+  }
+ },
+ "22": {
+  "class_type": "SamplerCustomAdvanced",
+  "inputs": {
+   "noise": [
+    "21",
+    0
+   ],
+   "guider": [
+    "19",
+    0
+   ],
+   "sampler": [
+    "20",
+    0
+   ],
+   "sigmas": [
+    "18",
+    0
+   ],
+   "latent_image": [
+    "17",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Sample"
+  }
+ },
+ "23": {
+  "class_type": "VAEDecode",
+  "inputs": {
+   "samples": [
+    "22",
+    0
+   ],
+   "vae": [
+    "3",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Decode"
+  }
+ },
+ "24": {
+  "class_type": "ImageCompositeMasked",
+  "inputs": {
+   "destination": [
+    "23",
+    0
+   ],
+   "source": [
+    "11",
+    0
+   ],
+   "x": 224,
+   "y": 0,
+   "resize_source": false
+  },
+  "_meta": {
+   "title": "Paste original centre back"
+  }
+ },
+ "25": {
+  "class_type": "SaveImage",
+  "inputs": {
+   "images": [
+    "24",
+    0
+   ],
+   "filename_prefix": "book/P13_panorama/panorama_21x9"
+  },
+  "_meta": {
+   "title": "Save 21:9"
+  }
+ }
+}

@@ -1,0 +1,171 @@
+{
+ "1": {
+  "class_type": "UNETLoader",
+  "inputs": {
+   "unet_name": "z_image_turbo_bf16.safetensors",
+   "weight_dtype": "fp8_e4m3fn"
+  },
+  "_meta": {
+   "title": "Load Z-Image-Turbo"
+  }
+ },
+ "2": {
+  "class_type": "CLIPLoader",
+  "inputs": {
+   "clip_name": "qwen_3_4b.safetensors",
+   "type": "lumina2",
+   "device": "default"
+  },
+  "_meta": {
+   "title": "Load text encoder (Qwen3-4B)"
+  }
+ },
+ "3": {
+  "class_type": "VAELoader",
+  "inputs": {
+   "vae_name": "ae.safetensors"
+  },
+  "_meta": {
+   "title": "Load VAE"
+  }
+ },
+ "4": {
+  "class_type": "ModelSamplingAuraFlow",
+  "inputs": {
+   "model": [
+    "1",
+    0
+   ],
+   "shift": 3.0
+  },
+  "_meta": {
+   "title": "Model sampling (shift 3)"
+  }
+ },
+ "6": {
+  "class_type": "CLIPTextEncode",
+  "inputs": {
+   "text": "Create an original visually extraordinary hero image for a professional creative design portfolio specializing in AI-assisted commercial visual production. A sophisticated artistic composition combining translucent sculptural glass, elegant architectural geometry, polished metallic surfaces, and beautifully arranged abstract dimensional forms. Rich charcoal, warm ivory, refined champagne-gold, and subtle deep-green color accents. Masterful interplay of realistic materials and imaginative visual design. Exceptional cinematic lighting, intricate reflections, sophisticated volumetric depth, restrained atmospheric effects. Premium contemporary editorial art direction, carefully balanced visual hierarchy. Elegant negative space on the left reserved for a future portfolio title. No imitation of existing design studios, no recognizable branded elements, no third-party logos, no signatures, no typography, no watermarks. Landscape orientation, 16:9.",
+   "clip": [
+    "2",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Prompt"
+  }
+ },
+ "7": {
+  "class_type": "ConditioningZeroOut",
+  "inputs": {
+   "conditioning": [
+    "6",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Negative (empty)"
+  }
+ },
+ "8": {
+  "class_type": "EmptySD3LatentImage",
+  "inputs": {
+   "width": 1344,
+   "height": 768,
+   "batch_size": 1
+  },
+  "_meta": {
+   "title": "Canvas 1344×768"
+  }
+ },
+ "9": {
+  "class_type": "KSampler",
+  "inputs": {
+   "model": [
+    "4",
+    0
+   ],
+   "seed": 16601,
+   "steps": 8,
+   "cfg": 1.0,
+   "sampler_name": "res_multistep",
+   "scheduler": "simple",
+   "positive": [
+    "6",
+    0
+   ],
+   "negative": [
+    "7",
+    0
+   ],
+   "latent_image": [
+    "8",
+    0
+   ],
+   "denoise": 1.0
+  },
+  "_meta": {
+   "title": "Sampler"
+  }
+ },
+ "10": {
+  "class_type": "VAEDecode",
+  "inputs": {
+   "samples": [
+    "9",
+    0
+   ],
+   "vae": [
+    "3",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Decode"
+  }
+ },
+ "11": {
+  "class_type": "SaveImage",
+  "inputs": {
+   "images": [
+    "10",
+    0
+   ],
+   "filename_prefix": "book/P16_portfolio/hero"
+  },
+  "_meta": {
+   "title": "Save hero"
+  }
+ },
+ "12": {
+  "class_type": "TextOverlay",
+  "inputs": {
+   "images": [
+    "10",
+    0
+   ],
+   "text": "YOUR NAME  ·  AI-ASSISTED VISUAL PRODUCTION",
+   "font_size": 3.5,
+   "color": "#EDE6D6",
+   "position": "bottom",
+   "align": "left",
+   "outline": false
+  },
+  "_meta": {
+   "title": "Portfolio title"
+  }
+ },
+ "13": {
+  "class_type": "SaveImage",
+  "inputs": {
+   "images": [
+    "12",
+    0
+   ],
+   "filename_prefix": "book/P16_portfolio/hero_title"
+  },
+  "_meta": {
+   "title": "Save hero with title"
+  }
+ }
+}

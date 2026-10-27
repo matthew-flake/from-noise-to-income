@@ -1,0 +1,4569 @@
+{
+ "id": "b4f79bed-c087-5ce4-a86d-a53532207d9c",
+ "revision": 0,
+ "last_node_id": 87,
+ "last_link_id": 116,
+ "nodes": [
+  {
+   "id": 1,
+   "type": "UNETLoader",
+   "pos": [
+    30,
+    100
+   ],
+   "size": [
+    340,
+    118
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "MODEL",
+     "type": "MODEL",
+     "links": [
+      3,
+      21,
+      38,
+      55,
+      72,
+      89,
+      106
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Load FLUX.2 [klein] 4B",
+   "properties": {
+    "Node name for S&R": "UNETLoader",
+    "models": [
+     {
+      "name": "flux-2-klein-4b-fp8.safetensors",
+      "url": "https://huggingface.co/black-forest-labs/FLUX.2-klein-4b-fp8/resolve/main/flux-2-klein-4b-fp8.safetensors",
+      "directory": "diffusion_models"
+     }
+    ]
+   },
+   "widgets_values": [
+    "flux-2-klein-4b-fp8.safetensors",
+    "default"
+   ]
+  },
+  {
+   "id": 2,
+   "type": "CLIPLoader",
+   "pos": [
+    30,
+    268
+   ],
+   "size": [
+    340,
+    142
+   ],
+   "flags": {},
+   "order": 1,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "CLIP",
+     "type": "CLIP",
+     "links": [
+      1,
+      15,
+      32,
+      49,
+      66,
+      83,
+      100
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Load text encoder (Qwen3-4B)",
+   "properties": {
+    "Node name for S&R": "CLIPLoader",
+    "models": [
+     {
+      "name": "qwen_3_4b.safetensors",
+      "url": "https://huggingface.co/Comfy-Org/z_image_turbo/resolve/main/split_files/text_encoders/qwen_3_4b.safetensors",
+      "directory": "text_encoders"
+     }
+    ]
+   },
+   "widgets_values": [
+    "qwen_3_4b.safetensors",
+    "flux2",
+    "default"
+   ]
+  },
+  {
+   "id": 3,
+   "type": "VAELoader",
+   "pos": [
+    30,
+    460
+   ],
+   "size": [
+    340,
+    94
+   ],
+   "flags": {},
+   "order": 2,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "VAE",
+     "type": "VAE",
+     "links": [
+      12,
+      17,
+      30,
+      34,
+      47,
+      51,
+      64,
+      68,
+      81,
+      85,
+      98,
+      102,
+      115
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Load FLUX.2 VAE",
+   "properties": {
+    "Node name for S&R": "VAELoader",
+    "models": [
+     {
+      "name": "flux2-vae.safetensors",
+      "url": "https://huggingface.co/Comfy-Org/flux2-klein-4B/resolve/main/split_files/vae/flux2-vae.safetensors",
+      "directory": "vae"
+     }
+    ]
+   },
+   "widgets_values": [
+    "flux2-vae.safetensors"
+   ]
+  },
+  {
+   "id": 4,
+   "type": "Note",
+   "pos": [
+    30,
+    604
+   ],
+   "size": [
+    380,
+    200
+   ],
+   "flags": {},
+   "order": 3,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [],
+   "title": "Licenses",
+   "properties": {},
+   "widgets_values": [
+    "MODELS (license category A — commercial use OK, checked Oct 2026):\n• FLUX.2 [klein] 4B — Apache 2.0 (Black Forest Labs). NOT the 9B or [dev] — those are non-commercial!\n• Qwen3-4B text encoder — Apache 2.0\n• FLUX.2 VAE — Apache 2.0\nFLUX.2 [klein] reads the character sheet as a reference image, so Maya keeps her face, hair and clothes in every scene."
+   ],
+   "color": "#432",
+   "bgcolor": "#653"
+  },
+  {
+   "id": 5,
+   "type": "CLIPTextEncode",
+   "pos": [
+    540,
+    100
+   ],
+   "size": [
+    420,
+    220
+   ],
+   "flags": {},
+   "order": 4,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "clip",
+     "type": "CLIP",
+     "link": 1
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      2,
+      4
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Instruction (sheet)",
+   "properties": {
+    "Node name for S&R": "CLIPTextEncode"
+   },
+   "widgets_values": [
+    "Character turnaround sheet: Maya, a 25-year-old fictional female explorer, premium stylized three-dimensional animated adventure character: short curly auburn hair, warm amber eyes, small freckles across the nose, expressive oval face, friendly confident smile, athletic but natural body proportions, mustard-yellow utility jacket, dark teal adventure backpack, charcoal cargo trousers, tan leather hiking boots. Distinctive recognizable silhouette, high-quality 3D materials, detailed fabric textures, natural facial expressions, beautiful cinematic lighting. Original fictional character, no resemblance to celebrities or existing animated characters, no logos, no typography. Front view, three-quarter view and side view standing next to each other, full body, neutral light grey studio background."
+   ]
+  },
+  {
+   "id": 6,
+   "type": "ConditioningZeroOut",
+   "pos": [
+    540,
+    370
+   ],
+   "size": [
+    340,
+    94
+   ],
+   "flags": {},
+   "order": 5,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "conditioning",
+     "type": "CONDITIONING",
+     "link": 2
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      5
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Negative (empty) (sheet)",
+   "properties": {
+    "Node name for S&R": "ConditioningZeroOut"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 7,
+   "type": "EmptyFlux2LatentImage",
+   "pos": [
+    1000,
+    100
+   ],
+   "size": [
+    340,
+    142
+   ],
+   "flags": {},
+   "order": 6,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "LATENT",
+     "type": "LATENT",
+     "links": [
+      10
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Canvas (sheet)",
+   "properties": {
+    "Node name for S&R": "EmptyFlux2LatentImage"
+   },
+   "widgets_values": [
+    1344,
+    768,
+    1
+   ]
+  },
+  {
+   "id": 8,
+   "type": "Flux2Scheduler",
+   "pos": [
+    1000,
+    292
+   ],
+   "size": [
+    340,
+    142
+   ],
+   "flags": {},
+   "order": 7,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "SIGMAS",
+     "type": "SIGMAS",
+     "links": [
+      9
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Scheduler (4 steps) (sheet)",
+   "properties": {
+    "Node name for S&R": "Flux2Scheduler"
+   },
+   "widgets_values": [
+    4,
+    1344,
+    768
+   ]
+  },
+  {
+   "id": 9,
+   "type": "CFGGuider",
+   "pos": [
+    1000,
+    484
+   ],
+   "size": [
+    340,
+    166
+   ],
+   "flags": {},
+   "order": 8,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "model",
+     "type": "MODEL",
+     "link": 3
+    },
+    {
+     "name": "positive",
+     "type": "CONDITIONING",
+     "link": 4
+    },
+    {
+     "name": "negative",
+     "type": "CONDITIONING",
+     "link": 5
+    }
+   ],
+   "outputs": [
+    {
+     "name": "GUIDER",
+     "type": "GUIDER",
+     "links": [
+      7
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Guider (cfg 1) (sheet)",
+   "properties": {
+    "Node name for S&R": "CFGGuider"
+   },
+   "widgets_values": [
+    1.0
+   ]
+  },
+  {
+   "id": 10,
+   "type": "KSamplerSelect",
+   "pos": [
+    1000,
+    700
+   ],
+   "size": [
+    340,
+    94
+   ],
+   "flags": {},
+   "order": 9,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "SAMPLER",
+     "type": "SAMPLER",
+     "links": [
+      8
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Sampler type (sheet)",
+   "properties": {
+    "Node name for S&R": "KSamplerSelect"
+   },
+   "widgets_values": [
+    "euler"
+   ]
+  },
+  {
+   "id": 11,
+   "type": "RandomNoise",
+   "pos": [
+    1000,
+    844
+   ],
+   "size": [
+    340,
+    94
+   ],
+   "flags": {},
+   "order": 10,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "NOISE",
+     "type": "NOISE",
+     "links": [
+      6
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Seed (sheet)",
+   "properties": {
+    "Node name for S&R": "RandomNoise"
+   },
+   "widgets_values": [
+    5501,
+    "fixed"
+   ]
+  },
+  {
+   "id": 12,
+   "type": "SamplerCustomAdvanced",
+   "pos": [
+    1000,
+    988
+   ],
+   "size": [
+    340,
+    214
+   ],
+   "flags": {},
+   "order": 11,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "noise",
+     "type": "NOISE",
+     "link": 6
+    },
+    {
+     "name": "guider",
+     "type": "GUIDER",
+     "link": 7
+    },
+    {
+     "name": "sampler",
+     "type": "SAMPLER",
+     "link": 8
+    },
+    {
+     "name": "sigmas",
+     "type": "SIGMAS",
+     "link": 9
+    },
+    {
+     "name": "latent_image",
+     "type": "LATENT",
+     "link": 10
+    }
+   ],
+   "outputs": [
+    {
+     "name": "output",
+     "type": "LATENT",
+     "links": [
+      11
+     ],
+     "slot_index": 0
+    },
+    {
+     "name": "denoised_output",
+     "type": "LATENT",
+     "links": [],
+     "slot_index": 1
+    }
+   ],
+   "title": "Sample (sheet)",
+   "properties": {
+    "Node name for S&R": "SamplerCustomAdvanced"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 13,
+   "type": "VAEDecode",
+   "pos": [
+    1000,
+    1252
+   ],
+   "size": [
+    340,
+    118
+   ],
+   "flags": {},
+   "order": 12,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "samples",
+     "type": "LATENT",
+     "link": 11
+    },
+    {
+     "name": "vae",
+     "type": "VAE",
+     "link": 12
+    }
+   ],
+   "outputs": [
+    {
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      13,
+      14
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Decode (sheet)",
+   "properties": {
+    "Node name for S&R": "VAEDecode"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 14,
+   "type": "SaveImage",
+   "pos": [
+    1380,
+    100
+   ],
+   "size": [
+    360,
+    380
+   ],
+   "flags": {},
+   "order": 13,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "images",
+     "type": "IMAGE",
+     "link": 13
+    }
+   ],
+   "outputs": [],
+   "title": "Save sheet",
+   "properties": {
+    "Node name for S&R": "SaveImage"
+   },
+   "widgets_values": [
+    "book/P05_maya/sheet"
+   ]
+  },
+  {
+   "id": 15,
+   "type": "ImageScaleToTotalPixels",
+   "pos": [
+    1380,
+    530
+   ],
+   "size": [
+    340,
+    166
+   ],
+   "flags": {},
+   "order": 14,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "image",
+     "type": "IMAGE",
+     "link": 14
+    }
+   ],
+   "outputs": [
+    {
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      16,
+      33,
+      50,
+      67,
+      84,
+      101
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Scale to ~1.0 MP",
+   "properties": {
+    "Node name for S&R": "ImageScaleToTotalPixels"
+   },
+   "widgets_values": [
+    "lanczos",
+    1.0,
+    16
+   ]
+  },
+  {
+   "id": 16,
+   "type": "CLIPTextEncode",
+   "pos": [
+    1870,
+    100
+   ],
+   "size": [
+    420,
+    220
+   ],
+   "flags": {},
+   "order": 15,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "clip",
+     "type": "CLIP",
+     "link": 15
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      18,
+      20
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Instruction 1",
+   "properties": {
+    "Node name for S&R": "CLIPTextEncode"
+   },
+   "widgets_values": [
+    "Use the character from the reference image: keep exactly the same face, hairstyle, clothing colors, backpack and proportions. SCENE: Maya arrives at a beautiful historic railway station at sunrise, carrying a folded adventure map. Premium stylized 3D animated film still, cinematic lighting, portrait orientation."
+   ]
+  },
+  {
+   "id": 17,
+   "type": "VAEEncode",
+   "pos": [
+    1870,
+    370
+   ],
+   "size": [
+    340,
+    118
+   ],
+   "flags": {},
+   "order": 16,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "pixels",
+     "type": "IMAGE",
+     "link": 16
+    },
+    {
+     "name": "vae",
+     "type": "VAE",
+     "link": 17
+    }
+   ],
+   "outputs": [
+    {
+     "name": "LATENT",
+     "type": "LATENT",
+     "links": [
+      19
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Encode reference 1 1",
+   "properties": {
+    "Node name for S&R": "VAEEncode"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 18,
+   "type": "ReferenceLatent",
+   "pos": [
+    1870,
+    538
+   ],
+   "size": [
+    340,
+    118
+   ],
+   "flags": {},
+   "order": 17,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "conditioning",
+     "type": "CONDITIONING",
+     "link": 18
+    },
+    {
+     "name": "latent",
+     "type": "LATENT",
+     "link": 19
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      22
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Set Reference Latent 1 1",
+   "properties": {
+    "Node name for S&R": "ReferenceLatent"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 19,
+   "type": "ConditioningZeroOut",
+   "pos": [
+    1870,
+    706
+   ],
+   "size": [
+    340,
+    94
+   ],
+   "flags": {},
+   "order": 18,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "conditioning",
+     "type": "CONDITIONING",
+     "link": 20
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      23
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Negative (empty) 1",
+   "properties": {
+    "Node name for S&R": "ConditioningZeroOut"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 20,
+   "type": "EmptyFlux2LatentImage",
+   "pos": [
+    2330,
+    100
+   ],
+   "size": [
+    340,
+    142
+   ],
+   "flags": {},
+   "order": 19,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "LATENT",
+     "type": "LATENT",
+     "links": [
+      28
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Canvas 1",
+   "properties": {
+    "Node name for S&R": "EmptyFlux2LatentImage"
+   },
+   "widgets_values": [
+    864,
+    1152,
+    1
+   ]
+  },
+  {
+   "id": 21,
+   "type": "Flux2Scheduler",
+   "pos": [
+    2330,
+    292
+   ],
+   "size": [
+    340,
+    142
+   ],
+   "flags": {},
+   "order": 20,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "SIGMAS",
+     "type": "SIGMAS",
+     "links": [
+      27
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Scheduler (4 steps) 1",
+   "properties": {
+    "Node name for S&R": "Flux2Scheduler"
+   },
+   "widgets_values": [
+    4,
+    864,
+    1152
+   ]
+  },
+  {
+   "id": 22,
+   "type": "CFGGuider",
+   "pos": [
+    2330,
+    484
+   ],
+   "size": [
+    340,
+    166
+   ],
+   "flags": {},
+   "order": 21,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "model",
+     "type": "MODEL",
+     "link": 21
+    },
+    {
+     "name": "positive",
+     "type": "CONDITIONING",
+     "link": 22
+    },
+    {
+     "name": "negative",
+     "type": "CONDITIONING",
+     "link": 23
+    }
+   ],
+   "outputs": [
+    {
+     "name": "GUIDER",
+     "type": "GUIDER",
+     "links": [
+      25
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Guider (cfg 1) 1",
+   "properties": {
+    "Node name for S&R": "CFGGuider"
+   },
+   "widgets_values": [
+    1.0
+   ]
+  },
+  {
+   "id": 23,
+   "type": "KSamplerSelect",
+   "pos": [
+    2330,
+    700
+   ],
+   "size": [
+    340,
+    94
+   ],
+   "flags": {},
+   "order": 22,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "SAMPLER",
+     "type": "SAMPLER",
+     "links": [
+      26
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Sampler type 1",
+   "properties": {
+    "Node name for S&R": "KSamplerSelect"
+   },
+   "widgets_values": [
+    "euler"
+   ]
+  },
+  {
+   "id": 24,
+   "type": "RandomNoise",
+   "pos": [
+    2330,
+    844
+   ],
+   "size": [
+    340,
+    94
+   ],
+   "flags": {},
+   "order": 23,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "NOISE",
+     "type": "NOISE",
+     "links": [
+      24
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Seed 1",
+   "properties": {
+    "Node name for S&R": "RandomNoise"
+   },
+   "widgets_values": [
+    5510,
+    "fixed"
+   ]
+  },
+  {
+   "id": 25,
+   "type": "SamplerCustomAdvanced",
+   "pos": [
+    2330,
+    988
+   ],
+   "size": [
+    340,
+    214
+   ],
+   "flags": {},
+   "order": 24,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "noise",
+     "type": "NOISE",
+     "link": 24
+    },
+    {
+     "name": "guider",
+     "type": "GUIDER",
+     "link": 25
+    },
+    {
+     "name": "sampler",
+     "type": "SAMPLER",
+     "link": 26
+    },
+    {
+     "name": "sigmas",
+     "type": "SIGMAS",
+     "link": 27
+    },
+    {
+     "name": "latent_image",
+     "type": "LATENT",
+     "link": 28
+    }
+   ],
+   "outputs": [
+    {
+     "name": "output",
+     "type": "LATENT",
+     "links": [
+      29
+     ],
+     "slot_index": 0
+    },
+    {
+     "name": "denoised_output",
+     "type": "LATENT",
+     "links": [],
+     "slot_index": 1
+    }
+   ],
+   "title": "Sample 1",
+   "properties": {
+    "Node name for S&R": "SamplerCustomAdvanced"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 26,
+   "type": "VAEDecode",
+   "pos": [
+    2330,
+    1252
+   ],
+   "size": [
+    340,
+    118
+   ],
+   "flags": {},
+   "order": 25,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "samples",
+     "type": "LATENT",
+     "link": 29
+    },
+    {
+     "name": "vae",
+     "type": "VAE",
+     "link": 30
+    }
+   ],
+   "outputs": [
+    {
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      31
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Decode 1",
+   "properties": {
+    "Node name for S&R": "VAEDecode"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 27,
+   "type": "SaveImage",
+   "pos": [
+    2710,
+    100
+   ],
+   "size": [
+    360,
+    380
+   ],
+   "flags": {},
+   "order": 26,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "images",
+     "type": "IMAGE",
+     "link": 31
+    }
+   ],
+   "outputs": [],
+   "title": "Save station",
+   "properties": {
+    "Node name for S&R": "SaveImage"
+   },
+   "widgets_values": [
+    "book/P05_maya/1_station"
+   ]
+  },
+  {
+   "id": 28,
+   "type": "CLIPTextEncode",
+   "pos": [
+    3200,
+    100
+   ],
+   "size": [
+    420,
+    220
+   ],
+   "flags": {},
+   "order": 27,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "clip",
+     "type": "CLIP",
+     "link": 32
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      35,
+      37
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Instruction 2",
+   "properties": {
+    "Node name for S&R": "CLIPTextEncode"
+   },
+   "widgets_values": [
+    "Use the character from the reference image: keep exactly the same face, hairstyle, clothing colors, backpack and proportions. SCENE: Maya explores a mysterious tropical rainforest filled with enormous plants and glowing insects. Premium stylized 3D animated film still, cinematic lighting, portrait orientation."
+   ]
+  },
+  {
+   "id": 29,
+   "type": "VAEEncode",
+   "pos": [
+    3200,
+    370
+   ],
+   "size": [
+    340,
+    118
+   ],
+   "flags": {},
+   "order": 28,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "pixels",
+     "type": "IMAGE",
+     "link": 33
+    },
+    {
+     "name": "vae",
+     "type": "VAE",
+     "link": 34
+    }
+   ],
+   "outputs": [
+    {
+     "name": "LATENT",
+     "type": "LATENT",
+     "links": [
+      36
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Encode reference 1 2",
+   "properties": {
+    "Node name for S&R": "VAEEncode"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 30,
+   "type": "ReferenceLatent",
+   "pos": [
+    3200,
+    538
+   ],
+   "size": [
+    340,
+    118
+   ],
+   "flags": {},
+   "order": 29,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "conditioning",
+     "type": "CONDITIONING",
+     "link": 35
+    },
+    {
+     "name": "latent",
+     "type": "LATENT",
+     "link": 36
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      39
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Set Reference Latent 1 2",
+   "properties": {
+    "Node name for S&R": "ReferenceLatent"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 31,
+   "type": "ConditioningZeroOut",
+   "pos": [
+    3200,
+    706
+   ],
+   "size": [
+    340,
+    94
+   ],
+   "flags": {},
+   "order": 30,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "conditioning",
+     "type": "CONDITIONING",
+     "link": 37
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      40
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Negative (empty) 2",
+   "properties": {
+    "Node name for S&R": "ConditioningZeroOut"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 32,
+   "type": "EmptyFlux2LatentImage",
+   "pos": [
+    3660,
+    100
+   ],
+   "size": [
+    340,
+    142
+   ],
+   "flags": {},
+   "order": 31,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "LATENT",
+     "type": "LATENT",
+     "links": [
+      45
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Canvas 2",
+   "properties": {
+    "Node name for S&R": "EmptyFlux2LatentImage"
+   },
+   "widgets_values": [
+    864,
+    1152,
+    1
+   ]
+  },
+  {
+   "id": 33,
+   "type": "Flux2Scheduler",
+   "pos": [
+    3660,
+    292
+   ],
+   "size": [
+    340,
+    142
+   ],
+   "flags": {},
+   "order": 32,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "SIGMAS",
+     "type": "SIGMAS",
+     "links": [
+      44
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Scheduler (4 steps) 2",
+   "properties": {
+    "Node name for S&R": "Flux2Scheduler"
+   },
+   "widgets_values": [
+    4,
+    864,
+    1152
+   ]
+  },
+  {
+   "id": 34,
+   "type": "CFGGuider",
+   "pos": [
+    3660,
+    484
+   ],
+   "size": [
+    340,
+    166
+   ],
+   "flags": {},
+   "order": 33,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "model",
+     "type": "MODEL",
+     "link": 38
+    },
+    {
+     "name": "positive",
+     "type": "CONDITIONING",
+     "link": 39
+    },
+    {
+     "name": "negative",
+     "type": "CONDITIONING",
+     "link": 40
+    }
+   ],
+   "outputs": [
+    {
+     "name": "GUIDER",
+     "type": "GUIDER",
+     "links": [
+      42
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Guider (cfg 1) 2",
+   "properties": {
+    "Node name for S&R": "CFGGuider"
+   },
+   "widgets_values": [
+    1.0
+   ]
+  },
+  {
+   "id": 35,
+   "type": "KSamplerSelect",
+   "pos": [
+    3660,
+    700
+   ],
+   "size": [
+    340,
+    94
+   ],
+   "flags": {},
+   "order": 34,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "SAMPLER",
+     "type": "SAMPLER",
+     "links": [
+      43
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Sampler type 2",
+   "properties": {
+    "Node name for S&R": "KSamplerSelect"
+   },
+   "widgets_values": [
+    "euler"
+   ]
+  },
+  {
+   "id": 36,
+   "type": "RandomNoise",
+   "pos": [
+    3660,
+    844
+   ],
+   "size": [
+    340,
+    94
+   ],
+   "flags": {},
+   "order": 35,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "NOISE",
+     "type": "NOISE",
+     "links": [
+      41
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Seed 2",
+   "properties": {
+    "Node name for S&R": "RandomNoise"
+   },
+   "widgets_values": [
+    5511,
+    "fixed"
+   ]
+  },
+  {
+   "id": 37,
+   "type": "SamplerCustomAdvanced",
+   "pos": [
+    3660,
+    988
+   ],
+   "size": [
+    340,
+    214
+   ],
+   "flags": {},
+   "order": 36,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "noise",
+     "type": "NOISE",
+     "link": 41
+    },
+    {
+     "name": "guider",
+     "type": "GUIDER",
+     "link": 42
+    },
+    {
+     "name": "sampler",
+     "type": "SAMPLER",
+     "link": 43
+    },
+    {
+     "name": "sigmas",
+     "type": "SIGMAS",
+     "link": 44
+    },
+    {
+     "name": "latent_image",
+     "type": "LATENT",
+     "link": 45
+    }
+   ],
+   "outputs": [
+    {
+     "name": "output",
+     "type": "LATENT",
+     "links": [
+      46
+     ],
+     "slot_index": 0
+    },
+    {
+     "name": "denoised_output",
+     "type": "LATENT",
+     "links": [],
+     "slot_index": 1
+    }
+   ],
+   "title": "Sample 2",
+   "properties": {
+    "Node name for S&R": "SamplerCustomAdvanced"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 38,
+   "type": "VAEDecode",
+   "pos": [
+    3660,
+    1252
+   ],
+   "size": [
+    340,
+    118
+   ],
+   "flags": {},
+   "order": 37,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "samples",
+     "type": "LATENT",
+     "link": 46
+    },
+    {
+     "name": "vae",
+     "type": "VAE",
+     "link": 47
+    }
+   ],
+   "outputs": [
+    {
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      48
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Decode 2",
+   "properties": {
+    "Node name for S&R": "VAEDecode"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 39,
+   "type": "SaveImage",
+   "pos": [
+    4040,
+    100
+   ],
+   "size": [
+    360,
+    380
+   ],
+   "flags": {},
+   "order": 38,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "images",
+     "type": "IMAGE",
+     "link": 48
+    }
+   ],
+   "outputs": [],
+   "title": "Save rainforest",
+   "properties": {
+    "Node name for S&R": "SaveImage"
+   },
+   "widgets_values": [
+    "book/P05_maya/2_rainforest"
+   ]
+  },
+  {
+   "id": 40,
+   "type": "CLIPTextEncode",
+   "pos": [
+    4530,
+    100
+   ],
+   "size": [
+    420,
+    220
+   ],
+   "flags": {},
+   "order": 39,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "clip",
+     "type": "CLIP",
+     "link": 49
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      52,
+      54
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Instruction 3",
+   "properties": {
+    "Node name for S&R": "CLIPTextEncode"
+   },
+   "widgets_values": [
+    "Use the character from the reference image: keep exactly the same face, hairstyle, clothing colors, backpack and proportions. SCENE: Maya discovers an ancient fictional sandstone temple surrounded by desert dunes at sunset. Premium stylized 3D animated film still, cinematic lighting, portrait orientation."
+   ]
+  },
+  {
+   "id": 41,
+   "type": "VAEEncode",
+   "pos": [
+    4530,
+    370
+   ],
+   "size": [
+    340,
+    118
+   ],
+   "flags": {},
+   "order": 40,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "pixels",
+     "type": "IMAGE",
+     "link": 50
+    },
+    {
+     "name": "vae",
+     "type": "VAE",
+     "link": 51
+    }
+   ],
+   "outputs": [
+    {
+     "name": "LATENT",
+     "type": "LATENT",
+     "links": [
+      53
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Encode reference 1 3",
+   "properties": {
+    "Node name for S&R": "VAEEncode"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 42,
+   "type": "ReferenceLatent",
+   "pos": [
+    4530,
+    538
+   ],
+   "size": [
+    340,
+    118
+   ],
+   "flags": {},
+   "order": 41,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "conditioning",
+     "type": "CONDITIONING",
+     "link": 52
+    },
+    {
+     "name": "latent",
+     "type": "LATENT",
+     "link": 53
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      56
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Set Reference Latent 1 3",
+   "properties": {
+    "Node name for S&R": "ReferenceLatent"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 43,
+   "type": "ConditioningZeroOut",
+   "pos": [
+    4530,
+    706
+   ],
+   "size": [
+    340,
+    94
+   ],
+   "flags": {},
+   "order": 42,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "conditioning",
+     "type": "CONDITIONING",
+     "link": 54
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      57
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Negative (empty) 3",
+   "properties": {
+    "Node name for S&R": "ConditioningZeroOut"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 44,
+   "type": "EmptyFlux2LatentImage",
+   "pos": [
+    4990,
+    100
+   ],
+   "size": [
+    340,
+    142
+   ],
+   "flags": {},
+   "order": 43,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "LATENT",
+     "type": "LATENT",
+     "links": [
+      62
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Canvas 3",
+   "properties": {
+    "Node name for S&R": "EmptyFlux2LatentImage"
+   },
+   "widgets_values": [
+    864,
+    1152,
+    1
+   ]
+  },
+  {
+   "id": 45,
+   "type": "Flux2Scheduler",
+   "pos": [
+    4990,
+    292
+   ],
+   "size": [
+    340,
+    142
+   ],
+   "flags": {},
+   "order": 44,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "SIGMAS",
+     "type": "SIGMAS",
+     "links": [
+      61
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Scheduler (4 steps) 3",
+   "properties": {
+    "Node name for S&R": "Flux2Scheduler"
+   },
+   "widgets_values": [
+    4,
+    864,
+    1152
+   ]
+  },
+  {
+   "id": 46,
+   "type": "CFGGuider",
+   "pos": [
+    4990,
+    484
+   ],
+   "size": [
+    340,
+    166
+   ],
+   "flags": {},
+   "order": 45,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "model",
+     "type": "MODEL",
+     "link": 55
+    },
+    {
+     "name": "positive",
+     "type": "CONDITIONING",
+     "link": 56
+    },
+    {
+     "name": "negative",
+     "type": "CONDITIONING",
+     "link": 57
+    }
+   ],
+   "outputs": [
+    {
+     "name": "GUIDER",
+     "type": "GUIDER",
+     "links": [
+      59
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Guider (cfg 1) 3",
+   "properties": {
+    "Node name for S&R": "CFGGuider"
+   },
+   "widgets_values": [
+    1.0
+   ]
+  },
+  {
+   "id": 47,
+   "type": "KSamplerSelect",
+   "pos": [
+    4990,
+    700
+   ],
+   "size": [
+    340,
+    94
+   ],
+   "flags": {},
+   "order": 46,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "SAMPLER",
+     "type": "SAMPLER",
+     "links": [
+      60
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Sampler type 3",
+   "properties": {
+    "Node name for S&R": "KSamplerSelect"
+   },
+   "widgets_values": [
+    "euler"
+   ]
+  },
+  {
+   "id": 48,
+   "type": "RandomNoise",
+   "pos": [
+    4990,
+    844
+   ],
+   "size": [
+    340,
+    94
+   ],
+   "flags": {},
+   "order": 47,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "NOISE",
+     "type": "NOISE",
+     "links": [
+      58
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Seed 3",
+   "properties": {
+    "Node name for S&R": "RandomNoise"
+   },
+   "widgets_values": [
+    5512,
+    "fixed"
+   ]
+  },
+  {
+   "id": 49,
+   "type": "SamplerCustomAdvanced",
+   "pos": [
+    4990,
+    988
+   ],
+   "size": [
+    340,
+    214
+   ],
+   "flags": {},
+   "order": 48,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "noise",
+     "type": "NOISE",
+     "link": 58
+    },
+    {
+     "name": "guider",
+     "type": "GUIDER",
+     "link": 59
+    },
+    {
+     "name": "sampler",
+     "type": "SAMPLER",
+     "link": 60
+    },
+    {
+     "name": "sigmas",
+     "type": "SIGMAS",
+     "link": 61
+    },
+    {
+     "name": "latent_image",
+     "type": "LATENT",
+     "link": 62
+    }
+   ],
+   "outputs": [
+    {
+     "name": "output",
+     "type": "LATENT",
+     "links": [
+      63
+     ],
+     "slot_index": 0
+    },
+    {
+     "name": "denoised_output",
+     "type": "LATENT",
+     "links": [],
+     "slot_index": 1
+    }
+   ],
+   "title": "Sample 3",
+   "properties": {
+    "Node name for S&R": "SamplerCustomAdvanced"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 50,
+   "type": "VAEDecode",
+   "pos": [
+    4990,
+    1252
+   ],
+   "size": [
+    340,
+    118
+   ],
+   "flags": {},
+   "order": 49,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "samples",
+     "type": "LATENT",
+     "link": 63
+    },
+    {
+     "name": "vae",
+     "type": "VAE",
+     "link": 64
+    }
+   ],
+   "outputs": [
+    {
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      65
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Decode 3",
+   "properties": {
+    "Node name for S&R": "VAEDecode"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 51,
+   "type": "SaveImage",
+   "pos": [
+    5370,
+    100
+   ],
+   "size": [
+    360,
+    380
+   ],
+   "flags": {},
+   "order": 50,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "images",
+     "type": "IMAGE",
+     "link": 65
+    }
+   ],
+   "outputs": [],
+   "title": "Save temple",
+   "properties": {
+    "Node name for S&R": "SaveImage"
+   },
+   "widgets_values": [
+    "book/P05_maya/3_temple"
+   ]
+  },
+  {
+   "id": 52,
+   "type": "CLIPTextEncode",
+   "pos": [
+    5860,
+    100
+   ],
+   "size": [
+    420,
+    220
+   ],
+   "flags": {},
+   "order": 51,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "clip",
+     "type": "CLIP",
+     "link": 66
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      69,
+      71
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Instruction 4",
+   "properties": {
+    "Node name for S&R": "CLIPTextEncode"
+   },
+   "widgets_values": [
+    "Use the character from the reference image: keep exactly the same face, hairstyle, clothing colors, backpack and proportions. SCENE: Maya stands on a snowy mountain ridge while dramatic clouds move across the valley. Premium stylized 3D animated film still, cinematic lighting, portrait orientation."
+   ]
+  },
+  {
+   "id": 53,
+   "type": "VAEEncode",
+   "pos": [
+    5860,
+    370
+   ],
+   "size": [
+    340,
+    118
+   ],
+   "flags": {},
+   "order": 52,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "pixels",
+     "type": "IMAGE",
+     "link": 67
+    },
+    {
+     "name": "vae",
+     "type": "VAE",
+     "link": 68
+    }
+   ],
+   "outputs": [
+    {
+     "name": "LATENT",
+     "type": "LATENT",
+     "links": [
+      70
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Encode reference 1 4",
+   "properties": {
+    "Node name for S&R": "VAEEncode"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 54,
+   "type": "ReferenceLatent",
+   "pos": [
+    5860,
+    538
+   ],
+   "size": [
+    340,
+    118
+   ],
+   "flags": {},
+   "order": 53,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "conditioning",
+     "type": "CONDITIONING",
+     "link": 69
+    },
+    {
+     "name": "latent",
+     "type": "LATENT",
+     "link": 70
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      73
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Set Reference Latent 1 4",
+   "properties": {
+    "Node name for S&R": "ReferenceLatent"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 55,
+   "type": "ConditioningZeroOut",
+   "pos": [
+    5860,
+    706
+   ],
+   "size": [
+    340,
+    94
+   ],
+   "flags": {},
+   "order": 54,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "conditioning",
+     "type": "CONDITIONING",
+     "link": 71
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      74
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Negative (empty) 4",
+   "properties": {
+    "Node name for S&R": "ConditioningZeroOut"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 56,
+   "type": "EmptyFlux2LatentImage",
+   "pos": [
+    6320,
+    100
+   ],
+   "size": [
+    340,
+    142
+   ],
+   "flags": {},
+   "order": 55,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "LATENT",
+     "type": "LATENT",
+     "links": [
+      79
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Canvas 4",
+   "properties": {
+    "Node name for S&R": "EmptyFlux2LatentImage"
+   },
+   "widgets_values": [
+    864,
+    1152,
+    1
+   ]
+  },
+  {
+   "id": 57,
+   "type": "Flux2Scheduler",
+   "pos": [
+    6320,
+    292
+   ],
+   "size": [
+    340,
+    142
+   ],
+   "flags": {},
+   "order": 56,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "SIGMAS",
+     "type": "SIGMAS",
+     "links": [
+      78
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Scheduler (4 steps) 4",
+   "properties": {
+    "Node name for S&R": "Flux2Scheduler"
+   },
+   "widgets_values": [
+    4,
+    864,
+    1152
+   ]
+  },
+  {
+   "id": 58,
+   "type": "CFGGuider",
+   "pos": [
+    6320,
+    484
+   ],
+   "size": [
+    340,
+    166
+   ],
+   "flags": {},
+   "order": 57,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "model",
+     "type": "MODEL",
+     "link": 72
+    },
+    {
+     "name": "positive",
+     "type": "CONDITIONING",
+     "link": 73
+    },
+    {
+     "name": "negative",
+     "type": "CONDITIONING",
+     "link": 74
+    }
+   ],
+   "outputs": [
+    {
+     "name": "GUIDER",
+     "type": "GUIDER",
+     "links": [
+      76
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Guider (cfg 1) 4",
+   "properties": {
+    "Node name for S&R": "CFGGuider"
+   },
+   "widgets_values": [
+    1.0
+   ]
+  },
+  {
+   "id": 59,
+   "type": "KSamplerSelect",
+   "pos": [
+    6320,
+    700
+   ],
+   "size": [
+    340,
+    94
+   ],
+   "flags": {},
+   "order": 58,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "SAMPLER",
+     "type": "SAMPLER",
+     "links": [
+      77
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Sampler type 4",
+   "properties": {
+    "Node name for S&R": "KSamplerSelect"
+   },
+   "widgets_values": [
+    "euler"
+   ]
+  },
+  {
+   "id": 60,
+   "type": "RandomNoise",
+   "pos": [
+    6320,
+    844
+   ],
+   "size": [
+    340,
+    94
+   ],
+   "flags": {},
+   "order": 59,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "NOISE",
+     "type": "NOISE",
+     "links": [
+      75
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Seed 4",
+   "properties": {
+    "Node name for S&R": "RandomNoise"
+   },
+   "widgets_values": [
+    5513,
+    "fixed"
+   ]
+  },
+  {
+   "id": 61,
+   "type": "SamplerCustomAdvanced",
+   "pos": [
+    6320,
+    988
+   ],
+   "size": [
+    340,
+    214
+   ],
+   "flags": {},
+   "order": 60,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "noise",
+     "type": "NOISE",
+     "link": 75
+    },
+    {
+     "name": "guider",
+     "type": "GUIDER",
+     "link": 76
+    },
+    {
+     "name": "sampler",
+     "type": "SAMPLER",
+     "link": 77
+    },
+    {
+     "name": "sigmas",
+     "type": "SIGMAS",
+     "link": 78
+    },
+    {
+     "name": "latent_image",
+     "type": "LATENT",
+     "link": 79
+    }
+   ],
+   "outputs": [
+    {
+     "name": "output",
+     "type": "LATENT",
+     "links": [
+      80
+     ],
+     "slot_index": 0
+    },
+    {
+     "name": "denoised_output",
+     "type": "LATENT",
+     "links": [],
+     "slot_index": 1
+    }
+   ],
+   "title": "Sample 4",
+   "properties": {
+    "Node name for S&R": "SamplerCustomAdvanced"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 62,
+   "type": "VAEDecode",
+   "pos": [
+    6320,
+    1252
+   ],
+   "size": [
+    340,
+    118
+   ],
+   "flags": {},
+   "order": 61,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "samples",
+     "type": "LATENT",
+     "link": 80
+    },
+    {
+     "name": "vae",
+     "type": "VAE",
+     "link": 81
+    }
+   ],
+   "outputs": [
+    {
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      82
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Decode 4",
+   "properties": {
+    "Node name for S&R": "VAEDecode"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 63,
+   "type": "SaveImage",
+   "pos": [
+    6700,
+    100
+   ],
+   "size": [
+    360,
+    380
+   ],
+   "flags": {},
+   "order": 62,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "images",
+     "type": "IMAGE",
+     "link": 82
+    }
+   ],
+   "outputs": [],
+   "title": "Save mountain",
+   "properties": {
+    "Node name for S&R": "SaveImage"
+   },
+   "widgets_values": [
+    "book/P05_maya/4_mountain"
+   ]
+  },
+  {
+   "id": 64,
+   "type": "CLIPTextEncode",
+   "pos": [
+    7190,
+    100
+   ],
+   "size": [
+    420,
+    220
+   ],
+   "flags": {},
+   "order": 63,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "clip",
+     "type": "CLIP",
+     "link": 83
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      86,
+      88
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Instruction 5",
+   "properties": {
+    "Node name for S&R": "CLIPTextEncode"
+   },
+   "widgets_values": [
+    "Use the character from the reference image: keep exactly the same face, hairstyle, clothing colors, backpack and proportions. SCENE: Maya walks through an imaginative futuristic city illuminated by colorful architectural lights. Premium stylized 3D animated film still, cinematic lighting, portrait orientation."
+   ]
+  },
+  {
+   "id": 65,
+   "type": "VAEEncode",
+   "pos": [
+    7190,
+    370
+   ],
+   "size": [
+    340,
+    118
+   ],
+   "flags": {},
+   "order": 64,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "pixels",
+     "type": "IMAGE",
+     "link": 84
+    },
+    {
+     "name": "vae",
+     "type": "VAE",
+     "link": 85
+    }
+   ],
+   "outputs": [
+    {
+     "name": "LATENT",
+     "type": "LATENT",
+     "links": [
+      87
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Encode reference 1 5",
+   "properties": {
+    "Node name for S&R": "VAEEncode"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 66,
+   "type": "ReferenceLatent",
+   "pos": [
+    7190,
+    538
+   ],
+   "size": [
+    340,
+    118
+   ],
+   "flags": {},
+   "order": 65,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "conditioning",
+     "type": "CONDITIONING",
+     "link": 86
+    },
+    {
+     "name": "latent",
+     "type": "LATENT",
+     "link": 87
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      90
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Set Reference Latent 1 5",
+   "properties": {
+    "Node name for S&R": "ReferenceLatent"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 67,
+   "type": "ConditioningZeroOut",
+   "pos": [
+    7190,
+    706
+   ],
+   "size": [
+    340,
+    94
+   ],
+   "flags": {},
+   "order": 66,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "conditioning",
+     "type": "CONDITIONING",
+     "link": 88
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      91
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Negative (empty) 5",
+   "properties": {
+    "Node name for S&R": "ConditioningZeroOut"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 68,
+   "type": "EmptyFlux2LatentImage",
+   "pos": [
+    7650,
+    100
+   ],
+   "size": [
+    340,
+    142
+   ],
+   "flags": {},
+   "order": 67,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "LATENT",
+     "type": "LATENT",
+     "links": [
+      96
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Canvas 5",
+   "properties": {
+    "Node name for S&R": "EmptyFlux2LatentImage"
+   },
+   "widgets_values": [
+    864,
+    1152,
+    1
+   ]
+  },
+  {
+   "id": 69,
+   "type": "Flux2Scheduler",
+   "pos": [
+    7650,
+    292
+   ],
+   "size": [
+    340,
+    142
+   ],
+   "flags": {},
+   "order": 68,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "SIGMAS",
+     "type": "SIGMAS",
+     "links": [
+      95
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Scheduler (4 steps) 5",
+   "properties": {
+    "Node name for S&R": "Flux2Scheduler"
+   },
+   "widgets_values": [
+    4,
+    864,
+    1152
+   ]
+  },
+  {
+   "id": 70,
+   "type": "CFGGuider",
+   "pos": [
+    7650,
+    484
+   ],
+   "size": [
+    340,
+    166
+   ],
+   "flags": {},
+   "order": 69,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "model",
+     "type": "MODEL",
+     "link": 89
+    },
+    {
+     "name": "positive",
+     "type": "CONDITIONING",
+     "link": 90
+    },
+    {
+     "name": "negative",
+     "type": "CONDITIONING",
+     "link": 91
+    }
+   ],
+   "outputs": [
+    {
+     "name": "GUIDER",
+     "type": "GUIDER",
+     "links": [
+      93
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Guider (cfg 1) 5",
+   "properties": {
+    "Node name for S&R": "CFGGuider"
+   },
+   "widgets_values": [
+    1.0
+   ]
+  },
+  {
+   "id": 71,
+   "type": "KSamplerSelect",
+   "pos": [
+    7650,
+    700
+   ],
+   "size": [
+    340,
+    94
+   ],
+   "flags": {},
+   "order": 70,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "SAMPLER",
+     "type": "SAMPLER",
+     "links": [
+      94
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Sampler type 5",
+   "properties": {
+    "Node name for S&R": "KSamplerSelect"
+   },
+   "widgets_values": [
+    "euler"
+   ]
+  },
+  {
+   "id": 72,
+   "type": "RandomNoise",
+   "pos": [
+    7650,
+    844
+   ],
+   "size": [
+    340,
+    94
+   ],
+   "flags": {},
+   "order": 71,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "NOISE",
+     "type": "NOISE",
+     "links": [
+      92
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Seed 5",
+   "properties": {
+    "Node name for S&R": "RandomNoise"
+   },
+   "widgets_values": [
+    5514,
+    "fixed"
+   ]
+  },
+  {
+   "id": 73,
+   "type": "SamplerCustomAdvanced",
+   "pos": [
+    7650,
+    988
+   ],
+   "size": [
+    340,
+    214
+   ],
+   "flags": {},
+   "order": 72,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "noise",
+     "type": "NOISE",
+     "link": 92
+    },
+    {
+     "name": "guider",
+     "type": "GUIDER",
+     "link": 93
+    },
+    {
+     "name": "sampler",
+     "type": "SAMPLER",
+     "link": 94
+    },
+    {
+     "name": "sigmas",
+     "type": "SIGMAS",
+     "link": 95
+    },
+    {
+     "name": "latent_image",
+     "type": "LATENT",
+     "link": 96
+    }
+   ],
+   "outputs": [
+    {
+     "name": "output",
+     "type": "LATENT",
+     "links": [
+      97
+     ],
+     "slot_index": 0
+    },
+    {
+     "name": "denoised_output",
+     "type": "LATENT",
+     "links": [],
+     "slot_index": 1
+    }
+   ],
+   "title": "Sample 5",
+   "properties": {
+    "Node name for S&R": "SamplerCustomAdvanced"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 74,
+   "type": "VAEDecode",
+   "pos": [
+    7650,
+    1252
+   ],
+   "size": [
+    340,
+    118
+   ],
+   "flags": {},
+   "order": 73,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "samples",
+     "type": "LATENT",
+     "link": 97
+    },
+    {
+     "name": "vae",
+     "type": "VAE",
+     "link": 98
+    }
+   ],
+   "outputs": [
+    {
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      99
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Decode 5",
+   "properties": {
+    "Node name for S&R": "VAEDecode"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 75,
+   "type": "SaveImage",
+   "pos": [
+    8030,
+    100
+   ],
+   "size": [
+    360,
+    380
+   ],
+   "flags": {},
+   "order": 74,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "images",
+     "type": "IMAGE",
+     "link": 99
+    }
+   ],
+   "outputs": [],
+   "title": "Save city",
+   "properties": {
+    "Node name for S&R": "SaveImage"
+   },
+   "widgets_values": [
+    "book/P05_maya/5_city"
+   ]
+  },
+  {
+   "id": 76,
+   "type": "CLIPTextEncode",
+   "pos": [
+    8520,
+    100
+   ],
+   "size": [
+    420,
+    220
+   ],
+   "flags": {},
+   "order": 75,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "clip",
+     "type": "CLIP",
+     "link": 100
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      103,
+      105
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Instruction 6",
+   "properties": {
+    "Node name for S&R": "CLIPTextEncode"
+   },
+   "widgets_values": [
+    "Use the character from the reference image: keep exactly the same face, hairstyle, clothing colors, backpack and proportions. SCENE: Maya watches a golden sunset from a quiet ocean cliff after completing her adventure. Premium stylized 3D animated film still, cinematic lighting, portrait orientation."
+   ]
+  },
+  {
+   "id": 77,
+   "type": "VAEEncode",
+   "pos": [
+    8520,
+    370
+   ],
+   "size": [
+    340,
+    118
+   ],
+   "flags": {},
+   "order": 76,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "pixels",
+     "type": "IMAGE",
+     "link": 101
+    },
+    {
+     "name": "vae",
+     "type": "VAE",
+     "link": 102
+    }
+   ],
+   "outputs": [
+    {
+     "name": "LATENT",
+     "type": "LATENT",
+     "links": [
+      104
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Encode reference 1 6",
+   "properties": {
+    "Node name for S&R": "VAEEncode"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 78,
+   "type": "ReferenceLatent",
+   "pos": [
+    8520,
+    538
+   ],
+   "size": [
+    340,
+    118
+   ],
+   "flags": {},
+   "order": 77,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "conditioning",
+     "type": "CONDITIONING",
+     "link": 103
+    },
+    {
+     "name": "latent",
+     "type": "LATENT",
+     "link": 104
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      107
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Set Reference Latent 1 6",
+   "properties": {
+    "Node name for S&R": "ReferenceLatent"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 79,
+   "type": "ConditioningZeroOut",
+   "pos": [
+    8520,
+    706
+   ],
+   "size": [
+    340,
+    94
+   ],
+   "flags": {},
+   "order": 78,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "conditioning",
+     "type": "CONDITIONING",
+     "link": 105
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      108
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Negative (empty) 6",
+   "properties": {
+    "Node name for S&R": "ConditioningZeroOut"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 80,
+   "type": "EmptyFlux2LatentImage",
+   "pos": [
+    8980,
+    100
+   ],
+   "size": [
+    340,
+    142
+   ],
+   "flags": {},
+   "order": 79,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "LATENT",
+     "type": "LATENT",
+     "links": [
+      113
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Canvas 6",
+   "properties": {
+    "Node name for S&R": "EmptyFlux2LatentImage"
+   },
+   "widgets_values": [
+    864,
+    1152,
+    1
+   ]
+  },
+  {
+   "id": 81,
+   "type": "Flux2Scheduler",
+   "pos": [
+    8980,
+    292
+   ],
+   "size": [
+    340,
+    142
+   ],
+   "flags": {},
+   "order": 80,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "SIGMAS",
+     "type": "SIGMAS",
+     "links": [
+      112
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Scheduler (4 steps) 6",
+   "properties": {
+    "Node name for S&R": "Flux2Scheduler"
+   },
+   "widgets_values": [
+    4,
+    864,
+    1152
+   ]
+  },
+  {
+   "id": 82,
+   "type": "CFGGuider",
+   "pos": [
+    8980,
+    484
+   ],
+   "size": [
+    340,
+    166
+   ],
+   "flags": {},
+   "order": 81,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "model",
+     "type": "MODEL",
+     "link": 106
+    },
+    {
+     "name": "positive",
+     "type": "CONDITIONING",
+     "link": 107
+    },
+    {
+     "name": "negative",
+     "type": "CONDITIONING",
+     "link": 108
+    }
+   ],
+   "outputs": [
+    {
+     "name": "GUIDER",
+     "type": "GUIDER",
+     "links": [
+      110
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Guider (cfg 1) 6",
+   "properties": {
+    "Node name for S&R": "CFGGuider"
+   },
+   "widgets_values": [
+    1.0
+   ]
+  },
+  {
+   "id": 83,
+   "type": "KSamplerSelect",
+   "pos": [
+    8980,
+    700
+   ],
+   "size": [
+    340,
+    94
+   ],
+   "flags": {},
+   "order": 82,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "SAMPLER",
+     "type": "SAMPLER",
+     "links": [
+      111
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Sampler type 6",
+   "properties": {
+    "Node name for S&R": "KSamplerSelect"
+   },
+   "widgets_values": [
+    "euler"
+   ]
+  },
+  {
+   "id": 84,
+   "type": "RandomNoise",
+   "pos": [
+    8980,
+    844
+   ],
+   "size": [
+    340,
+    94
+   ],
+   "flags": {},
+   "order": 83,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "NOISE",
+     "type": "NOISE",
+     "links": [
+      109
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Seed 6",
+   "properties": {
+    "Node name for S&R": "RandomNoise"
+   },
+   "widgets_values": [
+    5515,
+    "fixed"
+   ]
+  },
+  {
+   "id": 85,
+   "type": "SamplerCustomAdvanced",
+   "pos": [
+    8980,
+    988
+   ],
+   "size": [
+    340,
+    214
+   ],
+   "flags": {},
+   "order": 84,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "noise",
+     "type": "NOISE",
+     "link": 109
+    },
+    {
+     "name": "guider",
+     "type": "GUIDER",
+     "link": 110
+    },
+    {
+     "name": "sampler",
+     "type": "SAMPLER",
+     "link": 111
+    },
+    {
+     "name": "sigmas",
+     "type": "SIGMAS",
+     "link": 112
+    },
+    {
+     "name": "latent_image",
+     "type": "LATENT",
+     "link": 113
+    }
+   ],
+   "outputs": [
+    {
+     "name": "output",
+     "type": "LATENT",
+     "links": [
+      114
+     ],
+     "slot_index": 0
+    },
+    {
+     "name": "denoised_output",
+     "type": "LATENT",
+     "links": [],
+     "slot_index": 1
+    }
+   ],
+   "title": "Sample 6",
+   "properties": {
+    "Node name for S&R": "SamplerCustomAdvanced"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 86,
+   "type": "VAEDecode",
+   "pos": [
+    8980,
+    1252
+   ],
+   "size": [
+    340,
+    118
+   ],
+   "flags": {},
+   "order": 85,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "samples",
+     "type": "LATENT",
+     "link": 114
+    },
+    {
+     "name": "vae",
+     "type": "VAE",
+     "link": 115
+    }
+   ],
+   "outputs": [
+    {
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      116
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Decode 6",
+   "properties": {
+    "Node name for S&R": "VAEDecode"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 87,
+   "type": "SaveImage",
+   "pos": [
+    9360,
+    100
+   ],
+   "size": [
+    360,
+    380
+   ],
+   "flags": {},
+   "order": 86,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "images",
+     "type": "IMAGE",
+     "link": 116
+    }
+   ],
+   "outputs": [],
+   "title": "Save ocean",
+   "properties": {
+    "Node name for S&R": "SaveImage"
+   },
+   "widgets_values": [
+    "book/P05_maya/6_ocean"
+   ]
+  }
+ ],
+ "links": [
+  [
+   1,
+   2,
+   0,
+   5,
+   0,
+   "CLIP"
+  ],
+  [
+   2,
+   5,
+   0,
+   6,
+   0,
+   "CONDITIONING"
+  ],
+  [
+   3,
+   1,
+   0,
+   9,
+   0,
+   "MODEL"
+  ],
+  [
+   4,
+   5,
+   0,
+   9,
+   1,
+   "CONDITIONING"
+  ],
+  [
+   5,
+   6,
+   0,
+   9,
+   2,
+   "CONDITIONING"
+  ],
+  [
+   6,
+   11,
+   0,
+   12,
+   0,
+   "NOISE"
+  ],
+  [
+   7,
+   9,
+   0,
+   12,
+   1,
+   "GUIDER"
+  ],
+  [
+   8,
+   10,
+   0,
+   12,
+   2,
+   "SAMPLER"
+  ],
+  [
+   9,
+   8,
+   0,
+   12,
+   3,
+   "SIGMAS"
+  ],
+  [
+   10,
+   7,
+   0,
+   12,
+   4,
+   "LATENT"
+  ],
+  [
+   11,
+   12,
+   0,
+   13,
+   0,
+   "LATENT"
+  ],
+  [
+   12,
+   3,
+   0,
+   13,
+   1,
+   "VAE"
+  ],
+  [
+   13,
+   13,
+   0,
+   14,
+   0,
+   "IMAGE"
+  ],
+  [
+   14,
+   13,
+   0,
+   15,
+   0,
+   "IMAGE"
+  ],
+  [
+   15,
+   2,
+   0,
+   16,
+   0,
+   "CLIP"
+  ],
+  [
+   16,
+   15,
+   0,
+   17,
+   0,
+   "IMAGE"
+  ],
+  [
+   17,
+   3,
+   0,
+   17,
+   1,
+   "VAE"
+  ],
+  [
+   18,
+   16,
+   0,
+   18,
+   0,
+   "CONDITIONING"
+  ],
+  [
+   19,
+   17,
+   0,
+   18,
+   1,
+   "LATENT"
+  ],
+  [
+   20,
+   16,
+   0,
+   19,
+   0,
+   "CONDITIONING"
+  ],
+  [
+   21,
+   1,
+   0,
+   22,
+   0,
+   "MODEL"
+  ],
+  [
+   22,
+   18,
+   0,
+   22,
+   1,
+   "CONDITIONING"
+  ],
+  [
+   23,
+   19,
+   0,
+   22,
+   2,
+   "CONDITIONING"
+  ],
+  [
+   24,
+   24,
+   0,
+   25,
+   0,
+   "NOISE"
+  ],
+  [
+   25,
+   22,
+   0,
+   25,
+   1,
+   "GUIDER"
+  ],
+  [
+   26,
+   23,
+   0,
+   25,
+   2,
+   "SAMPLER"
+  ],
+  [
+   27,
+   21,
+   0,
+   25,
+   3,
+   "SIGMAS"
+  ],
+  [
+   28,
+   20,
+   0,
+   25,
+   4,
+   "LATENT"
+  ],
+  [
+   29,
+   25,
+   0,
+   26,
+   0,
+   "LATENT"
+  ],
+  [
+   30,
+   3,
+   0,
+   26,
+   1,
+   "VAE"
+  ],
+  [
+   31,
+   26,
+   0,
+   27,
+   0,
+   "IMAGE"
+  ],
+  [
+   32,
+   2,
+   0,
+   28,
+   0,
+   "CLIP"
+  ],
+  [
+   33,
+   15,
+   0,
+   29,
+   0,
+   "IMAGE"
+  ],
+  [
+   34,
+   3,
+   0,
+   29,
+   1,
+   "VAE"
+  ],
+  [
+   35,
+   28,
+   0,
+   30,
+   0,
+   "CONDITIONING"
+  ],
+  [
+   36,
+   29,
+   0,
+   30,
+   1,
+   "LATENT"
+  ],
+  [
+   37,
+   28,
+   0,
+   31,
+   0,
+   "CONDITIONING"
+  ],
+  [
+   38,
+   1,
+   0,
+   34,
+   0,
+   "MODEL"
+  ],
+  [
+   39,
+   30,
+   0,
+   34,
+   1,
+   "CONDITIONING"
+  ],
+  [
+   40,
+   31,
+   0,
+   34,
+   2,
+   "CONDITIONING"
+  ],
+  [
+   41,
+   36,
+   0,
+   37,
+   0,
+   "NOISE"
+  ],
+  [
+   42,
+   34,
+   0,
+   37,
+   1,
+   "GUIDER"
+  ],
+  [
+   43,
+   35,
+   0,
+   37,
+   2,
+   "SAMPLER"
+  ],
+  [
+   44,
+   33,
+   0,
+   37,
+   3,
+   "SIGMAS"
+  ],
+  [
+   45,
+   32,
+   0,
+   37,
+   4,
+   "LATENT"
+  ],
+  [
+   46,
+   37,
+   0,
+   38,
+   0,
+   "LATENT"
+  ],
+  [
+   47,
+   3,
+   0,
+   38,
+   1,
+   "VAE"
+  ],
+  [
+   48,
+   38,
+   0,
+   39,
+   0,
+   "IMAGE"
+  ],
+  [
+   49,
+   2,
+   0,
+   40,
+   0,
+   "CLIP"
+  ],
+  [
+   50,
+   15,
+   0,
+   41,
+   0,
+   "IMAGE"
+  ],
+  [
+   51,
+   3,
+   0,
+   41,
+   1,
+   "VAE"
+  ],
+  [
+   52,
+   40,
+   0,
+   42,
+   0,
+   "CONDITIONING"
+  ],
+  [
+   53,
+   41,
+   0,
+   42,
+   1,
+   "LATENT"
+  ],
+  [
+   54,
+   40,
+   0,
+   43,
+   0,
+   "CONDITIONING"
+  ],
+  [
+   55,
+   1,
+   0,
+   46,
+   0,
+   "MODEL"
+  ],
+  [
+   56,
+   42,
+   0,
+   46,
+   1,
+   "CONDITIONING"
+  ],
+  [
+   57,
+   43,
+   0,
+   46,
+   2,
+   "CONDITIONING"
+  ],
+  [
+   58,
+   48,
+   0,
+   49,
+   0,
+   "NOISE"
+  ],
+  [
+   59,
+   46,
+   0,
+   49,
+   1,
+   "GUIDER"
+  ],
+  [
+   60,
+   47,
+   0,
+   49,
+   2,
+   "SAMPLER"
+  ],
+  [
+   61,
+   45,
+   0,
+   49,
+   3,
+   "SIGMAS"
+  ],
+  [
+   62,
+   44,
+   0,
+   49,
+   4,
+   "LATENT"
+  ],
+  [
+   63,
+   49,
+   0,
+   50,
+   0,
+   "LATENT"
+  ],
+  [
+   64,
+   3,
+   0,
+   50,
+   1,
+   "VAE"
+  ],
+  [
+   65,
+   50,
+   0,
+   51,
+   0,
+   "IMAGE"
+  ],
+  [
+   66,
+   2,
+   0,
+   52,
+   0,
+   "CLIP"
+  ],
+  [
+   67,
+   15,
+   0,
+   53,
+   0,
+   "IMAGE"
+  ],
+  [
+   68,
+   3,
+   0,
+   53,
+   1,
+   "VAE"
+  ],
+  [
+   69,
+   52,
+   0,
+   54,
+   0,
+   "CONDITIONING"
+  ],
+  [
+   70,
+   53,
+   0,
+   54,
+   1,
+   "LATENT"
+  ],
+  [
+   71,
+   52,
+   0,
+   55,
+   0,
+   "CONDITIONING"
+  ],
+  [
+   72,
+   1,
+   0,
+   58,
+   0,
+   "MODEL"
+  ],
+  [
+   73,
+   54,
+   0,
+   58,
+   1,
+   "CONDITIONING"
+  ],
+  [
+   74,
+   55,
+   0,
+   58,
+   2,
+   "CONDITIONING"
+  ],
+  [
+   75,
+   60,
+   0,
+   61,
+   0,
+   "NOISE"
+  ],
+  [
+   76,
+   58,
+   0,
+   61,
+   1,
+   "GUIDER"
+  ],
+  [
+   77,
+   59,
+   0,
+   61,
+   2,
+   "SAMPLER"
+  ],
+  [
+   78,
+   57,
+   0,
+   61,
+   3,
+   "SIGMAS"
+  ],
+  [
+   79,
+   56,
+   0,
+   61,
+   4,
+   "LATENT"
+  ],
+  [
+   80,
+   61,
+   0,
+   62,
+   0,
+   "LATENT"
+  ],
+  [
+   81,
+   3,
+   0,
+   62,
+   1,
+   "VAE"
+  ],
+  [
+   82,
+   62,
+   0,
+   63,
+   0,
+   "IMAGE"
+  ],
+  [
+   83,
+   2,
+   0,
+   64,
+   0,
+   "CLIP"
+  ],
+  [
+   84,
+   15,
+   0,
+   65,
+   0,
+   "IMAGE"
+  ],
+  [
+   85,
+   3,
+   0,
+   65,
+   1,
+   "VAE"
+  ],
+  [
+   86,
+   64,
+   0,
+   66,
+   0,
+   "CONDITIONING"
+  ],
+  [
+   87,
+   65,
+   0,
+   66,
+   1,
+   "LATENT"
+  ],
+  [
+   88,
+   64,
+   0,
+   67,
+   0,
+   "CONDITIONING"
+  ],
+  [
+   89,
+   1,
+   0,
+   70,
+   0,
+   "MODEL"
+  ],
+  [
+   90,
+   66,
+   0,
+   70,
+   1,
+   "CONDITIONING"
+  ],
+  [
+   91,
+   67,
+   0,
+   70,
+   2,
+   "CONDITIONING"
+  ],
+  [
+   92,
+   72,
+   0,
+   73,
+   0,
+   "NOISE"
+  ],
+  [
+   93,
+   70,
+   0,
+   73,
+   1,
+   "GUIDER"
+  ],
+  [
+   94,
+   71,
+   0,
+   73,
+   2,
+   "SAMPLER"
+  ],
+  [
+   95,
+   69,
+   0,
+   73,
+   3,
+   "SIGMAS"
+  ],
+  [
+   96,
+   68,
+   0,
+   73,
+   4,
+   "LATENT"
+  ],
+  [
+   97,
+   73,
+   0,
+   74,
+   0,
+   "LATENT"
+  ],
+  [
+   98,
+   3,
+   0,
+   74,
+   1,
+   "VAE"
+  ],
+  [
+   99,
+   74,
+   0,
+   75,
+   0,
+   "IMAGE"
+  ],
+  [
+   100,
+   2,
+   0,
+   76,
+   0,
+   "CLIP"
+  ],
+  [
+   101,
+   15,
+   0,
+   77,
+   0,
+   "IMAGE"
+  ],
+  [
+   102,
+   3,
+   0,
+   77,
+   1,
+   "VAE"
+  ],
+  [
+   103,
+   76,
+   0,
+   78,
+   0,
+   "CONDITIONING"
+  ],
+  [
+   104,
+   77,
+   0,
+   78,
+   1,
+   "LATENT"
+  ],
+  [
+   105,
+   76,
+   0,
+   79,
+   0,
+   "CONDITIONING"
+  ],
+  [
+   106,
+   1,
+   0,
+   82,
+   0,
+   "MODEL"
+  ],
+  [
+   107,
+   78,
+   0,
+   82,
+   1,
+   "CONDITIONING"
+  ],
+  [
+   108,
+   79,
+   0,
+   82,
+   2,
+   "CONDITIONING"
+  ],
+  [
+   109,
+   84,
+   0,
+   85,
+   0,
+   "NOISE"
+  ],
+  [
+   110,
+   82,
+   0,
+   85,
+   1,
+   "GUIDER"
+  ],
+  [
+   111,
+   83,
+   0,
+   85,
+   2,
+   "SAMPLER"
+  ],
+  [
+   112,
+   81,
+   0,
+   85,
+   3,
+   "SIGMAS"
+  ],
+  [
+   113,
+   80,
+   0,
+   85,
+   4,
+   "LATENT"
+  ],
+  [
+   114,
+   85,
+   0,
+   86,
+   0,
+   "LATENT"
+  ],
+  [
+   115,
+   3,
+   0,
+   86,
+   1,
+   "VAE"
+  ],
+  [
+   116,
+   86,
+   0,
+   87,
+   0,
+   "IMAGE"
+  ]
+ ],
+ "groups": [
+  {
+   "id": 1,
+   "title": "1 · Models",
+   "bounding": [
+    0,
+    50,
+    440,
+    804
+   ],
+   "color": "#3f789e",
+   "font_size": 24,
+   "flags": {}
+  },
+  {
+   "id": 2,
+   "title": "2 · Character sheet",
+   "bounding": [
+    510,
+    50,
+    1260,
+    1370
+   ],
+   "color": "#8a6d3b",
+   "font_size": 24,
+   "flags": {}
+  },
+  {
+   "id": 3,
+   "title": "3 · Scene 1: station",
+   "bounding": [
+    1840,
+    50,
+    1260,
+    1370
+   ],
+   "color": "#4b7f52",
+   "font_size": 24,
+   "flags": {}
+  },
+  {
+   "id": 4,
+   "title": "4 · Scene 2: rainforest",
+   "bounding": [
+    3170,
+    50,
+    1260,
+    1370
+   ],
+   "color": "#7d4b8a",
+   "font_size": 24,
+   "flags": {}
+  },
+  {
+   "id": 5,
+   "title": "5 · Scene 3: temple",
+   "bounding": [
+    4500,
+    50,
+    1260,
+    1370
+   ],
+   "color": "#a1544f",
+   "font_size": 24,
+   "flags": {}
+  },
+  {
+   "id": 6,
+   "title": "6 · Scene 4: mountain",
+   "bounding": [
+    5830,
+    50,
+    1260,
+    1370
+   ],
+   "color": "#4f7d8a",
+   "font_size": 24,
+   "flags": {}
+  },
+  {
+   "id": 7,
+   "title": "7 · Scene 5: city",
+   "bounding": [
+    7160,
+    50,
+    1260,
+    1370
+   ],
+   "color": "#6b6b3b",
+   "font_size": 24,
+   "flags": {}
+  },
+  {
+   "id": 8,
+   "title": "8 · Scene 6: ocean",
+   "bounding": [
+    8490,
+    50,
+    1260,
+    1370
+   ],
+   "color": "#5a5a8a",
+   "font_size": 24,
+   "flags": {}
+  }
+ ],
+ "config": {},
+ "extra": {
+  "ds": {
+   "scale": 0.6,
+   "offset": [
+    40,
+    40
+   ]
+  },
+  "info": {
+   "name": "P05 Consistent character in six scenes (Maya)",
+   "author": "Matthew Flake",
+   "description": "Companion workflow for the book 'From Noise to Income' — P05.",
+   "license": "MIT (workflow file). Model files keep their own licenses — see README."
+  }
+ },
+ "version": 0.4
+}

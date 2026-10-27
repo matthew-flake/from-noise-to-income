@@ -1,0 +1,255 @@
+{
+ "1": {
+  "class_type": "UNETLoader",
+  "inputs": {
+   "unet_name": "z_image_turbo_bf16.safetensors",
+   "weight_dtype": "fp8_e4m3fn"
+  },
+  "_meta": {
+   "title": "Load Z-Image-Turbo"
+  }
+ },
+ "2": {
+  "class_type": "CLIPLoader",
+  "inputs": {
+   "clip_name": "qwen_3_4b.safetensors",
+   "type": "lumina2",
+   "device": "default"
+  },
+  "_meta": {
+   "title": "Load text encoder (Qwen3-4B)"
+  }
+ },
+ "3": {
+  "class_type": "VAELoader",
+  "inputs": {
+   "vae_name": "ae.safetensors"
+  },
+  "_meta": {
+   "title": "Load VAE"
+  }
+ },
+ "4": {
+  "class_type": "ModelSamplingAuraFlow",
+  "inputs": {
+   "model": [
+    "1",
+    0
+   ],
+   "shift": 3.0
+  },
+  "_meta": {
+   "title": "Model sampling (shift 3)"
+  }
+ },
+ "7": {
+  "class_type": "CLIPTextEncode",
+  "inputs": {
+   "text": "watercolor clipart of a single lemon slice with two green leaves, hand-painted, soft edges, vibrant yellow, isolated on plain white background, centered, no shadow, no text",
+   "clip": [
+    "2",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Prompt"
+  }
+ },
+ "8": {
+  "class_type": "ConditioningZeroOut",
+  "inputs": {
+   "conditioning": [
+    "7",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Negative (empty)"
+  }
+ },
+ "9": {
+  "class_type": "EmptySD3LatentImage",
+  "inputs": {
+   "width": 1024,
+   "height": 1024,
+   "batch_size": 1
+  },
+  "_meta": {
+   "title": "Canvas 1024×1024"
+  }
+ },
+ "10": {
+  "class_type": "KSampler",
+  "inputs": {
+   "model": [
+    "4",
+    0
+   ],
+   "seed": 18018,
+   "steps": 8,
+   "cfg": 1.0,
+   "sampler_name": "res_multistep",
+   "scheduler": "simple",
+   "positive": [
+    "7",
+    0
+   ],
+   "negative": [
+    "8",
+    0
+   ],
+   "latent_image": [
+    "9",
+    0
+   ],
+   "denoise": 1.0
+  },
+  "_meta": {
+   "title": "Sampler"
+  }
+ },
+ "11": {
+  "class_type": "VAEDecode",
+  "inputs": {
+   "samples": [
+    "10",
+    0
+   ],
+   "vae": [
+    "3",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Decode"
+  }
+ },
+ "12": {
+  "class_type": "BiRefNetRMBG",
+  "inputs": {
+   "image": [
+    "11",
+    0
+   ],
+   "model": "BiRefNet-general",
+   "sensitivity": 1.0,
+   "mask_blur": 0,
+   "mask_offset": 0,
+   "invert_output": false,
+   "refine_foreground": true,
+   "unload_model": false,
+   "background": "Alpha",
+   "background_color": "#222222"
+  },
+  "_meta": {
+   "title": "Remove background (BiRefNet)"
+  }
+ },
+ "13": {
+  "class_type": "UpscaleModelLoader",
+  "inputs": {
+   "model_name": "4x_NMKD-Siax_200k.pth"
+  },
+  "_meta": {
+   "title": "Load upscaler"
+  }
+ },
+ "14": {
+  "class_type": "ImageUpscaleWithModel",
+  "inputs": {
+   "upscale_model": [
+    "13",
+    0
+   ],
+   "image": [
+    "11",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Upscale ×4"
+  }
+ },
+ "15": {
+  "class_type": "MaskToImage",
+  "inputs": {
+   "mask": [
+    "12",
+    1
+   ]
+  },
+  "_meta": {
+   "title": "Mask → image"
+  }
+ },
+ "16": {
+  "class_type": "ImageScale",
+  "inputs": {
+   "image": [
+    "15",
+    0
+   ],
+   "upscale_method": "bilinear",
+   "width": 4096,
+   "height": 4096,
+   "crop": "disabled"
+  },
+  "_meta": {
+   "title": "Mask to 4096 px"
+  }
+ },
+ "17": {
+  "class_type": "ImageToMask",
+  "inputs": {
+   "image": [
+    "16",
+    0
+   ],
+   "channel": "red"
+  },
+  "_meta": {
+   "title": "Image → mask"
+  }
+ },
+ "18": {
+  "class_type": "InvertMask",
+  "inputs": {
+   "mask": [
+    "17",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Invert (alpha convention)"
+  }
+ },
+ "19": {
+  "class_type": "JoinImageWithAlpha",
+  "inputs": {
+   "image": [
+    "14",
+    0
+   ],
+   "alpha": [
+    "18",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "4096 px with transparency"
+  }
+ },
+ "20": {
+  "class_type": "SaveImage",
+  "inputs": {
+   "images": [
+    "19",
+    0
+   ],
+   "filename_prefix": "book/P18_etsy_clipart/lemon_slice"
+  },
+  "_meta": {
+   "title": "Save PNG (RGBA)"
+  }
+ }
+}

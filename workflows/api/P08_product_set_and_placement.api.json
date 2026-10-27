@@ -1,0 +1,427 @@
+{
+ "1": {
+  "class_type": "UNETLoader",
+  "inputs": {
+   "unet_name": "flux-2-klein-4b-fp8.safetensors",
+   "weight_dtype": "default"
+  },
+  "_meta": {
+   "title": "Load FLUX.2 [klein] 4B"
+  }
+ },
+ "2": {
+  "class_type": "CLIPLoader",
+  "inputs": {
+   "clip_name": "qwen_3_4b.safetensors",
+   "type": "flux2",
+   "device": "default"
+  },
+  "_meta": {
+   "title": "Load text encoder (Qwen3-4B)"
+  }
+ },
+ "3": {
+  "class_type": "VAELoader",
+  "inputs": {
+   "vae_name": "flux2-vae.safetensors"
+  },
+  "_meta": {
+   "title": "Load FLUX.2 VAE"
+  }
+ },
+ "5": {
+  "class_type": "CLIPTextEncode",
+  "inputs": {
+   "text": "Create an original photorealistic luxury product photography environment. A beautifully sculpted natural travertine stone podium occupies the central foreground. Elegant Mediterranean-inspired architectural surfaces, warm limestone walls, soft ivory plaster, delicate olive branches, natural stone textures. Beautiful late-afternoon sunlight enters from the upper-left side, creating gentle architectural shadows. Warm beige, ivory, sandstone, and muted olive color palette. Professional commercial photography, realistic surface imperfections, subtle depth of field, excellent shadow consistency. Sophisticated minimalist art direction suitable for skincare, fragrance, jewelry, or premium lifestyle products. The central podium must remain completely empty and clearly visible for future product compositing. No bottles, no products, no people, no furniture, no typography, no logos. Original environment and architectural arrangement. Portrait orientation, 4:5.",
+   "clip": [
+    "2",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Instruction (set)"
+  }
+ },
+ "6": {
+  "class_type": "ConditioningZeroOut",
+  "inputs": {
+   "conditioning": [
+    "5",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Negative (empty) (set)"
+  }
+ },
+ "7": {
+  "class_type": "EmptyFlux2LatentImage",
+  "inputs": {
+   "width": 896,
+   "height": 1120,
+   "batch_size": 1
+  },
+  "_meta": {
+   "title": "Canvas (set)"
+  }
+ },
+ "8": {
+  "class_type": "Flux2Scheduler",
+  "inputs": {
+   "steps": 4,
+   "width": 896,
+   "height": 1120
+  },
+  "_meta": {
+   "title": "Scheduler (4 steps) (set)"
+  }
+ },
+ "9": {
+  "class_type": "CFGGuider",
+  "inputs": {
+   "model": [
+    "1",
+    0
+   ],
+   "positive": [
+    "5",
+    0
+   ],
+   "negative": [
+    "6",
+    0
+   ],
+   "cfg": 1.0
+  },
+  "_meta": {
+   "title": "Guider (cfg 1) (set)"
+  }
+ },
+ "10": {
+  "class_type": "KSamplerSelect",
+  "inputs": {
+   "sampler_name": "euler"
+  },
+  "_meta": {
+   "title": "Sampler type (set)"
+  }
+ },
+ "11": {
+  "class_type": "RandomNoise",
+  "inputs": {
+   "noise_seed": 8801
+  },
+  "_meta": {
+   "title": "Seed (set)"
+  }
+ },
+ "12": {
+  "class_type": "SamplerCustomAdvanced",
+  "inputs": {
+   "noise": [
+    "11",
+    0
+   ],
+   "guider": [
+    "9",
+    0
+   ],
+   "sampler": [
+    "10",
+    0
+   ],
+   "sigmas": [
+    "8",
+    0
+   ],
+   "latent_image": [
+    "7",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Sample (set)"
+  }
+ },
+ "13": {
+  "class_type": "VAEDecode",
+  "inputs": {
+   "samples": [
+    "12",
+    0
+   ],
+   "vae": [
+    "3",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Decode (set)"
+  }
+ },
+ "14": {
+  "class_type": "SaveImage",
+  "inputs": {
+   "images": [
+    "13",
+    0
+   ],
+   "filename_prefix": "book/P08_set/empty_set"
+  },
+  "_meta": {
+   "title": "Save empty set"
+  }
+ },
+ "16": {
+  "class_type": "LoadImage",
+  "inputs": {
+   "image": "product.png"
+  },
+  "_meta": {
+   "title": "Product photo"
+  }
+ },
+ "17": {
+  "class_type": "ImageScaleToTotalPixels",
+  "inputs": {
+   "image": [
+    "16",
+    0
+   ],
+   "upscale_method": "lanczos",
+   "megapixels": 1.0,
+   "resolution_steps": 16
+  },
+  "_meta": {
+   "title": "Scale to ~1.0 MP"
+  }
+ },
+ "18": {
+  "class_type": "BiRefNetRMBG",
+  "inputs": {
+   "image": [
+    "17",
+    0
+   ],
+   "model": "BiRefNet-general",
+   "sensitivity": 1.0,
+   "mask_blur": 0,
+   "mask_offset": 0,
+   "invert_output": false,
+   "refine_foreground": true,
+   "unload_model": false,
+   "background": "Color",
+   "background_color": "#FFFFFF"
+  },
+  "_meta": {
+   "title": "Cut out on white"
+  }
+ },
+ "19": {
+  "class_type": "CLIPTextEncode",
+  "inputs": {
+   "text": "Place the product from the second reference image standing in the center of the empty travertine podium in the first reference image. Keep the scene, architecture, sunlight direction and colors of the first image. Keep the product exactly as it is: same shape, material, color and markings. Add a natural contact shadow consistent with the late-afternoon light from the upper left. Professional product photography.",
+   "clip": [
+    "2",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Instruction (place)"
+  }
+ },
+ "20": {
+  "class_type": "VAEEncode",
+  "inputs": {
+   "pixels": [
+    "13",
+    0
+   ],
+   "vae": [
+    "3",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Encode reference 1 (place)"
+  }
+ },
+ "21": {
+  "class_type": "ReferenceLatent",
+  "inputs": {
+   "conditioning": [
+    "19",
+    0
+   ],
+   "latent": [
+    "20",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Set Reference Latent 1 (place)"
+  }
+ },
+ "22": {
+  "class_type": "VAEEncode",
+  "inputs": {
+   "pixels": [
+    "18",
+    0
+   ],
+   "vae": [
+    "3",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Encode reference 2 (place)"
+  }
+ },
+ "23": {
+  "class_type": "ReferenceLatent",
+  "inputs": {
+   "conditioning": [
+    "21",
+    0
+   ],
+   "latent": [
+    "22",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Set Reference Latent 2 (place)"
+  }
+ },
+ "24": {
+  "class_type": "ConditioningZeroOut",
+  "inputs": {
+   "conditioning": [
+    "19",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Negative (empty) (place)"
+  }
+ },
+ "25": {
+  "class_type": "EmptyFlux2LatentImage",
+  "inputs": {
+   "width": 896,
+   "height": 1120,
+   "batch_size": 1
+  },
+  "_meta": {
+   "title": "Canvas (place)"
+  }
+ },
+ "26": {
+  "class_type": "Flux2Scheduler",
+  "inputs": {
+   "steps": 4,
+   "width": 896,
+   "height": 1120
+  },
+  "_meta": {
+   "title": "Scheduler (4 steps) (place)"
+  }
+ },
+ "27": {
+  "class_type": "CFGGuider",
+  "inputs": {
+   "model": [
+    "1",
+    0
+   ],
+   "positive": [
+    "23",
+    0
+   ],
+   "negative": [
+    "24",
+    0
+   ],
+   "cfg": 1.0
+  },
+  "_meta": {
+   "title": "Guider (cfg 1) (place)"
+  }
+ },
+ "28": {
+  "class_type": "KSamplerSelect",
+  "inputs": {
+   "sampler_name": "euler"
+  },
+  "_meta": {
+   "title": "Sampler type (place)"
+  }
+ },
+ "29": {
+  "class_type": "RandomNoise",
+  "inputs": {
+   "noise_seed": 8802
+  },
+  "_meta": {
+   "title": "Seed (place)"
+  }
+ },
+ "30": {
+  "class_type": "SamplerCustomAdvanced",
+  "inputs": {
+   "noise": [
+    "29",
+    0
+   ],
+   "guider": [
+    "27",
+    0
+   ],
+   "sampler": [
+    "28",
+    0
+   ],
+   "sigmas": [
+    "26",
+    0
+   ],
+   "latent_image": [
+    "25",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Sample (place)"
+  }
+ },
+ "31": {
+  "class_type": "VAEDecode",
+  "inputs": {
+   "samples": [
+    "30",
+    0
+   ],
+   "vae": [
+    "3",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Decode (place)"
+  }
+ },
+ "32": {
+  "class_type": "SaveImage",
+  "inputs": {
+   "images": [
+    "31",
+    0
+   ],
+   "filename_prefix": "book/P08_set/product_on_set"
+  },
+  "_meta": {
+   "title": "Save product shot"
+  }
+ }
+}

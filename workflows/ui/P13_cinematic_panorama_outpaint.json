@@ -1,0 +1,1292 @@
+{
+ "id": "6bba9321-8191-5e60-beb3-1d27ac26529d",
+ "revision": 0,
+ "last_node_id": 25,
+ "last_link_id": 26,
+ "nodes": [
+  {
+   "id": 1,
+   "type": "UNETLoader",
+   "pos": [
+    30,
+    100
+   ],
+   "size": [
+    340,
+    118
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "MODEL",
+     "type": "MODEL",
+     "links": [
+      14
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Load FLUX.2 [klein] 4B",
+   "properties": {
+    "Node name for S&R": "UNETLoader",
+    "models": [
+     {
+      "name": "flux-2-klein-4b-fp8.safetensors",
+      "url": "https://huggingface.co/black-forest-labs/FLUX.2-klein-4b-fp8/resolve/main/flux-2-klein-4b-fp8.safetensors",
+      "directory": "diffusion_models"
+     }
+    ]
+   },
+   "widgets_values": [
+    "flux-2-klein-4b-fp8.safetensors",
+    "default"
+   ]
+  },
+  {
+   "id": 2,
+   "type": "CLIPLoader",
+   "pos": [
+    30,
+    268
+   ],
+   "size": [
+    340,
+    142
+   ],
+   "flags": {},
+   "order": 1,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "CLIP",
+     "type": "CLIP",
+     "links": [
+      8
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Load text encoder (Qwen3-4B)",
+   "properties": {
+    "Node name for S&R": "CLIPLoader",
+    "models": [
+     {
+      "name": "qwen_3_4b.safetensors",
+      "url": "https://huggingface.co/Comfy-Org/z_image_turbo/resolve/main/split_files/text_encoders/qwen_3_4b.safetensors",
+      "directory": "text_encoders"
+     }
+    ]
+   },
+   "widgets_values": [
+    "qwen_3_4b.safetensors",
+    "flux2",
+    "default"
+   ]
+  },
+  {
+   "id": 3,
+   "type": "VAELoader",
+   "pos": [
+    30,
+    460
+   ],
+   "size": [
+    340,
+    94
+   ],
+   "flags": {},
+   "order": 2,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "VAE",
+     "type": "VAE",
+     "links": [
+      10,
+      23
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Load FLUX.2 VAE",
+   "properties": {
+    "Node name for S&R": "VAELoader",
+    "models": [
+     {
+      "name": "flux2-vae.safetensors",
+      "url": "https://huggingface.co/Comfy-Org/flux2-klein-4B/resolve/main/split_files/vae/flux2-vae.safetensors",
+      "directory": "vae"
+     }
+    ]
+   },
+   "widgets_values": [
+    "flux2-vae.safetensors"
+   ]
+  },
+  {
+   "id": 4,
+   "type": "Note",
+   "pos": [
+    30,
+    604
+   ],
+   "size": [
+    380,
+    183
+   ],
+   "flags": {},
+   "order": 3,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [],
+   "title": "Licenses",
+   "properties": {},
+   "widgets_values": [
+    "MODELS (license category A — commercial use OK, checked Oct 2026):\n• FLUX.2 [klein] 4B — Apache 2.0 (Black Forest Labs). NOT the 9B or [dev] — those are non-commercial!\n• Qwen3-4B text encoder — Apache 2.0\n• FLUX.2 VAE — Apache 2.0\n• LaMa - Apache 2.0 (optional defect removal)."
+   ],
+   "color": "#432",
+   "bgcolor": "#653"
+  },
+  {
+   "id": 5,
+   "type": "Note",
+   "pos": [
+    540,
+    100
+   ],
+   "size": [
+    380,
+    81
+   ],
+   "flags": {},
+   "order": 4,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [],
+   "title": "Repair",
+   "properties": {},
+   "widgets_values": [
+    "Optional: paint small defects in the Mask Editor of Load Image - LaMa removes them. Empty mask = no change."
+   ],
+   "color": "#432",
+   "bgcolor": "#653"
+  },
+  {
+   "id": 6,
+   "type": "LoadImage",
+   "pos": [
+    540,
+    231
+   ],
+   "size": [
+    340,
+    360
+   ],
+   "flags": {},
+   "order": 5,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      1
+     ],
+     "slot_index": 0
+    },
+    {
+     "name": "MASK",
+     "type": "MASK",
+     "links": [
+      2
+     ],
+     "slot_index": 1
+    }
+   ],
+   "title": "Landscape photo (16:9)",
+   "properties": {
+    "Node name for S&R": "LoadImage"
+   },
+   "widgets_values": [
+    "landscape.png",
+    "image"
+   ]
+  },
+  {
+   "id": 7,
+   "type": "ImageScale",
+   "pos": [
+    540,
+    641
+   ],
+   "size": [
+    340,
+    190
+   ],
+   "flags": {},
+   "order": 6,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "image",
+     "type": "IMAGE",
+     "link": 1
+    }
+   ],
+   "outputs": [
+    {
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      5
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Normalise to 1344×768",
+   "properties": {
+    "Node name for S&R": "ImageScale"
+   },
+   "widgets_values": [
+    "lanczos",
+    1344,
+    768,
+    "center"
+   ]
+  },
+  {
+   "id": 8,
+   "type": "MaskToImage",
+   "pos": [
+    960,
+    100
+   ],
+   "size": [
+    340,
+    94
+   ],
+   "flags": {},
+   "order": 7,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "mask",
+     "type": "MASK",
+     "link": 2
+    }
+   ],
+   "outputs": [
+    {
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      3
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Painted mask → image",
+   "properties": {
+    "Node name for S&R": "MaskToImage"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 9,
+   "type": "ImageScale",
+   "pos": [
+    960,
+    244
+   ],
+   "size": [
+    340,
+    190
+   ],
+   "flags": {},
+   "order": 8,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "image",
+     "type": "IMAGE",
+     "link": 3
+    }
+   ],
+   "outputs": [
+    {
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      4
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Mask to 1344×768",
+   "properties": {
+    "Node name for S&R": "ImageScale"
+   },
+   "widgets_values": [
+    "bilinear",
+    1344,
+    768,
+    "center"
+   ]
+  },
+  {
+   "id": 10,
+   "type": "ImageToMask",
+   "pos": [
+    960,
+    484
+   ],
+   "size": [
+    340,
+    118
+   ],
+   "flags": {},
+   "order": 9,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "image",
+     "type": "IMAGE",
+     "link": 4
+    }
+   ],
+   "outputs": [
+    {
+     "name": "MASK",
+     "type": "MASK",
+     "links": [
+      6
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Image → mask",
+   "properties": {
+    "Node name for S&R": "ImageToMask"
+   },
+   "widgets_values": [
+    "red"
+   ]
+  },
+  {
+   "id": 11,
+   "type": "AILab_LamaRemover",
+   "pos": [
+    1340,
+    100
+   ],
+   "size": [
+    340,
+    190
+   ],
+   "flags": {},
+   "order": 10,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "images",
+     "type": "IMAGE",
+     "link": 5
+    },
+    {
+     "name": "masks",
+     "type": "MASK",
+     "link": 6
+    }
+   ],
+   "outputs": [
+    {
+     "name": "images",
+     "type": "IMAGE",
+     "links": [
+      7,
+      25
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Remove painted defects (LaMa)",
+   "properties": {
+    "Node name for S&R": "AILab_LamaRemover"
+   },
+   "widgets_values": [
+    230,
+    8,
+    true
+   ]
+  },
+  {
+   "id": 12,
+   "type": "ImagePadForOutpaint",
+   "pos": [
+    1810,
+    100
+   ],
+   "size": [
+    340,
+    238
+   ],
+   "flags": {},
+   "order": 11,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "image",
+     "type": "IMAGE",
+     "link": 7
+    }
+   ],
+   "outputs": [
+    {
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      9
+     ],
+     "slot_index": 0
+    },
+    {
+     "name": "MASK",
+     "type": "MASK",
+     "links": [],
+     "slot_index": 1
+    }
+   ],
+   "title": "Add 224 px left & right",
+   "properties": {
+    "Node name for S&R": "ImagePadForOutpaint"
+   },
+   "widgets_values": [
+    224,
+    0,
+    224,
+    0,
+    0
+   ]
+  },
+  {
+   "id": 13,
+   "type": "CLIPTextEncode",
+   "pos": [
+    2190,
+    100
+   ],
+   "size": [
+    420,
+    220
+   ],
+   "flags": {},
+   "order": 12,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "clip",
+     "type": "CLIP",
+     "link": 8
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      11,
+      13
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Instruction",
+   "properties": {
+    "Node name for S&R": "CLIPTextEncode"
+   },
+   "widgets_values": [
+    "Extend the supplied original landscape image into a breathtaking ultra-wide cinematic panorama. Fill the plain grey areas on the left and right. Continue the visible landscape naturally beyond the existing image boundaries: majestic rugged alpine mountain peaks, a pristine turquoise glacial lake, subtle morning mist, natural vegetation, atmospheric perspective. Beautiful golden sunrise illuminating the mountain slopes with warm directional light. Highly realistic geological formations, natural reflections in the lake, subtle clouds. Match the original image's horizon line, perspective, camera position, lens characteristics, color temperature, lighting direction, and photographic grain. Create seamless visual transitions between the existing image and newly generated areas. Preserve the original image content in the middle without alteration. Professional landscape photography, natural color grading. Do not introduce recognizable buildings, people, text, logos, or artificial landmarks."
+   ]
+  },
+  {
+   "id": 14,
+   "type": "VAEEncode",
+   "pos": [
+    2190,
+    370
+   ],
+   "size": [
+    340,
+    118
+   ],
+   "flags": {},
+   "order": 13,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "pixels",
+     "type": "IMAGE",
+     "link": 9
+    },
+    {
+     "name": "vae",
+     "type": "VAE",
+     "link": 10
+    }
+   ],
+   "outputs": [
+    {
+     "name": "LATENT",
+     "type": "LATENT",
+     "links": [
+      12
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Encode reference 1",
+   "properties": {
+    "Node name for S&R": "VAEEncode"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 15,
+   "type": "ReferenceLatent",
+   "pos": [
+    2190,
+    538
+   ],
+   "size": [
+    340,
+    118
+   ],
+   "flags": {},
+   "order": 14,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "conditioning",
+     "type": "CONDITIONING",
+     "link": 11
+    },
+    {
+     "name": "latent",
+     "type": "LATENT",
+     "link": 12
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      15
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Set Reference Latent 1",
+   "properties": {
+    "Node name for S&R": "ReferenceLatent"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 16,
+   "type": "ConditioningZeroOut",
+   "pos": [
+    2190,
+    706
+   ],
+   "size": [
+    340,
+    94
+   ],
+   "flags": {},
+   "order": 15,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "conditioning",
+     "type": "CONDITIONING",
+     "link": 13
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      16
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Negative (empty)",
+   "properties": {
+    "Node name for S&R": "ConditioningZeroOut"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 17,
+   "type": "EmptyFlux2LatentImage",
+   "pos": [
+    2650,
+    100
+   ],
+   "size": [
+    340,
+    142
+   ],
+   "flags": {},
+   "order": 16,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "LATENT",
+     "type": "LATENT",
+     "links": [
+      21
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Canvas",
+   "properties": {
+    "Node name for S&R": "EmptyFlux2LatentImage"
+   },
+   "widgets_values": [
+    1792,
+    768,
+    1
+   ]
+  },
+  {
+   "id": 18,
+   "type": "Flux2Scheduler",
+   "pos": [
+    2650,
+    292
+   ],
+   "size": [
+    340,
+    142
+   ],
+   "flags": {},
+   "order": 17,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "SIGMAS",
+     "type": "SIGMAS",
+     "links": [
+      20
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Scheduler (4 steps)",
+   "properties": {
+    "Node name for S&R": "Flux2Scheduler"
+   },
+   "widgets_values": [
+    4,
+    1792,
+    768
+   ]
+  },
+  {
+   "id": 19,
+   "type": "CFGGuider",
+   "pos": [
+    2650,
+    484
+   ],
+   "size": [
+    340,
+    166
+   ],
+   "flags": {},
+   "order": 18,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "model",
+     "type": "MODEL",
+     "link": 14
+    },
+    {
+     "name": "positive",
+     "type": "CONDITIONING",
+     "link": 15
+    },
+    {
+     "name": "negative",
+     "type": "CONDITIONING",
+     "link": 16
+    }
+   ],
+   "outputs": [
+    {
+     "name": "GUIDER",
+     "type": "GUIDER",
+     "links": [
+      18
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Guider (cfg 1)",
+   "properties": {
+    "Node name for S&R": "CFGGuider"
+   },
+   "widgets_values": [
+    1.0
+   ]
+  },
+  {
+   "id": 20,
+   "type": "KSamplerSelect",
+   "pos": [
+    2650,
+    700
+   ],
+   "size": [
+    340,
+    94
+   ],
+   "flags": {},
+   "order": 19,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "SAMPLER",
+     "type": "SAMPLER",
+     "links": [
+      19
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Sampler type",
+   "properties": {
+    "Node name for S&R": "KSamplerSelect"
+   },
+   "widgets_values": [
+    "euler"
+   ]
+  },
+  {
+   "id": 21,
+   "type": "RandomNoise",
+   "pos": [
+    2650,
+    844
+   ],
+   "size": [
+    340,
+    94
+   ],
+   "flags": {},
+   "order": 20,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "NOISE",
+     "type": "NOISE",
+     "links": [
+      17
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Seed",
+   "properties": {
+    "Node name for S&R": "RandomNoise"
+   },
+   "widgets_values": [
+    13301,
+    "fixed"
+   ]
+  },
+  {
+   "id": 22,
+   "type": "SamplerCustomAdvanced",
+   "pos": [
+    2650,
+    988
+   ],
+   "size": [
+    340,
+    214
+   ],
+   "flags": {},
+   "order": 21,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "noise",
+     "type": "NOISE",
+     "link": 17
+    },
+    {
+     "name": "guider",
+     "type": "GUIDER",
+     "link": 18
+    },
+    {
+     "name": "sampler",
+     "type": "SAMPLER",
+     "link": 19
+    },
+    {
+     "name": "sigmas",
+     "type": "SIGMAS",
+     "link": 20
+    },
+    {
+     "name": "latent_image",
+     "type": "LATENT",
+     "link": 21
+    }
+   ],
+   "outputs": [
+    {
+     "name": "output",
+     "type": "LATENT",
+     "links": [
+      22
+     ],
+     "slot_index": 0
+    },
+    {
+     "name": "denoised_output",
+     "type": "LATENT",
+     "links": [],
+     "slot_index": 1
+    }
+   ],
+   "title": "Sample",
+   "properties": {
+    "Node name for S&R": "SamplerCustomAdvanced"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 23,
+   "type": "VAEDecode",
+   "pos": [
+    2650,
+    1252
+   ],
+   "size": [
+    340,
+    118
+   ],
+   "flags": {},
+   "order": 22,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "samples",
+     "type": "LATENT",
+     "link": 22
+    },
+    {
+     "name": "vae",
+     "type": "VAE",
+     "link": 23
+    }
+   ],
+   "outputs": [
+    {
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      24
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Decode",
+   "properties": {
+    "Node name for S&R": "VAEDecode"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 24,
+   "type": "ImageCompositeMasked",
+   "pos": [
+    3120,
+    100
+   ],
+   "size": [
+    340,
+    214
+   ],
+   "flags": {},
+   "order": 23,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "destination",
+     "type": "IMAGE",
+     "link": 24
+    },
+    {
+     "name": "source",
+     "type": "IMAGE",
+     "link": 25
+    },
+    {
+     "name": "mask",
+     "type": "MASK",
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      26
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Paste original centre back",
+   "properties": {
+    "Node name for S&R": "ImageCompositeMasked"
+   },
+   "widgets_values": [
+    224,
+    0,
+    false
+   ]
+  },
+  {
+   "id": 25,
+   "type": "SaveImage",
+   "pos": [
+    3500,
+    100
+   ],
+   "size": [
+    360,
+    380
+   ],
+   "flags": {},
+   "order": 24,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "images",
+     "type": "IMAGE",
+     "link": 26
+    }
+   ],
+   "outputs": [],
+   "title": "Save 21:9",
+   "properties": {
+    "Node name for S&R": "SaveImage"
+   },
+   "widgets_values": [
+    "book/P13_panorama/panorama_21x9"
+   ]
+  }
+ ],
+ "links": [
+  [
+   1,
+   6,
+   0,
+   7,
+   0,
+   "IMAGE"
+  ],
+  [
+   2,
+   6,
+   1,
+   8,
+   0,
+   "MASK"
+  ],
+  [
+   3,
+   8,
+   0,
+   9,
+   0,
+   "IMAGE"
+  ],
+  [
+   4,
+   9,
+   0,
+   10,
+   0,
+   "IMAGE"
+  ],
+  [
+   5,
+   7,
+   0,
+   11,
+   0,
+   "IMAGE"
+  ],
+  [
+   6,
+   10,
+   0,
+   11,
+   1,
+   "MASK"
+  ],
+  [
+   7,
+   11,
+   0,
+   12,
+   0,
+   "IMAGE"
+  ],
+  [
+   8,
+   2,
+   0,
+   13,
+   0,
+   "CLIP"
+  ],
+  [
+   9,
+   12,
+   0,
+   14,
+   0,
+   "IMAGE"
+  ],
+  [
+   10,
+   3,
+   0,
+   14,
+   1,
+   "VAE"
+  ],
+  [
+   11,
+   13,
+   0,
+   15,
+   0,
+   "CONDITIONING"
+  ],
+  [
+   12,
+   14,
+   0,
+   15,
+   1,
+   "LATENT"
+  ],
+  [
+   13,
+   13,
+   0,
+   16,
+   0,
+   "CONDITIONING"
+  ],
+  [
+   14,
+   1,
+   0,
+   19,
+   0,
+   "MODEL"
+  ],
+  [
+   15,
+   15,
+   0,
+   19,
+   1,
+   "CONDITIONING"
+  ],
+  [
+   16,
+   16,
+   0,
+   19,
+   2,
+   "CONDITIONING"
+  ],
+  [
+   17,
+   21,
+   0,
+   22,
+   0,
+   "NOISE"
+  ],
+  [
+   18,
+   19,
+   0,
+   22,
+   1,
+   "GUIDER"
+  ],
+  [
+   19,
+   20,
+   0,
+   22,
+   2,
+   "SAMPLER"
+  ],
+  [
+   20,
+   18,
+   0,
+   22,
+   3,
+   "SIGMAS"
+  ],
+  [
+   21,
+   17,
+   0,
+   22,
+   4,
+   "LATENT"
+  ],
+  [
+   22,
+   22,
+   0,
+   23,
+   0,
+   "LATENT"
+  ],
+  [
+   23,
+   3,
+   0,
+   23,
+   1,
+   "VAE"
+  ],
+  [
+   24,
+   23,
+   0,
+   24,
+   0,
+   "IMAGE"
+  ],
+  [
+   25,
+   11,
+   0,
+   24,
+   1,
+   "IMAGE"
+  ],
+  [
+   26,
+   24,
+   0,
+   25,
+   0,
+   "IMAGE"
+  ]
+ ],
+ "groups": [
+  {
+   "id": 1,
+   "title": "1 · Models",
+   "bounding": [
+    0,
+    50,
+    440,
+    787
+   ],
+   "color": "#3f789e",
+   "font_size": 24,
+   "flags": {}
+  },
+  {
+   "id": 2,
+   "title": "2 · Photo & repair",
+   "bounding": [
+    510,
+    50,
+    1200,
+    831
+   ],
+   "color": "#8a6d3b",
+   "font_size": 24,
+   "flags": {}
+  },
+  {
+   "id": 3,
+   "title": "3 · Extend to 21:9",
+   "bounding": [
+    1780,
+    50,
+    1240,
+    1370
+   ],
+   "color": "#4b7f52",
+   "font_size": 24,
+   "flags": {}
+  },
+  {
+   "id": 4,
+   "title": "4 · Keep the original centre + upscale",
+   "bounding": [
+    3090,
+    50,
+    800,
+    480
+   ],
+   "color": "#7d4b8a",
+   "font_size": 24,
+   "flags": {}
+  }
+ ],
+ "config": {},
+ "extra": {
+  "ds": {
+   "scale": 0.6,
+   "offset": [
+    40,
+    40
+   ]
+  },
+  "info": {
+   "name": "P13 Cinematic landscape outpainting (16:9 → 21:9)",
+   "author": "Matthew Flake",
+   "description": "Companion workflow for the book 'From Noise to Income' — P13.",
+   "license": "MIT (workflow file). Model files keep their own licenses — see README."
+  }
+ },
+ "version": 0.4
+}

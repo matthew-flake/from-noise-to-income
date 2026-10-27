@@ -1,0 +1,192 @@
+{
+ "1": {
+  "class_type": "UNETLoader",
+  "inputs": {
+   "unet_name": "z_image_turbo_bf16.safetensors",
+   "weight_dtype": "fp8_e4m3fn"
+  },
+  "_meta": {
+   "title": "Load Z-Image-Turbo"
+  }
+ },
+ "2": {
+  "class_type": "CLIPLoader",
+  "inputs": {
+   "clip_name": "qwen_3_4b.safetensors",
+   "type": "lumina2",
+   "device": "default"
+  },
+  "_meta": {
+   "title": "Load text encoder (Qwen3-4B)"
+  }
+ },
+ "3": {
+  "class_type": "VAELoader",
+  "inputs": {
+   "vae_name": "ae.safetensors"
+  },
+  "_meta": {
+   "title": "Load VAE"
+  }
+ },
+ "4": {
+  "class_type": "ModelSamplingAuraFlow",
+  "inputs": {
+   "model": [
+    "1",
+    0
+   ],
+   "shift": 3.0
+  },
+  "_meta": {
+   "title": "Model sampling (shift 3)"
+  }
+ },
+ "6": {
+  "class_type": "CLIPTextEncode",
+  "inputs": {
+   "text": "Create an original monumental contemporary abstract artwork suitable for an elegant modern corporate office. Flowing organic geometric shapes, sculptural plaster textures, layered mineral pigments, architectural forms, sophisticated interplay between matte and subtly reflective surfaces. Refined warm ivory, sandstone beige, soft terracotta, muted taupe, and restrained metallic champagne-gold accents. Tactile surfaces, realistic plaster relief, subtle imperfections, delicate material transitions, beautiful asymmetrical balance, controlled visual rhythm. The artwork should communicate elegance, confidence, creativity, and architectural sophistication. Museum-quality abstract fine art, carefully controlled composition, exceptional surface detail, visually striking but harmonious. Flat front-facing artwork filling the entire frame, without a surrounding room, furniture, or picture frame. Original abstract design, no recognizable existing artworks, no signatures, no typography, no logos. Landscape orientation, 3:2 aspect ratio.",
+   "clip": [
+    "2",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Prompt"
+  }
+ },
+ "7": {
+  "class_type": "ConditioningZeroOut",
+  "inputs": {
+   "conditioning": [
+    "6",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Negative (empty)"
+  }
+ },
+ "8": {
+  "class_type": "EmptySD3LatentImage",
+  "inputs": {
+   "width": 1248,
+   "height": 832,
+   "batch_size": 1
+  },
+  "_meta": {
+   "title": "Canvas 1248×832"
+  }
+ },
+ "9": {
+  "class_type": "KSampler",
+  "inputs": {
+   "model": [
+    "4",
+    0
+   ],
+   "seed": 2201,
+   "steps": 8,
+   "cfg": 1.0,
+   "sampler_name": "res_multistep",
+   "scheduler": "simple",
+   "positive": [
+    "6",
+    0
+   ],
+   "negative": [
+    "7",
+    0
+   ],
+   "latent_image": [
+    "8",
+    0
+   ],
+   "denoise": 1.0
+  },
+  "_meta": {
+   "title": "Sampler"
+  }
+ },
+ "10": {
+  "class_type": "VAEDecode",
+  "inputs": {
+   "samples": [
+    "9",
+    0
+   ],
+   "vae": [
+    "3",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Decode"
+  }
+ },
+ "11": {
+  "class_type": "SaveImage",
+  "inputs": {
+   "images": [
+    "10",
+    0
+   ],
+   "filename_prefix": "book/P02_office_art/preview"
+  },
+  "_meta": {
+   "title": "Save preview"
+  }
+ },
+ "12": {
+  "class_type": "UpscaleModelLoader",
+  "inputs": {
+   "model_name": "4x_NMKD-Siax_200k.pth"
+  },
+  "_meta": {
+   "title": "Load upscaler"
+  }
+ },
+ "13": {
+  "class_type": "ImageUpscaleWithModel",
+  "inputs": {
+   "upscale_model": [
+    "12",
+    0
+   ],
+   "image": [
+    "10",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Upscale ×4"
+  }
+ },
+ "14": {
+  "class_type": "ImageScaleBy",
+  "inputs": {
+   "image": [
+    "13",
+    0
+   ],
+   "upscale_method": "lanczos",
+   "scale_by": 2.0
+  },
+  "_meta": {
+   "title": "Resize ×2 (lanczos)"
+  }
+ },
+ "16": {
+  "class_type": "SaveImage",
+  "inputs": {
+   "images": [
+    "14",
+    0
+   ],
+   "filename_prefix": "book/P02_office_art/print_150dpi"
+  },
+  "_meta": {
+   "title": "Save large print file"
+  }
+ }
+}

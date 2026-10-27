@@ -1,0 +1,171 @@
+{
+ "1": {
+  "class_type": "UNETLoader",
+  "inputs": {
+   "unet_name": "z_image_turbo_bf16.safetensors",
+   "weight_dtype": "fp8_e4m3fn"
+  },
+  "_meta": {
+   "title": "Load Z-Image-Turbo"
+  }
+ },
+ "2": {
+  "class_type": "CLIPLoader",
+  "inputs": {
+   "clip_name": "qwen_3_4b.safetensors",
+   "type": "lumina2",
+   "device": "default"
+  },
+  "_meta": {
+   "title": "Load text encoder (Qwen3-4B)"
+  }
+ },
+ "3": {
+  "class_type": "VAELoader",
+  "inputs": {
+   "vae_name": "ae.safetensors"
+  },
+  "_meta": {
+   "title": "Load VAE"
+  }
+ },
+ "4": {
+  "class_type": "ModelSamplingAuraFlow",
+  "inputs": {
+   "model": [
+    "1",
+    0
+   ],
+   "shift": 3.0
+  },
+  "_meta": {
+   "title": "Model sampling (shift 3)"
+  }
+ },
+ "6": {
+  "class_type": "CLIPTextEncode",
+  "inputs": {
+   "text": "Create an original breathtaking futuristic renewable energy visualization for a professional corporate presentation. A luminous transparent globe floats above an interconnected sustainable energy landscape. The landscape contains realistic solar photovoltaic farms, elegant wind turbines, modular battery energy storage installations, and modern electrical infrastructure. Beautiful flowing cyan and electric-blue energy pathways visually connect the individual technologies. Deep midnight-navy environment, cinematic volumetric lighting, sophisticated reflections, atmospheric depth. The scene symbolizes intelligent electricity networks, technological innovation, energy transformation, and a sustainable future. Premium three-dimensional visualization, physically plausible materials, realistic architectural scale, exceptional lighting and composition. Place the main visual elements in the right two-thirds of the image. Leave the left third clean, empty and relatively dark. Original concept, no corporate logos, no trademarks, no technical labels. Completely text-free image: no letters, no words, no characters, no signage. Landscape orientation, 16:9.",
+   "clip": [
+    "2",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Prompt"
+  }
+ },
+ "7": {
+  "class_type": "ConditioningZeroOut",
+  "inputs": {
+   "conditioning": [
+    "6",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Negative (empty)"
+  }
+ },
+ "8": {
+  "class_type": "EmptySD3LatentImage",
+  "inputs": {
+   "width": 1344,
+   "height": 768,
+   "batch_size": 1
+  },
+  "_meta": {
+   "title": "Canvas 1344×768"
+  }
+ },
+ "9": {
+  "class_type": "KSampler",
+  "inputs": {
+   "model": [
+    "4",
+    0
+   ],
+   "seed": 10101,
+   "steps": 8,
+   "cfg": 1.0,
+   "sampler_name": "res_multistep",
+   "scheduler": "simple",
+   "positive": [
+    "6",
+    0
+   ],
+   "negative": [
+    "7",
+    0
+   ],
+   "latent_image": [
+    "8",
+    0
+   ],
+   "denoise": 1.0
+  },
+  "_meta": {
+   "title": "Sampler"
+  }
+ },
+ "10": {
+  "class_type": "VAEDecode",
+  "inputs": {
+   "samples": [
+    "9",
+    0
+   ],
+   "vae": [
+    "3",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Decode"
+  }
+ },
+ "11": {
+  "class_type": "SaveImage",
+  "inputs": {
+   "images": [
+    "10",
+    0
+   ],
+   "filename_prefix": "book/P10_slides/energy"
+  },
+  "_meta": {
+   "title": "Save clean"
+  }
+ },
+ "12": {
+  "class_type": "TextOverlay",
+  "inputs": {
+   "images": [
+    "10",
+    0
+   ],
+   "text": "THE GRID, REIMAGINED",
+   "font_size": 6.0,
+   "color": "#FFFFFF",
+   "position": "top",
+   "align": "left",
+   "outline": false
+  },
+  "_meta": {
+   "title": "Headline"
+  }
+ },
+ "13": {
+  "class_type": "SaveImage",
+  "inputs": {
+   "images": [
+    "12",
+    0
+   ],
+   "filename_prefix": "book/P10_slides/energy_title"
+  },
+  "_meta": {
+   "title": "Save slide"
+  }
+ }
+}

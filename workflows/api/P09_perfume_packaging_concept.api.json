@@ -1,0 +1,140 @@
+{
+ "1": {
+  "class_type": "UNETLoader",
+  "inputs": {
+   "unet_name": "z_image_turbo_bf16.safetensors",
+   "weight_dtype": "fp8_e4m3fn"
+  },
+  "_meta": {
+   "title": "Load Z-Image-Turbo"
+  }
+ },
+ "2": {
+  "class_type": "CLIPLoader",
+  "inputs": {
+   "clip_name": "qwen_3_4b.safetensors",
+   "type": "lumina2",
+   "device": "default"
+  },
+  "_meta": {
+   "title": "Load text encoder (Qwen3-4B)"
+  }
+ },
+ "3": {
+  "class_type": "VAELoader",
+  "inputs": {
+   "vae_name": "ae.safetensors"
+  },
+  "_meta": {
+   "title": "Load VAE"
+  }
+ },
+ "4": {
+  "class_type": "ModelSamplingAuraFlow",
+  "inputs": {
+   "model": [
+    "1",
+    0
+   ],
+   "shift": 3.0
+  },
+  "_meta": {
+   "title": "Model sampling (shift 3)"
+  }
+ },
+ "6": {
+  "class_type": "CLIPTextEncode",
+  "inputs": {
+   "text": "Create an original award-worthy luxury fragrance packaging design for a fictional premium perfume brand. A beautifully sculpted deep-emerald glass perfume bottle with a distinctive architectural silhouette. The bottle features elegant geometric proportions, luxurious transparent glass, a heavy brushed champagne-gold cap, and a plain polished gold plaque without any engraving. Beside the bottle stands a matching premium rigid presentation box decorated only with delicate original botanical embossing; the front of the box is plain and blank, with no lettering, no monogram and no printed band. The packaging communicates mystery, nature, craftsmanship, and sophisticated elegance. Dark cinematic studio environment with subtle moss, natural stone, and understated organic decorative elements. Exceptional realistic glass refraction, polished metallic highlights, physically convincing materials, professional studio lighting. Visually striking premium product presentation, carefully controlled composition, exquisite commercial art direction. Completely original bottle geometry and packaging concept, no resemblance to existing identifiable fragrance packaging, no existing brand names, no logos, no trademarks. Completely text-free image: no letters, no words, no characters, no signage. Portrait orientation, 3:4.",
+   "clip": [
+    "2",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Prompt"
+  }
+ },
+ "7": {
+  "class_type": "ConditioningZeroOut",
+  "inputs": {
+   "conditioning": [
+    "6",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Negative (empty)"
+  }
+ },
+ "8": {
+  "class_type": "EmptySD3LatentImage",
+  "inputs": {
+   "width": 864,
+   "height": 1152,
+   "batch_size": 1
+  },
+  "_meta": {
+   "title": "Canvas 864×1152"
+  }
+ },
+ "9": {
+  "class_type": "KSampler",
+  "inputs": {
+   "model": [
+    "4",
+    0
+   ],
+   "seed": 9901,
+   "steps": 8,
+   "cfg": 1.0,
+   "sampler_name": "res_multistep",
+   "scheduler": "simple",
+   "positive": [
+    "6",
+    0
+   ],
+   "negative": [
+    "7",
+    0
+   ],
+   "latent_image": [
+    "8",
+    0
+   ],
+   "denoise": 1.0
+  },
+  "_meta": {
+   "title": "Sampler"
+  }
+ },
+ "10": {
+  "class_type": "VAEDecode",
+  "inputs": {
+   "samples": [
+    "9",
+    0
+   ],
+   "vae": [
+    "3",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Decode"
+  }
+ },
+ "11": {
+  "class_type": "SaveImage",
+  "inputs": {
+   "images": [
+    "10",
+    0
+   ],
+   "filename_prefix": "book/P09_packaging/concept"
+  },
+  "_meta": {
+   "title": "Save concept"
+  }
+ }
+}

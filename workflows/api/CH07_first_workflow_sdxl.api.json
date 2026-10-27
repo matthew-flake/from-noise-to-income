@@ -1,0 +1,107 @@
+{
+ "2": {
+  "class_type": "CheckpointLoaderSimple",
+  "inputs": {
+   "ckpt_name": "sd_xl_base_1.0.safetensors"
+  },
+  "_meta": {
+   "title": "1 · Load Checkpoint"
+  }
+ },
+ "3": {
+  "class_type": "CLIPTextEncode",
+  "inputs": {
+   "text": "Create an original, exquisite botanical fine-art illustration featuring a magnolia branch. A meticulously composed botanical specimen with elegant stems, delicate flowers, organically arranged leaves, intricate natural veins, and subtle variations in botanical structure. Traditional watercolor painting combined with delicate hand-drawn ink details, translucent pigment layers, natural paper grain, sophisticated muted sage green, dusty olive, warm ivory, and subtle earthy tones. Elegant archival botanical illustration aesthetic, exceptional artistic craftsmanship, balanced vertical composition, beautiful negative space, intricate details, premium printable wall art, timeless interior decoration. Original composition, no artist signatures, no typography, no logos, no watermarks. Portrait orientation, 4:5 aspect ratio.",
+   "clip": [
+    "2",
+    1
+   ]
+  },
+  "_meta": {
+   "title": "2a · Positive prompt"
+  }
+ },
+ "4": {
+  "class_type": "CLIPTextEncode",
+  "inputs": {
+   "text": "low quality, blurry, pixelated, poorly composed, distorted proportions, malformed objects, duplicated elements, inconsistent perspective, unnatural lighting, excessive saturation, muddy colors, compression artifacts, unwanted text, watermark, signature, random letters, fake logos, recognizable trademarks, recognizable copyrighted characters, imitation of existing commercial artwork, visible image borders, unfinished details",
+   "clip": [
+    "2",
+    1
+   ]
+  },
+  "_meta": {
+   "title": "2b · Negative prompt"
+  }
+ },
+ "5": {
+  "class_type": "EmptyLatentImage",
+  "inputs": {
+   "width": 896,
+   "height": 1120,
+   "batch_size": 1
+  },
+  "_meta": {
+   "title": "3 · Empty Latent 896×1120"
+  }
+ },
+ "6": {
+  "class_type": "KSampler",
+  "inputs": {
+   "model": [
+    "2",
+    0
+   ],
+   "seed": 42,
+   "steps": 30,
+   "cfg": 6.0,
+   "sampler_name": "dpmpp_2m",
+   "scheduler": "karras",
+   "positive": [
+    "3",
+    0
+   ],
+   "negative": [
+    "4",
+    0
+   ],
+   "latent_image": [
+    "5",
+    0
+   ],
+   "denoise": 1.0
+  },
+  "_meta": {
+   "title": "4 · KSampler"
+  }
+ },
+ "7": {
+  "class_type": "VAEDecode",
+  "inputs": {
+   "samples": [
+    "6",
+    0
+   ],
+   "vae": [
+    "2",
+    2
+   ]
+  },
+  "_meta": {
+   "title": "5a · VAE Decode"
+  }
+ },
+ "8": {
+  "class_type": "SaveImage",
+  "inputs": {
+   "images": [
+    "7",
+    0
+   ],
+   "filename_prefix": "book/CH07_first/magnolia"
+  },
+  "_meta": {
+   "title": "5b · Save Image"
+  }
+ }
+}

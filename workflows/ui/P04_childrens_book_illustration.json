@@ -1,0 +1,732 @@
+{
+ "id": "c5653ce5-2732-5505-8221-fe2f5d760b33",
+ "revision": 0,
+ "last_node_id": 15,
+ "last_link_id": 13,
+ "nodes": [
+  {
+   "id": 1,
+   "type": "UNETLoader",
+   "pos": [
+    30,
+    100
+   ],
+   "size": [
+    340,
+    118
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "MODEL",
+     "type": "MODEL",
+     "links": [
+      1
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Load Z-Image-Turbo",
+   "properties": {
+    "Node name for S&R": "UNETLoader",
+    "models": [
+     {
+      "name": "z_image_turbo_bf16.safetensors",
+      "url": "https://huggingface.co/Comfy-Org/z_image_turbo/resolve/main/split_files/diffusion_models/z_image_turbo_bf16.safetensors",
+      "directory": "diffusion_models"
+     }
+    ]
+   },
+   "widgets_values": [
+    "z_image_turbo_bf16.safetensors",
+    "fp8_e4m3fn"
+   ]
+  },
+  {
+   "id": 2,
+   "type": "CLIPLoader",
+   "pos": [
+    30,
+    268
+   ],
+   "size": [
+    340,
+    142
+   ],
+   "flags": {},
+   "order": 1,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "CLIP",
+     "type": "CLIP",
+     "links": [
+      2
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Load text encoder (Qwen3-4B)",
+   "properties": {
+    "Node name for S&R": "CLIPLoader",
+    "models": [
+     {
+      "name": "qwen_3_4b.safetensors",
+      "url": "https://huggingface.co/Comfy-Org/z_image_turbo/resolve/main/split_files/text_encoders/qwen_3_4b.safetensors",
+      "directory": "text_encoders"
+     }
+    ]
+   },
+   "widgets_values": [
+    "qwen_3_4b.safetensors",
+    "lumina2",
+    "default"
+   ]
+  },
+  {
+   "id": 3,
+   "type": "VAELoader",
+   "pos": [
+    30,
+    460
+   ],
+   "size": [
+    340,
+    94
+   ],
+   "flags": {},
+   "order": 2,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "VAE",
+     "type": "VAE",
+     "links": [
+      9
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Load VAE",
+   "properties": {
+    "Node name for S&R": "VAELoader",
+    "models": [
+     {
+      "name": "ae.safetensors",
+      "url": "https://huggingface.co/Comfy-Org/z_image_turbo/resolve/main/split_files/vae/ae.safetensors",
+      "directory": "vae"
+     }
+    ]
+   },
+   "widgets_values": [
+    "ae.safetensors"
+   ]
+  },
+  {
+   "id": 4,
+   "type": "ModelSamplingAuraFlow",
+   "pos": [
+    30,
+    604
+   ],
+   "size": [
+    340,
+    118
+   ],
+   "flags": {},
+   "order": 3,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "model",
+     "type": "MODEL",
+     "link": 1
+    }
+   ],
+   "outputs": [
+    {
+     "name": "MODEL",
+     "type": "MODEL",
+     "links": [
+      4
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Model sampling (shift 3)",
+   "properties": {
+    "Node name for S&R": "ModelSamplingAuraFlow"
+   },
+   "widgets_values": [
+    3.0
+   ]
+  },
+  {
+   "id": 5,
+   "type": "Note",
+   "pos": [
+    30,
+    772
+   ],
+   "size": [
+    380,
+    217
+   ],
+   "flags": {},
+   "order": 4,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [],
+   "title": "Licenses",
+   "properties": {},
+   "widgets_values": [
+    "MODELS (license category A — commercial use OK, checked Oct 2026):\n• Z-Image-Turbo — Apache 2.0 (Tongyi-MAI)\n• Qwen3-4B text encoder — Apache 2.0\n• ae.safetensors (FLUX.1 [schnell] VAE) — Apache 2.0\n8 GB VRAM: keep weight_dtype = fp8_e4m3fn. Re-check every LICENSE before you sell.\n• 4x NMKD-Siax 200k upscaler — WTFPL (OpenModelDB). Alternative: Real-ESRGAN x4plus (BSD-3)."
+   ],
+   "color": "#432",
+   "bgcolor": "#653"
+  },
+  {
+   "id": 6,
+   "type": "Note",
+   "pos": [
+    540,
+    100
+   ],
+   "size": [
+    380,
+    115
+   ],
+   "flags": {},
+   "order": 5,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [],
+   "title": "Consistency",
+   "properties": {},
+   "widgets_values": [
+    "Keep the fox description word for word in every page prompt (amber eyes, teal hand-knitted scarf). For pages that must match a reference exactly, use the reference-image technique from P05."
+   ],
+   "color": "#432",
+   "bgcolor": "#653"
+  },
+  {
+   "id": 7,
+   "type": "CLIPTextEncode",
+   "pos": [
+    960,
+    100
+   ],
+   "size": [
+    420,
+    220
+   ],
+   "flags": {},
+   "order": 6,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "clip",
+     "type": "CLIP",
+     "link": 2
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      3,
+      5
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Prompt",
+   "properties": {
+    "Node name for S&R": "CLIPTextEncode"
+   },
+   "widgets_values": [
+    "Create an original enchanting children's picture-book illustration. A small curious red fox with bright amber eyes, soft orange fur, a fluffy tail, and a distinctive hand-knitted teal scarf discovers a magical woodland clearing. The fox stands beside enormous softly glowing mushrooms while tiny golden fireflies float through the air. Ancient trees, delicate flowers, lush moss, whimsical forest vegetation, and warm sunlight filtering gently through the leaves. Expressive character design, charming proportions, emotional storytelling, delicate watercolor washes combined with textured gouache brushwork. A harmonious palette of forest green, warm amber, muted teal, dusty peach, and soft gold. Beautifully composed illustration with gentle depth, atmospheric perspective, intricate environmental details, and a magical but comforting atmosphere. Reserve an uncluttered area in the upper-right portion for future story text. Original fictional character and environment, no existing franchise characters, no artist signatures, no typography, no logos. Landscape orientation, 16:9."
+   ]
+  },
+  {
+   "id": 8,
+   "type": "ConditioningZeroOut",
+   "pos": [
+    960,
+    370
+   ],
+   "size": [
+    340,
+    94
+   ],
+   "flags": {},
+   "order": 7,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "conditioning",
+     "type": "CONDITIONING",
+     "link": 3
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      6
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Negative (empty)",
+   "properties": {
+    "Node name for S&R": "ConditioningZeroOut"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 9,
+   "type": "EmptySD3LatentImage",
+   "pos": [
+    960,
+    514
+   ],
+   "size": [
+    340,
+    142
+   ],
+   "flags": {},
+   "order": 8,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "LATENT",
+     "type": "LATENT",
+     "links": [
+      7
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Canvas 1344×768",
+   "properties": {
+    "Node name for S&R": "EmptySD3LatentImage"
+   },
+   "widgets_values": [
+    1344,
+    768,
+    1
+   ]
+  },
+  {
+   "id": 10,
+   "type": "KSampler",
+   "pos": [
+    960,
+    706
+   ],
+   "size": [
+    340,
+    310
+   ],
+   "flags": {},
+   "order": 9,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "model",
+     "type": "MODEL",
+     "link": 4
+    },
+    {
+     "name": "positive",
+     "type": "CONDITIONING",
+     "link": 5
+    },
+    {
+     "name": "negative",
+     "type": "CONDITIONING",
+     "link": 6
+    },
+    {
+     "name": "latent_image",
+     "type": "LATENT",
+     "link": 7
+    }
+   ],
+   "outputs": [
+    {
+     "name": "LATENT",
+     "type": "LATENT",
+     "links": [
+      8
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Sampler",
+   "properties": {
+    "Node name for S&R": "KSampler"
+   },
+   "widgets_values": [
+    4401,
+    "fixed",
+    8,
+    1.0,
+    "res_multistep",
+    "simple",
+    1.0
+   ]
+  },
+  {
+   "id": 11,
+   "type": "VAEDecode",
+   "pos": [
+    960,
+    1066
+   ],
+   "size": [
+    340,
+    118
+   ],
+   "flags": {},
+   "order": 10,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "samples",
+     "type": "LATENT",
+     "link": 8
+    },
+    {
+     "name": "vae",
+     "type": "VAE",
+     "link": 9
+    }
+   ],
+   "outputs": [
+    {
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      10,
+      12
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Decode",
+   "properties": {
+    "Node name for S&R": "VAEDecode"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 12,
+   "type": "SaveImage",
+   "pos": [
+    1420,
+    100
+   ],
+   "size": [
+    360,
+    380
+   ],
+   "flags": {},
+   "order": 11,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "images",
+     "type": "IMAGE",
+     "link": 10
+    }
+   ],
+   "outputs": [],
+   "title": "Save page",
+   "properties": {
+    "Node name for S&R": "SaveImage"
+   },
+   "widgets_values": [
+    "book/P04_kidsbook/clearing"
+   ]
+  },
+  {
+   "id": 13,
+   "type": "UpscaleModelLoader",
+   "pos": [
+    1910,
+    100
+   ],
+   "size": [
+    340,
+    94
+   ],
+   "flags": {},
+   "order": 12,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "UPSCALE_MODEL",
+     "type": "UPSCALE_MODEL",
+     "links": [
+      11
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Load upscaler",
+   "properties": {
+    "Node name for S&R": "UpscaleModelLoader"
+   },
+   "widgets_values": [
+    "4x_NMKD-Siax_200k.pth"
+   ]
+  },
+  {
+   "id": 14,
+   "type": "ImageUpscaleWithModel",
+   "pos": [
+    1910,
+    244
+   ],
+   "size": [
+    340,
+    118
+   ],
+   "flags": {},
+   "order": 13,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "upscale_model",
+     "type": "UPSCALE_MODEL",
+     "link": 11
+    },
+    {
+     "name": "image",
+     "type": "IMAGE",
+     "link": 12
+    }
+   ],
+   "outputs": [
+    {
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      13
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Upscale ×4",
+   "properties": {
+    "Node name for S&R": "ImageUpscaleWithModel"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 15,
+   "type": "SaveImage",
+   "pos": [
+    2290,
+    100
+   ],
+   "size": [
+    360,
+    380
+   ],
+   "flags": {},
+   "order": 14,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "images",
+     "type": "IMAGE",
+     "link": 13
+    }
+   ],
+   "outputs": [],
+   "title": "Save print file (5376 × 3072)",
+   "properties": {
+    "Node name for S&R": "SaveImage"
+   },
+   "widgets_values": [
+    "book/P04_kidsbook/clearing_print"
+   ]
+  }
+ ],
+ "links": [
+  [
+   1,
+   1,
+   0,
+   4,
+   0,
+   "MODEL"
+  ],
+  [
+   2,
+   2,
+   0,
+   7,
+   0,
+   "CLIP"
+  ],
+  [
+   3,
+   7,
+   0,
+   8,
+   0,
+   "CONDITIONING"
+  ],
+  [
+   4,
+   4,
+   0,
+   10,
+   0,
+   "MODEL"
+  ],
+  [
+   5,
+   7,
+   0,
+   10,
+   1,
+   "CONDITIONING"
+  ],
+  [
+   6,
+   8,
+   0,
+   10,
+   2,
+   "CONDITIONING"
+  ],
+  [
+   7,
+   9,
+   0,
+   10,
+   3,
+   "LATENT"
+  ],
+  [
+   8,
+   10,
+   0,
+   11,
+   0,
+   "LATENT"
+  ],
+  [
+   9,
+   3,
+   0,
+   11,
+   1,
+   "VAE"
+  ],
+  [
+   10,
+   11,
+   0,
+   12,
+   0,
+   "IMAGE"
+  ],
+  [
+   11,
+   13,
+   0,
+   14,
+   0,
+   "UPSCALE_MODEL"
+  ],
+  [
+   12,
+   11,
+   0,
+   14,
+   1,
+   "IMAGE"
+  ],
+  [
+   13,
+   14,
+   0,
+   15,
+   0,
+   "IMAGE"
+  ]
+ ],
+ "groups": [
+  {
+   "id": 1,
+   "title": "1 · Models",
+   "bounding": [
+    0,
+    50,
+    440,
+    989
+   ],
+   "color": "#3f789e",
+   "font_size": 24,
+   "flags": {}
+  },
+  {
+   "id": 2,
+   "title": "2 · Illustration",
+   "bounding": [
+    510,
+    50,
+    1300,
+    1184
+   ],
+   "color": "#8a6d3b",
+   "font_size": 24,
+   "flags": {}
+  },
+  {
+   "id": 3,
+   "title": "3 · Print size",
+   "bounding": [
+    1880,
+    50,
+    800,
+    480
+   ],
+   "color": "#4b7f52",
+   "font_size": 24,
+   "flags": {}
+  }
+ ],
+ "config": {},
+ "extra": {
+  "ds": {
+   "scale": 0.6,
+   "offset": [
+    40,
+    40
+   ]
+  },
+  "info": {
+   "name": "P04 Magical children's book illustration (16:9, space for text)",
+   "author": "Matthew Flake",
+   "description": "Companion workflow for the book 'From Noise to Income' — P04.",
+   "license": "MIT (workflow file). Model files keep their own licenses — see README."
+  }
+ },
+ "version": 0.4
+}

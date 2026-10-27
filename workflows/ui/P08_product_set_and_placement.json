@@ -1,0 +1,1650 @@
+{
+ "id": "414d87ef-6945-5b48-8e05-38d6ce0b0408",
+ "revision": 0,
+ "last_node_id": 32,
+ "last_link_id": 36,
+ "nodes": [
+  {
+   "id": 1,
+   "type": "UNETLoader",
+   "pos": [
+    30,
+    100
+   ],
+   "size": [
+    340,
+    118
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "MODEL",
+     "type": "MODEL",
+     "links": [
+      3,
+      26
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Load FLUX.2 [klein] 4B",
+   "properties": {
+    "Node name for S&R": "UNETLoader",
+    "models": [
+     {
+      "name": "flux-2-klein-4b-fp8.safetensors",
+      "url": "https://huggingface.co/black-forest-labs/FLUX.2-klein-4b-fp8/resolve/main/flux-2-klein-4b-fp8.safetensors",
+      "directory": "diffusion_models"
+     }
+    ]
+   },
+   "widgets_values": [
+    "flux-2-klein-4b-fp8.safetensors",
+    "default"
+   ]
+  },
+  {
+   "id": 2,
+   "type": "CLIPLoader",
+   "pos": [
+    30,
+    268
+   ],
+   "size": [
+    340,
+    142
+   ],
+   "flags": {},
+   "order": 1,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "CLIP",
+     "type": "CLIP",
+     "links": [
+      1,
+      16
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Load text encoder (Qwen3-4B)",
+   "properties": {
+    "Node name for S&R": "CLIPLoader",
+    "models": [
+     {
+      "name": "qwen_3_4b.safetensors",
+      "url": "https://huggingface.co/Comfy-Org/z_image_turbo/resolve/main/split_files/text_encoders/qwen_3_4b.safetensors",
+      "directory": "text_encoders"
+     }
+    ]
+   },
+   "widgets_values": [
+    "qwen_3_4b.safetensors",
+    "flux2",
+    "default"
+   ]
+  },
+  {
+   "id": 3,
+   "type": "VAELoader",
+   "pos": [
+    30,
+    460
+   ],
+   "size": [
+    340,
+    94
+   ],
+   "flags": {},
+   "order": 2,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "VAE",
+     "type": "VAE",
+     "links": [
+      12,
+      18,
+      22,
+      35
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Load FLUX.2 VAE",
+   "properties": {
+    "Node name for S&R": "VAELoader",
+    "models": [
+     {
+      "name": "flux2-vae.safetensors",
+      "url": "https://huggingface.co/Comfy-Org/flux2-klein-4B/resolve/main/split_files/vae/flux2-vae.safetensors",
+      "directory": "vae"
+     }
+    ]
+   },
+   "widgets_values": [
+    "flux2-vae.safetensors"
+   ]
+  },
+  {
+   "id": 4,
+   "type": "Note",
+   "pos": [
+    30,
+    604
+   ],
+   "size": [
+    380,
+    217
+   ],
+   "flags": {},
+   "order": 3,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [],
+   "title": "Licenses",
+   "properties": {},
+   "widgets_values": [
+    "MODELS (license category A — commercial use OK, checked Oct 2026):\n• FLUX.2 [klein] 4B — Apache 2.0 (Black Forest Labs). NOT the 9B or [dev] — those are non-commercial!\n• Qwen3-4B text encoder — Apache 2.0\n• FLUX.2 VAE — Apache 2.0\n• BiRefNet-general — MIT (node pack ComfyUI-RMBG, GPL-3.0 code).\n  Do NOT switch to RMBG-2.0 — CC BY-NC (non-commercial)."
+   ],
+   "color": "#432",
+   "bgcolor": "#653"
+  },
+  {
+   "id": 5,
+   "type": "CLIPTextEncode",
+   "pos": [
+    540,
+    100
+   ],
+   "size": [
+    420,
+    220
+   ],
+   "flags": {},
+   "order": 4,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "clip",
+     "type": "CLIP",
+     "link": 1
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      2,
+      4
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Instruction (set)",
+   "properties": {
+    "Node name for S&R": "CLIPTextEncode"
+   },
+   "widgets_values": [
+    "Create an original photorealistic luxury product photography environment. A beautifully sculpted natural travertine stone podium occupies the central foreground. Elegant Mediterranean-inspired architectural surfaces, warm limestone walls, soft ivory plaster, delicate olive branches, natural stone textures. Beautiful late-afternoon sunlight enters from the upper-left side, creating gentle architectural shadows. Warm beige, ivory, sandstone, and muted olive color palette. Professional commercial photography, realistic surface imperfections, subtle depth of field, excellent shadow consistency. Sophisticated minimalist art direction suitable for skincare, fragrance, jewelry, or premium lifestyle products. The central podium must remain completely empty and clearly visible for future product compositing. No bottles, no products, no people, no furniture, no typography, no logos. Original environment and architectural arrangement. Portrait orientation, 4:5."
+   ]
+  },
+  {
+   "id": 6,
+   "type": "ConditioningZeroOut",
+   "pos": [
+    540,
+    370
+   ],
+   "size": [
+    340,
+    94
+   ],
+   "flags": {},
+   "order": 5,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "conditioning",
+     "type": "CONDITIONING",
+     "link": 2
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      5
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Negative (empty) (set)",
+   "properties": {
+    "Node name for S&R": "ConditioningZeroOut"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 7,
+   "type": "EmptyFlux2LatentImage",
+   "pos": [
+    1000,
+    100
+   ],
+   "size": [
+    340,
+    142
+   ],
+   "flags": {},
+   "order": 6,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "LATENT",
+     "type": "LATENT",
+     "links": [
+      10
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Canvas (set)",
+   "properties": {
+    "Node name for S&R": "EmptyFlux2LatentImage"
+   },
+   "widgets_values": [
+    896,
+    1120,
+    1
+   ]
+  },
+  {
+   "id": 8,
+   "type": "Flux2Scheduler",
+   "pos": [
+    1000,
+    292
+   ],
+   "size": [
+    340,
+    142
+   ],
+   "flags": {},
+   "order": 7,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "SIGMAS",
+     "type": "SIGMAS",
+     "links": [
+      9
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Scheduler (4 steps) (set)",
+   "properties": {
+    "Node name for S&R": "Flux2Scheduler"
+   },
+   "widgets_values": [
+    4,
+    896,
+    1120
+   ]
+  },
+  {
+   "id": 9,
+   "type": "CFGGuider",
+   "pos": [
+    1000,
+    484
+   ],
+   "size": [
+    340,
+    166
+   ],
+   "flags": {},
+   "order": 8,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "model",
+     "type": "MODEL",
+     "link": 3
+    },
+    {
+     "name": "positive",
+     "type": "CONDITIONING",
+     "link": 4
+    },
+    {
+     "name": "negative",
+     "type": "CONDITIONING",
+     "link": 5
+    }
+   ],
+   "outputs": [
+    {
+     "name": "GUIDER",
+     "type": "GUIDER",
+     "links": [
+      7
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Guider (cfg 1) (set)",
+   "properties": {
+    "Node name for S&R": "CFGGuider"
+   },
+   "widgets_values": [
+    1.0
+   ]
+  },
+  {
+   "id": 10,
+   "type": "KSamplerSelect",
+   "pos": [
+    1000,
+    700
+   ],
+   "size": [
+    340,
+    94
+   ],
+   "flags": {},
+   "order": 9,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "SAMPLER",
+     "type": "SAMPLER",
+     "links": [
+      8
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Sampler type (set)",
+   "properties": {
+    "Node name for S&R": "KSamplerSelect"
+   },
+   "widgets_values": [
+    "euler"
+   ]
+  },
+  {
+   "id": 11,
+   "type": "RandomNoise",
+   "pos": [
+    1000,
+    844
+   ],
+   "size": [
+    340,
+    94
+   ],
+   "flags": {},
+   "order": 10,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "NOISE",
+     "type": "NOISE",
+     "links": [
+      6
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Seed (set)",
+   "properties": {
+    "Node name for S&R": "RandomNoise"
+   },
+   "widgets_values": [
+    8801,
+    "fixed"
+   ]
+  },
+  {
+   "id": 12,
+   "type": "SamplerCustomAdvanced",
+   "pos": [
+    1000,
+    988
+   ],
+   "size": [
+    340,
+    214
+   ],
+   "flags": {},
+   "order": 11,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "noise",
+     "type": "NOISE",
+     "link": 6
+    },
+    {
+     "name": "guider",
+     "type": "GUIDER",
+     "link": 7
+    },
+    {
+     "name": "sampler",
+     "type": "SAMPLER",
+     "link": 8
+    },
+    {
+     "name": "sigmas",
+     "type": "SIGMAS",
+     "link": 9
+    },
+    {
+     "name": "latent_image",
+     "type": "LATENT",
+     "link": 10
+    }
+   ],
+   "outputs": [
+    {
+     "name": "output",
+     "type": "LATENT",
+     "links": [
+      11
+     ],
+     "slot_index": 0
+    },
+    {
+     "name": "denoised_output",
+     "type": "LATENT",
+     "links": [],
+     "slot_index": 1
+    }
+   ],
+   "title": "Sample (set)",
+   "properties": {
+    "Node name for S&R": "SamplerCustomAdvanced"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 13,
+   "type": "VAEDecode",
+   "pos": [
+    1000,
+    1252
+   ],
+   "size": [
+    340,
+    118
+   ],
+   "flags": {},
+   "order": 12,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "samples",
+     "type": "LATENT",
+     "link": 11
+    },
+    {
+     "name": "vae",
+     "type": "VAE",
+     "link": 12
+    }
+   ],
+   "outputs": [
+    {
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      13,
+      17
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Decode (set)",
+   "properties": {
+    "Node name for S&R": "VAEDecode"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 14,
+   "type": "SaveImage",
+   "pos": [
+    1380,
+    100
+   ],
+   "size": [
+    360,
+    380
+   ],
+   "flags": {},
+   "order": 13,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "images",
+     "type": "IMAGE",
+     "link": 13
+    }
+   ],
+   "outputs": [],
+   "title": "Save empty set",
+   "properties": {
+    "Node name for S&R": "SaveImage"
+   },
+   "widgets_values": [
+    "book/P08_set/empty_set"
+   ]
+  },
+  {
+   "id": 15,
+   "type": "Note",
+   "pos": [
+    1870,
+    100
+   ],
+   "size": [
+    380,
+    81
+   ],
+   "flags": {},
+   "order": 14,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [],
+   "title": "How to use",
+   "properties": {},
+   "widgets_values": [
+    "Load a product photo on a plain background. BiRefNet cuts it out so the model sees only the product."
+   ],
+   "color": "#432",
+   "bgcolor": "#653"
+  },
+  {
+   "id": 16,
+   "type": "LoadImage",
+   "pos": [
+    1870,
+    231
+   ],
+   "size": [
+    340,
+    360
+   ],
+   "flags": {},
+   "order": 15,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      14
+     ],
+     "slot_index": 0
+    },
+    {
+     "name": "MASK",
+     "type": "MASK",
+     "links": [],
+     "slot_index": 1
+    }
+   ],
+   "title": "Product photo",
+   "properties": {
+    "Node name for S&R": "LoadImage"
+   },
+   "widgets_values": [
+    "product.png",
+    "image"
+   ]
+  },
+  {
+   "id": 17,
+   "type": "ImageScaleToTotalPixels",
+   "pos": [
+    1870,
+    641
+   ],
+   "size": [
+    340,
+    166
+   ],
+   "flags": {},
+   "order": 16,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "image",
+     "type": "IMAGE",
+     "link": 14
+    }
+   ],
+   "outputs": [
+    {
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      15
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Scale to ~1.0 MP",
+   "properties": {
+    "Node name for S&R": "ImageScaleToTotalPixels"
+   },
+   "widgets_values": [
+    "lanczos",
+    1.0,
+    16
+   ]
+  },
+  {
+   "id": 18,
+   "type": "BiRefNetRMBG",
+   "pos": [
+    2290,
+    100
+   ],
+   "size": [
+    340,
+    358
+   ],
+   "flags": {},
+   "order": 17,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "image",
+     "type": "IMAGE",
+     "link": 15
+    }
+   ],
+   "outputs": [
+    {
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      21
+     ],
+     "slot_index": 0
+    },
+    {
+     "name": "MASK",
+     "type": "MASK",
+     "links": [],
+     "slot_index": 1
+    },
+    {
+     "name": "MASK_IMAGE",
+     "type": "IMAGE",
+     "links": [],
+     "slot_index": 2
+    }
+   ],
+   "title": "Cut out on white",
+   "properties": {
+    "Node name for S&R": "BiRefNetRMBG"
+   },
+   "widgets_values": [
+    "BiRefNet-general",
+    1.0,
+    0,
+    0,
+    false,
+    true,
+    false,
+    "Color",
+    "#FFFFFF"
+   ]
+  },
+  {
+   "id": 19,
+   "type": "CLIPTextEncode",
+   "pos": [
+    2760,
+    100
+   ],
+   "size": [
+    420,
+    220
+   ],
+   "flags": {},
+   "order": 18,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "clip",
+     "type": "CLIP",
+     "link": 16
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      19,
+      25
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Instruction (place)",
+   "properties": {
+    "Node name for S&R": "CLIPTextEncode"
+   },
+   "widgets_values": [
+    "Place the product from the second reference image standing in the center of the empty travertine podium in the first reference image. Keep the scene, architecture, sunlight direction and colors of the first image. Keep the product exactly as it is: same shape, material, color and markings. Add a natural contact shadow consistent with the late-afternoon light from the upper left. Professional product photography."
+   ]
+  },
+  {
+   "id": 20,
+   "type": "VAEEncode",
+   "pos": [
+    2760,
+    370
+   ],
+   "size": [
+    340,
+    118
+   ],
+   "flags": {},
+   "order": 19,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "pixels",
+     "type": "IMAGE",
+     "link": 17
+    },
+    {
+     "name": "vae",
+     "type": "VAE",
+     "link": 18
+    }
+   ],
+   "outputs": [
+    {
+     "name": "LATENT",
+     "type": "LATENT",
+     "links": [
+      20
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Encode reference 1 (place)",
+   "properties": {
+    "Node name for S&R": "VAEEncode"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 21,
+   "type": "ReferenceLatent",
+   "pos": [
+    2760,
+    538
+   ],
+   "size": [
+    340,
+    118
+   ],
+   "flags": {},
+   "order": 20,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "conditioning",
+     "type": "CONDITIONING",
+     "link": 19
+    },
+    {
+     "name": "latent",
+     "type": "LATENT",
+     "link": 20
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      23
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Set Reference Latent 1 (place)",
+   "properties": {
+    "Node name for S&R": "ReferenceLatent"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 22,
+   "type": "VAEEncode",
+   "pos": [
+    2760,
+    706
+   ],
+   "size": [
+    340,
+    118
+   ],
+   "flags": {},
+   "order": 21,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "pixels",
+     "type": "IMAGE",
+     "link": 21
+    },
+    {
+     "name": "vae",
+     "type": "VAE",
+     "link": 22
+    }
+   ],
+   "outputs": [
+    {
+     "name": "LATENT",
+     "type": "LATENT",
+     "links": [
+      24
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Encode reference 2 (place)",
+   "properties": {
+    "Node name for S&R": "VAEEncode"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 23,
+   "type": "ReferenceLatent",
+   "pos": [
+    2760,
+    874
+   ],
+   "size": [
+    340,
+    118
+   ],
+   "flags": {},
+   "order": 22,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "conditioning",
+     "type": "CONDITIONING",
+     "link": 23
+    },
+    {
+     "name": "latent",
+     "type": "LATENT",
+     "link": 24
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      27
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Set Reference Latent 2 (place)",
+   "properties": {
+    "Node name for S&R": "ReferenceLatent"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 24,
+   "type": "ConditioningZeroOut",
+   "pos": [
+    2760,
+    1042
+   ],
+   "size": [
+    340,
+    94
+   ],
+   "flags": {},
+   "order": 23,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "conditioning",
+     "type": "CONDITIONING",
+     "link": 25
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      28
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Negative (empty) (place)",
+   "properties": {
+    "Node name for S&R": "ConditioningZeroOut"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 25,
+   "type": "EmptyFlux2LatentImage",
+   "pos": [
+    3220,
+    100
+   ],
+   "size": [
+    340,
+    142
+   ],
+   "flags": {},
+   "order": 24,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "LATENT",
+     "type": "LATENT",
+     "links": [
+      33
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Canvas (place)",
+   "properties": {
+    "Node name for S&R": "EmptyFlux2LatentImage"
+   },
+   "widgets_values": [
+    896,
+    1120,
+    1
+   ]
+  },
+  {
+   "id": 26,
+   "type": "Flux2Scheduler",
+   "pos": [
+    3220,
+    292
+   ],
+   "size": [
+    340,
+    142
+   ],
+   "flags": {},
+   "order": 25,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "SIGMAS",
+     "type": "SIGMAS",
+     "links": [
+      32
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Scheduler (4 steps) (place)",
+   "properties": {
+    "Node name for S&R": "Flux2Scheduler"
+   },
+   "widgets_values": [
+    4,
+    896,
+    1120
+   ]
+  },
+  {
+   "id": 27,
+   "type": "CFGGuider",
+   "pos": [
+    3220,
+    484
+   ],
+   "size": [
+    340,
+    166
+   ],
+   "flags": {},
+   "order": 26,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "model",
+     "type": "MODEL",
+     "link": 26
+    },
+    {
+     "name": "positive",
+     "type": "CONDITIONING",
+     "link": 27
+    },
+    {
+     "name": "negative",
+     "type": "CONDITIONING",
+     "link": 28
+    }
+   ],
+   "outputs": [
+    {
+     "name": "GUIDER",
+     "type": "GUIDER",
+     "links": [
+      30
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Guider (cfg 1) (place)",
+   "properties": {
+    "Node name for S&R": "CFGGuider"
+   },
+   "widgets_values": [
+    1.0
+   ]
+  },
+  {
+   "id": 28,
+   "type": "KSamplerSelect",
+   "pos": [
+    3220,
+    700
+   ],
+   "size": [
+    340,
+    94
+   ],
+   "flags": {},
+   "order": 27,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "SAMPLER",
+     "type": "SAMPLER",
+     "links": [
+      31
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Sampler type (place)",
+   "properties": {
+    "Node name for S&R": "KSamplerSelect"
+   },
+   "widgets_values": [
+    "euler"
+   ]
+  },
+  {
+   "id": 29,
+   "type": "RandomNoise",
+   "pos": [
+    3220,
+    844
+   ],
+   "size": [
+    340,
+    94
+   ],
+   "flags": {},
+   "order": 28,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "NOISE",
+     "type": "NOISE",
+     "links": [
+      29
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Seed (place)",
+   "properties": {
+    "Node name for S&R": "RandomNoise"
+   },
+   "widgets_values": [
+    8802,
+    "fixed"
+   ]
+  },
+  {
+   "id": 30,
+   "type": "SamplerCustomAdvanced",
+   "pos": [
+    3220,
+    988
+   ],
+   "size": [
+    340,
+    214
+   ],
+   "flags": {},
+   "order": 29,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "noise",
+     "type": "NOISE",
+     "link": 29
+    },
+    {
+     "name": "guider",
+     "type": "GUIDER",
+     "link": 30
+    },
+    {
+     "name": "sampler",
+     "type": "SAMPLER",
+     "link": 31
+    },
+    {
+     "name": "sigmas",
+     "type": "SIGMAS",
+     "link": 32
+    },
+    {
+     "name": "latent_image",
+     "type": "LATENT",
+     "link": 33
+    }
+   ],
+   "outputs": [
+    {
+     "name": "output",
+     "type": "LATENT",
+     "links": [
+      34
+     ],
+     "slot_index": 0
+    },
+    {
+     "name": "denoised_output",
+     "type": "LATENT",
+     "links": [],
+     "slot_index": 1
+    }
+   ],
+   "title": "Sample (place)",
+   "properties": {
+    "Node name for S&R": "SamplerCustomAdvanced"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 31,
+   "type": "VAEDecode",
+   "pos": [
+    3220,
+    1252
+   ],
+   "size": [
+    340,
+    118
+   ],
+   "flags": {},
+   "order": 30,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "samples",
+     "type": "LATENT",
+     "link": 34
+    },
+    {
+     "name": "vae",
+     "type": "VAE",
+     "link": 35
+    }
+   ],
+   "outputs": [
+    {
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      36
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Decode (place)",
+   "properties": {
+    "Node name for S&R": "VAEDecode"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 32,
+   "type": "SaveImage",
+   "pos": [
+    3600,
+    100
+   ],
+   "size": [
+    360,
+    380
+   ],
+   "flags": {},
+   "order": 31,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "images",
+     "type": "IMAGE",
+     "link": 36
+    }
+   ],
+   "outputs": [],
+   "title": "Save product shot",
+   "properties": {
+    "Node name for S&R": "SaveImage"
+   },
+   "widgets_values": [
+    "book/P08_set/product_on_set"
+   ]
+  }
+ ],
+ "links": [
+  [
+   1,
+   2,
+   0,
+   5,
+   0,
+   "CLIP"
+  ],
+  [
+   2,
+   5,
+   0,
+   6,
+   0,
+   "CONDITIONING"
+  ],
+  [
+   3,
+   1,
+   0,
+   9,
+   0,
+   "MODEL"
+  ],
+  [
+   4,
+   5,
+   0,
+   9,
+   1,
+   "CONDITIONING"
+  ],
+  [
+   5,
+   6,
+   0,
+   9,
+   2,
+   "CONDITIONING"
+  ],
+  [
+   6,
+   11,
+   0,
+   12,
+   0,
+   "NOISE"
+  ],
+  [
+   7,
+   9,
+   0,
+   12,
+   1,
+   "GUIDER"
+  ],
+  [
+   8,
+   10,
+   0,
+   12,
+   2,
+   "SAMPLER"
+  ],
+  [
+   9,
+   8,
+   0,
+   12,
+   3,
+   "SIGMAS"
+  ],
+  [
+   10,
+   7,
+   0,
+   12,
+   4,
+   "LATENT"
+  ],
+  [
+   11,
+   12,
+   0,
+   13,
+   0,
+   "LATENT"
+  ],
+  [
+   12,
+   3,
+   0,
+   13,
+   1,
+   "VAE"
+  ],
+  [
+   13,
+   13,
+   0,
+   14,
+   0,
+   "IMAGE"
+  ],
+  [
+   14,
+   16,
+   0,
+   17,
+   0,
+   "IMAGE"
+  ],
+  [
+   15,
+   17,
+   0,
+   18,
+   0,
+   "IMAGE"
+  ],
+  [
+   16,
+   2,
+   0,
+   19,
+   0,
+   "CLIP"
+  ],
+  [
+   17,
+   13,
+   0,
+   20,
+   0,
+   "IMAGE"
+  ],
+  [
+   18,
+   3,
+   0,
+   20,
+   1,
+   "VAE"
+  ],
+  [
+   19,
+   19,
+   0,
+   21,
+   0,
+   "CONDITIONING"
+  ],
+  [
+   20,
+   20,
+   0,
+   21,
+   1,
+   "LATENT"
+  ],
+  [
+   21,
+   18,
+   0,
+   22,
+   0,
+   "IMAGE"
+  ],
+  [
+   22,
+   3,
+   0,
+   22,
+   1,
+   "VAE"
+  ],
+  [
+   23,
+   21,
+   0,
+   23,
+   0,
+   "CONDITIONING"
+  ],
+  [
+   24,
+   22,
+   0,
+   23,
+   1,
+   "LATENT"
+  ],
+  [
+   25,
+   19,
+   0,
+   24,
+   0,
+   "CONDITIONING"
+  ],
+  [
+   26,
+   1,
+   0,
+   27,
+   0,
+   "MODEL"
+  ],
+  [
+   27,
+   23,
+   0,
+   27,
+   1,
+   "CONDITIONING"
+  ],
+  [
+   28,
+   24,
+   0,
+   27,
+   2,
+   "CONDITIONING"
+  ],
+  [
+   29,
+   29,
+   0,
+   30,
+   0,
+   "NOISE"
+  ],
+  [
+   30,
+   27,
+   0,
+   30,
+   1,
+   "GUIDER"
+  ],
+  [
+   31,
+   28,
+   0,
+   30,
+   2,
+   "SAMPLER"
+  ],
+  [
+   32,
+   26,
+   0,
+   30,
+   3,
+   "SIGMAS"
+  ],
+  [
+   33,
+   25,
+   0,
+   30,
+   4,
+   "LATENT"
+  ],
+  [
+   34,
+   30,
+   0,
+   31,
+   0,
+   "LATENT"
+  ],
+  [
+   35,
+   3,
+   0,
+   31,
+   1,
+   "VAE"
+  ],
+  [
+   36,
+   31,
+   0,
+   32,
+   0,
+   "IMAGE"
+  ]
+ ],
+ "groups": [
+  {
+   "id": 1,
+   "title": "1 · Models",
+   "bounding": [
+    0,
+    50,
+    440,
+    821
+   ],
+   "color": "#3f789e",
+   "font_size": 24,
+   "flags": {}
+  },
+  {
+   "id": 2,
+   "title": "2 · Empty set (background)",
+   "bounding": [
+    510,
+    50,
+    1260,
+    1370
+   ],
+   "color": "#8a6d3b",
+   "font_size": 24,
+   "flags": {}
+  },
+  {
+   "id": 3,
+   "title": "3 · Your product",
+   "bounding": [
+    1840,
+    50,
+    820,
+    807
+   ],
+   "color": "#4b7f52",
+   "font_size": 24,
+   "flags": {}
+  },
+  {
+   "id": 4,
+   "title": "4 · Place product on the podium",
+   "bounding": [
+    2730,
+    50,
+    1260,
+    1370
+   ],
+   "color": "#7d4b8a",
+   "font_size": 24,
+   "flags": {}
+  }
+ ],
+ "config": {},
+ "extra": {
+  "ds": {
+   "scale": 0.6,
+   "offset": [
+    40,
+    40
+   ]
+  },
+  "info": {
+   "name": "P08 Mediterranean product-photography set + your product placed on the podium",
+   "author": "Matthew Flake",
+   "description": "Companion workflow for the book 'From Noise to Income' — P08.",
+   "license": "MIT (workflow file). Model files keep their own licenses — see README."
+  }
+ },
+ "version": 0.4
+}

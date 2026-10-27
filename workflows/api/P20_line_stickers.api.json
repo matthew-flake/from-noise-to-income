@@ -1,0 +1,308 @@
+{
+ "1": {
+  "class_type": "UNETLoader",
+  "inputs": {
+   "unet_name": "z_image_turbo_bf16.safetensors",
+   "weight_dtype": "fp8_e4m3fn"
+  },
+  "_meta": {
+   "title": "Load Z-Image-Turbo"
+  }
+ },
+ "2": {
+  "class_type": "CLIPLoader",
+  "inputs": {
+   "clip_name": "qwen_3_4b.safetensors",
+   "type": "lumina2",
+   "device": "default"
+  },
+  "_meta": {
+   "title": "Load text encoder (Qwen3-4B)"
+  }
+ },
+ "3": {
+  "class_type": "VAELoader",
+  "inputs": {
+   "vae_name": "ae.safetensors"
+  },
+  "_meta": {
+   "title": "Load VAE"
+  }
+ },
+ "4": {
+  "class_type": "ModelSamplingAuraFlow",
+  "inputs": {
+   "model": [
+    "1",
+    0
+   ],
+   "shift": 3.0
+  },
+  "_meta": {
+   "title": "Model sampling (shift 3)"
+  }
+ },
+ "7": {
+  "class_type": "CLIPTextEncode",
+  "inputs": {
+   "text": "cute chibi kawaii sticker of an original fluffy white sheep character with a pink scarf, waving hello happily, big sparkling eyes, thick dark outline, simple flat colors, white sticker border, full body, isolated on plain white background, no text",
+   "clip": [
+    "2",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Prompt"
+  }
+ },
+ "8": {
+  "class_type": "ConditioningZeroOut",
+  "inputs": {
+   "conditioning": [
+    "7",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Negative (empty)"
+  }
+ },
+ "9": {
+  "class_type": "EmptySD3LatentImage",
+  "inputs": {
+   "width": 1024,
+   "height": 1024,
+   "batch_size": 1
+  },
+  "_meta": {
+   "title": "Canvas 1024×1024"
+  }
+ },
+ "10": {
+  "class_type": "KSampler",
+  "inputs": {
+   "model": [
+    "4",
+    0
+   ],
+   "seed": 20020,
+   "steps": 8,
+   "cfg": 1.0,
+   "sampler_name": "res_multistep",
+   "scheduler": "simple",
+   "positive": [
+    "7",
+    0
+   ],
+   "negative": [
+    "8",
+    0
+   ],
+   "latent_image": [
+    "9",
+    0
+   ],
+   "denoise": 1.0
+  },
+  "_meta": {
+   "title": "Sampler"
+  }
+ },
+ "11": {
+  "class_type": "VAEDecode",
+  "inputs": {
+   "samples": [
+    "10",
+    0
+   ],
+   "vae": [
+    "3",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Decode"
+  }
+ },
+ "12": {
+  "class_type": "BiRefNetRMBG",
+  "inputs": {
+   "image": [
+    "11",
+    0
+   ],
+   "model": "BiRefNet-general",
+   "sensitivity": 1.0,
+   "mask_blur": 0,
+   "mask_offset": 0,
+   "invert_output": false,
+   "refine_foreground": true,
+   "unload_model": false,
+   "background": "Alpha",
+   "background_color": "#222222"
+  },
+  "_meta": {
+   "title": "Remove background (BiRefNet)"
+  }
+ },
+ "13": {
+  "class_type": "ResizeAndPadImage",
+  "inputs": {
+   "image": [
+    "11",
+    0
+   ],
+   "target_width": 350,
+   "target_height": 300,
+   "padding_color": "white",
+   "interpolation": "lanczos"
+  },
+  "_meta": {
+   "title": "Fit 350×300 (RGB)"
+  }
+ },
+ "14": {
+  "class_type": "MaskToImage",
+  "inputs": {
+   "mask": [
+    "12",
+    1
+   ]
+  },
+  "_meta": {
+   "title": "Mask → image"
+  }
+ },
+ "15": {
+  "class_type": "ResizeAndPadImage",
+  "inputs": {
+   "image": [
+    "14",
+    0
+   ],
+   "target_width": 350,
+   "target_height": 300,
+   "padding_color": "black",
+   "interpolation": "lanczos"
+  },
+  "_meta": {
+   "title": "Fit 350×300 (mask)"
+  }
+ },
+ "16": {
+  "class_type": "EmptyImage",
+  "inputs": {
+   "width": 370,
+   "height": 320,
+   "batch_size": 1,
+   "color": 16777215
+  },
+  "_meta": {
+   "title": "White 370×320"
+  }
+ },
+ "17": {
+  "class_type": "EmptyImage",
+  "inputs": {
+   "width": 370,
+   "height": 320,
+   "batch_size": 1,
+   "color": 0
+  },
+  "_meta": {
+   "title": "Black 370×320"
+  }
+ },
+ "18": {
+  "class_type": "ImageCompositeMasked",
+  "inputs": {
+   "destination": [
+    "16",
+    0
+   ],
+   "source": [
+    "13",
+    0
+   ],
+   "x": 10,
+   "y": 10,
+   "resize_source": false
+  },
+  "_meta": {
+   "title": "Place with 10 px margin"
+  }
+ },
+ "19": {
+  "class_type": "ImageCompositeMasked",
+  "inputs": {
+   "destination": [
+    "17",
+    0
+   ],
+   "source": [
+    "15",
+    0
+   ],
+   "x": 10,
+   "y": 10,
+   "resize_source": false
+  },
+  "_meta": {
+   "title": "Place mask with 10 px margin"
+  }
+ },
+ "20": {
+  "class_type": "ImageToMask",
+  "inputs": {
+   "image": [
+    "19",
+    0
+   ],
+   "channel": "red"
+  },
+  "_meta": {
+   "title": "Image → mask"
+  }
+ },
+ "21": {
+  "class_type": "InvertMask",
+  "inputs": {
+   "mask": [
+    "20",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Invert (alpha convention)"
+  }
+ },
+ "22": {
+  "class_type": "JoinImageWithAlpha",
+  "inputs": {
+   "image": [
+    "18",
+    0
+   ],
+   "alpha": [
+    "21",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Sticker with transparency"
+  }
+ },
+ "23": {
+  "class_type": "SaveImage",
+  "inputs": {
+   "images": [
+    "22",
+    0
+   ],
+   "filename_prefix": "book/P20_line_stickers/01_hello"
+  },
+  "_meta": {
+   "title": "Save sticker PNG"
+  }
+ }
+}

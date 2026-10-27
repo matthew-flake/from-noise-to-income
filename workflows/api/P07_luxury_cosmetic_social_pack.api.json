@@ -1,0 +1,361 @@
+{
+ "1": {
+  "class_type": "UNETLoader",
+  "inputs": {
+   "unet_name": "z_image_turbo_bf16.safetensors",
+   "weight_dtype": "fp8_e4m3fn"
+  },
+  "_meta": {
+   "title": "Load Z-Image-Turbo"
+  }
+ },
+ "2": {
+  "class_type": "CLIPLoader",
+  "inputs": {
+   "clip_name": "qwen_3_4b.safetensors",
+   "type": "lumina2",
+   "device": "default"
+  },
+  "_meta": {
+   "title": "Load text encoder (Qwen3-4B)"
+  }
+ },
+ "3": {
+  "class_type": "VAELoader",
+  "inputs": {
+   "vae_name": "ae.safetensors"
+  },
+  "_meta": {
+   "title": "Load VAE"
+  }
+ },
+ "4": {
+  "class_type": "ModelSamplingAuraFlow",
+  "inputs": {
+   "model": [
+    "1",
+    0
+   ],
+   "shift": 3.0
+  },
+  "_meta": {
+   "title": "Model sampling (shift 3)"
+  }
+ },
+ "6": {
+  "class_type": "CLIPTextEncode",
+  "inputs": {
+   "text": "Create an original luxury skincare advertising photograph featuring an entirely fictional, unbranded cosmetic serum bottle. Elegant matte-black glass bottle with a sculptural champagne-gold metallic cap. The bottle floats above a polished black-marble podium surrounded by subtle golden light reflections. Dramatic professional studio lighting, controlled highlights, deep charcoal background, refined shadows, subtle atmospheric haze. Photorealistic glass and metallic materials, sophisticated premium product photography, elegant minimalist composition. Strong product-centered visual hierarchy, beautiful contrast, carefully balanced negative space suitable for later advertising typography. Extremely polished commercial aesthetic, high-end beauty campaign art direction, realistic optical reflections and natural material behavior. Original generic packaging design, blank label, no recognizable product shapes associated with existing brands, no text, no logos, no trademarks. Portrait orientation, 4:5.",
+   "clip": [
+    "2",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Prompt 4:5"
+  }
+ },
+ "7": {
+  "class_type": "ConditioningZeroOut",
+  "inputs": {
+   "conditioning": [
+    "6",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Negative (empty) 4:5"
+  }
+ },
+ "8": {
+  "class_type": "EmptySD3LatentImage",
+  "inputs": {
+   "width": 896,
+   "height": 1120,
+   "batch_size": 1
+  },
+  "_meta": {
+   "title": "Canvas 896×1120 4:5"
+  }
+ },
+ "9": {
+  "class_type": "KSampler",
+  "inputs": {
+   "model": [
+    "4",
+    0
+   ],
+   "seed": 7701,
+   "steps": 8,
+   "cfg": 1.0,
+   "sampler_name": "res_multistep",
+   "scheduler": "simple",
+   "positive": [
+    "6",
+    0
+   ],
+   "negative": [
+    "7",
+    0
+   ],
+   "latent_image": [
+    "8",
+    0
+   ],
+   "denoise": 1.0
+  },
+  "_meta": {
+   "title": "Sampler 4:5"
+  }
+ },
+ "10": {
+  "class_type": "VAEDecode",
+  "inputs": {
+   "samples": [
+    "9",
+    0
+   ],
+   "vae": [
+    "3",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Decode 4:5"
+  }
+ },
+ "11": {
+  "class_type": "SaveImage",
+  "inputs": {
+   "images": [
+    "10",
+    0
+   ],
+   "filename_prefix": "book/P07_cosmetics/4x5"
+  },
+  "_meta": {
+   "title": "Save 4:5"
+  }
+ },
+ "12": {
+  "class_type": "CLIPTextEncode",
+  "inputs": {
+   "text": "Create an original luxury skincare advertising photograph featuring an entirely fictional, unbranded cosmetic serum bottle. Elegant matte-black glass bottle with a sculptural champagne-gold metallic cap. The bottle floats above a polished black-marble podium surrounded by subtle golden light reflections. Dramatic professional studio lighting, controlled highlights, deep charcoal background, refined shadows, subtle atmospheric haze. Photorealistic glass and metallic materials, sophisticated premium product photography, elegant minimalist composition. Strong product-centered visual hierarchy, beautiful contrast, carefully balanced negative space suitable for later advertising typography. Extremely polished commercial aesthetic, high-end beauty campaign art direction, realistic optical reflections and natural material behavior. Original generic packaging design, blank label, no recognizable product shapes associated with existing brands, no text, no logos, no trademarks. Tall vertical story format, 9:16, extra space above the product.",
+   "clip": [
+    "2",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Prompt 9:16"
+  }
+ },
+ "13": {
+  "class_type": "ConditioningZeroOut",
+  "inputs": {
+   "conditioning": [
+    "12",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Negative (empty) 9:16"
+  }
+ },
+ "14": {
+  "class_type": "EmptySD3LatentImage",
+  "inputs": {
+   "width": 720,
+   "height": 1280,
+   "batch_size": 1
+  },
+  "_meta": {
+   "title": "Canvas 720×1280 9:16"
+  }
+ },
+ "15": {
+  "class_type": "KSampler",
+  "inputs": {
+   "model": [
+    "4",
+    0
+   ],
+   "seed": 7701,
+   "steps": 8,
+   "cfg": 1.0,
+   "sampler_name": "res_multistep",
+   "scheduler": "simple",
+   "positive": [
+    "12",
+    0
+   ],
+   "negative": [
+    "13",
+    0
+   ],
+   "latent_image": [
+    "14",
+    0
+   ],
+   "denoise": 1.0
+  },
+  "_meta": {
+   "title": "Sampler 9:16"
+  }
+ },
+ "16": {
+  "class_type": "VAEDecode",
+  "inputs": {
+   "samples": [
+    "15",
+    0
+   ],
+   "vae": [
+    "3",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Decode 9:16"
+  }
+ },
+ "17": {
+  "class_type": "SaveImage",
+  "inputs": {
+   "images": [
+    "16",
+    0
+   ],
+   "filename_prefix": "book/P07_cosmetics/9x16"
+  },
+  "_meta": {
+   "title": "Save 9:16"
+  }
+ },
+ "18": {
+  "class_type": "CLIPTextEncode",
+  "inputs": {
+   "text": "Create an original luxury skincare advertising photograph featuring an entirely fictional, unbranded cosmetic serum bottle. Elegant matte-black glass bottle with a sculptural champagne-gold metallic cap. The bottle floats above a polished black-marble podium surrounded by subtle golden light reflections. Dramatic professional studio lighting, controlled highlights, deep charcoal background, refined shadows, subtle atmospheric haze. Photorealistic glass and metallic materials, sophisticated premium product photography, elegant minimalist composition. Strong product-centered visual hierarchy, beautiful contrast, carefully balanced negative space suitable for later advertising typography. Extremely polished commercial aesthetic, high-end beauty campaign art direction, realistic optical reflections and natural material behavior. Original generic packaging design, blank label, no recognizable product shapes associated with existing brands, no text, no logos, no trademarks. Square format, bottle slightly left of center.",
+   "clip": [
+    "2",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Prompt 1:1"
+  }
+ },
+ "19": {
+  "class_type": "ConditioningZeroOut",
+  "inputs": {
+   "conditioning": [
+    "18",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Negative (empty) 1:1"
+  }
+ },
+ "20": {
+  "class_type": "EmptySD3LatentImage",
+  "inputs": {
+   "width": 1024,
+   "height": 1024,
+   "batch_size": 1
+  },
+  "_meta": {
+   "title": "Canvas 1024×1024 1:1"
+  }
+ },
+ "21": {
+  "class_type": "KSampler",
+  "inputs": {
+   "model": [
+    "4",
+    0
+   ],
+   "seed": 7701,
+   "steps": 8,
+   "cfg": 1.0,
+   "sampler_name": "res_multistep",
+   "scheduler": "simple",
+   "positive": [
+    "18",
+    0
+   ],
+   "negative": [
+    "19",
+    0
+   ],
+   "latent_image": [
+    "20",
+    0
+   ],
+   "denoise": 1.0
+  },
+  "_meta": {
+   "title": "Sampler 1:1"
+  }
+ },
+ "22": {
+  "class_type": "VAEDecode",
+  "inputs": {
+   "samples": [
+    "21",
+    0
+   ],
+   "vae": [
+    "3",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Decode 1:1"
+  }
+ },
+ "23": {
+  "class_type": "SaveImage",
+  "inputs": {
+   "images": [
+    "22",
+    0
+   ],
+   "filename_prefix": "book/P07_cosmetics/1x1"
+  },
+  "_meta": {
+   "title": "Save 1:1"
+  }
+ },
+ "25": {
+  "class_type": "TextOverlay",
+  "inputs": {
+   "images": [
+    "16",
+    0
+   ],
+   "text": "RADIANCE, REFINED",
+   "font_size": 5.0,
+   "color": "#E8D9B0",
+   "position": "top",
+   "align": "center",
+   "outline": false
+  },
+  "_meta": {
+   "title": "Headline"
+  }
+ },
+ "26": {
+  "class_type": "SaveImage",
+  "inputs": {
+   "images": [
+    "25",
+    0
+   ],
+   "filename_prefix": "book/P07_cosmetics/9x16_headline"
+  },
+  "_meta": {
+   "title": "Save story with headline"
+  }
+ }
+}

@@ -1,0 +1,1240 @@
+{
+ "1": {
+  "class_type": "UNETLoader",
+  "inputs": {
+   "unet_name": "flux-2-klein-4b-fp8.safetensors",
+   "weight_dtype": "default"
+  },
+  "_meta": {
+   "title": "Load FLUX.2 [klein] 4B"
+  }
+ },
+ "2": {
+  "class_type": "CLIPLoader",
+  "inputs": {
+   "clip_name": "qwen_3_4b.safetensors",
+   "type": "flux2",
+   "device": "default"
+  },
+  "_meta": {
+   "title": "Load text encoder (Qwen3-4B)"
+  }
+ },
+ "3": {
+  "class_type": "VAELoader",
+  "inputs": {
+   "vae_name": "flux2-vae.safetensors"
+  },
+  "_meta": {
+   "title": "Load FLUX.2 VAE"
+  }
+ },
+ "5": {
+  "class_type": "CLIPTextEncode",
+  "inputs": {
+   "text": "Character turnaround sheet: Maya, a 25-year-old fictional female explorer, premium stylized three-dimensional animated adventure character: short curly auburn hair, warm amber eyes, small freckles across the nose, expressive oval face, friendly confident smile, athletic but natural body proportions, mustard-yellow utility jacket, dark teal adventure backpack, charcoal cargo trousers, tan leather hiking boots. Distinctive recognizable silhouette, high-quality 3D materials, detailed fabric textures, natural facial expressions, beautiful cinematic lighting. Original fictional character, no resemblance to celebrities or existing animated characters, no logos, no typography. Front view, three-quarter view and side view standing next to each other, full body, neutral light grey studio background.",
+   "clip": [
+    "2",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Instruction (sheet)"
+  }
+ },
+ "6": {
+  "class_type": "ConditioningZeroOut",
+  "inputs": {
+   "conditioning": [
+    "5",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Negative (empty) (sheet)"
+  }
+ },
+ "7": {
+  "class_type": "EmptyFlux2LatentImage",
+  "inputs": {
+   "width": 1344,
+   "height": 768,
+   "batch_size": 1
+  },
+  "_meta": {
+   "title": "Canvas (sheet)"
+  }
+ },
+ "8": {
+  "class_type": "Flux2Scheduler",
+  "inputs": {
+   "steps": 4,
+   "width": 1344,
+   "height": 768
+  },
+  "_meta": {
+   "title": "Scheduler (4 steps) (sheet)"
+  }
+ },
+ "9": {
+  "class_type": "CFGGuider",
+  "inputs": {
+   "model": [
+    "1",
+    0
+   ],
+   "positive": [
+    "5",
+    0
+   ],
+   "negative": [
+    "6",
+    0
+   ],
+   "cfg": 1.0
+  },
+  "_meta": {
+   "title": "Guider (cfg 1) (sheet)"
+  }
+ },
+ "10": {
+  "class_type": "KSamplerSelect",
+  "inputs": {
+   "sampler_name": "euler"
+  },
+  "_meta": {
+   "title": "Sampler type (sheet)"
+  }
+ },
+ "11": {
+  "class_type": "RandomNoise",
+  "inputs": {
+   "noise_seed": 5501
+  },
+  "_meta": {
+   "title": "Seed (sheet)"
+  }
+ },
+ "12": {
+  "class_type": "SamplerCustomAdvanced",
+  "inputs": {
+   "noise": [
+    "11",
+    0
+   ],
+   "guider": [
+    "9",
+    0
+   ],
+   "sampler": [
+    "10",
+    0
+   ],
+   "sigmas": [
+    "8",
+    0
+   ],
+   "latent_image": [
+    "7",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Sample (sheet)"
+  }
+ },
+ "13": {
+  "class_type": "VAEDecode",
+  "inputs": {
+   "samples": [
+    "12",
+    0
+   ],
+   "vae": [
+    "3",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Decode (sheet)"
+  }
+ },
+ "14": {
+  "class_type": "SaveImage",
+  "inputs": {
+   "images": [
+    "13",
+    0
+   ],
+   "filename_prefix": "book/P05_maya/sheet"
+  },
+  "_meta": {
+   "title": "Save sheet"
+  }
+ },
+ "15": {
+  "class_type": "ImageScaleToTotalPixels",
+  "inputs": {
+   "image": [
+    "13",
+    0
+   ],
+   "upscale_method": "lanczos",
+   "megapixels": 1.0,
+   "resolution_steps": 16
+  },
+  "_meta": {
+   "title": "Scale to ~1.0 MP"
+  }
+ },
+ "16": {
+  "class_type": "CLIPTextEncode",
+  "inputs": {
+   "text": "Use the character from the reference image: keep exactly the same face, hairstyle, clothing colors, backpack and proportions. SCENE: Maya arrives at a beautiful historic railway station at sunrise, carrying a folded adventure map. Premium stylized 3D animated film still, cinematic lighting, portrait orientation.",
+   "clip": [
+    "2",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Instruction 1"
+  }
+ },
+ "17": {
+  "class_type": "VAEEncode",
+  "inputs": {
+   "pixels": [
+    "15",
+    0
+   ],
+   "vae": [
+    "3",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Encode reference 1 1"
+  }
+ },
+ "18": {
+  "class_type": "ReferenceLatent",
+  "inputs": {
+   "conditioning": [
+    "16",
+    0
+   ],
+   "latent": [
+    "17",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Set Reference Latent 1 1"
+  }
+ },
+ "19": {
+  "class_type": "ConditioningZeroOut",
+  "inputs": {
+   "conditioning": [
+    "16",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Negative (empty) 1"
+  }
+ },
+ "20": {
+  "class_type": "EmptyFlux2LatentImage",
+  "inputs": {
+   "width": 864,
+   "height": 1152,
+   "batch_size": 1
+  },
+  "_meta": {
+   "title": "Canvas 1"
+  }
+ },
+ "21": {
+  "class_type": "Flux2Scheduler",
+  "inputs": {
+   "steps": 4,
+   "width": 864,
+   "height": 1152
+  },
+  "_meta": {
+   "title": "Scheduler (4 steps) 1"
+  }
+ },
+ "22": {
+  "class_type": "CFGGuider",
+  "inputs": {
+   "model": [
+    "1",
+    0
+   ],
+   "positive": [
+    "18",
+    0
+   ],
+   "negative": [
+    "19",
+    0
+   ],
+   "cfg": 1.0
+  },
+  "_meta": {
+   "title": "Guider (cfg 1) 1"
+  }
+ },
+ "23": {
+  "class_type": "KSamplerSelect",
+  "inputs": {
+   "sampler_name": "euler"
+  },
+  "_meta": {
+   "title": "Sampler type 1"
+  }
+ },
+ "24": {
+  "class_type": "RandomNoise",
+  "inputs": {
+   "noise_seed": 5510
+  },
+  "_meta": {
+   "title": "Seed 1"
+  }
+ },
+ "25": {
+  "class_type": "SamplerCustomAdvanced",
+  "inputs": {
+   "noise": [
+    "24",
+    0
+   ],
+   "guider": [
+    "22",
+    0
+   ],
+   "sampler": [
+    "23",
+    0
+   ],
+   "sigmas": [
+    "21",
+    0
+   ],
+   "latent_image": [
+    "20",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Sample 1"
+  }
+ },
+ "26": {
+  "class_type": "VAEDecode",
+  "inputs": {
+   "samples": [
+    "25",
+    0
+   ],
+   "vae": [
+    "3",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Decode 1"
+  }
+ },
+ "27": {
+  "class_type": "SaveImage",
+  "inputs": {
+   "images": [
+    "26",
+    0
+   ],
+   "filename_prefix": "book/P05_maya/1_station"
+  },
+  "_meta": {
+   "title": "Save station"
+  }
+ },
+ "28": {
+  "class_type": "CLIPTextEncode",
+  "inputs": {
+   "text": "Use the character from the reference image: keep exactly the same face, hairstyle, clothing colors, backpack and proportions. SCENE: Maya explores a mysterious tropical rainforest filled with enormous plants and glowing insects. Premium stylized 3D animated film still, cinematic lighting, portrait orientation.",
+   "clip": [
+    "2",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Instruction 2"
+  }
+ },
+ "29": {
+  "class_type": "VAEEncode",
+  "inputs": {
+   "pixels": [
+    "15",
+    0
+   ],
+   "vae": [
+    "3",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Encode reference 1 2"
+  }
+ },
+ "30": {
+  "class_type": "ReferenceLatent",
+  "inputs": {
+   "conditioning": [
+    "28",
+    0
+   ],
+   "latent": [
+    "29",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Set Reference Latent 1 2"
+  }
+ },
+ "31": {
+  "class_type": "ConditioningZeroOut",
+  "inputs": {
+   "conditioning": [
+    "28",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Negative (empty) 2"
+  }
+ },
+ "32": {
+  "class_type": "EmptyFlux2LatentImage",
+  "inputs": {
+   "width": 864,
+   "height": 1152,
+   "batch_size": 1
+  },
+  "_meta": {
+   "title": "Canvas 2"
+  }
+ },
+ "33": {
+  "class_type": "Flux2Scheduler",
+  "inputs": {
+   "steps": 4,
+   "width": 864,
+   "height": 1152
+  },
+  "_meta": {
+   "title": "Scheduler (4 steps) 2"
+  }
+ },
+ "34": {
+  "class_type": "CFGGuider",
+  "inputs": {
+   "model": [
+    "1",
+    0
+   ],
+   "positive": [
+    "30",
+    0
+   ],
+   "negative": [
+    "31",
+    0
+   ],
+   "cfg": 1.0
+  },
+  "_meta": {
+   "title": "Guider (cfg 1) 2"
+  }
+ },
+ "35": {
+  "class_type": "KSamplerSelect",
+  "inputs": {
+   "sampler_name": "euler"
+  },
+  "_meta": {
+   "title": "Sampler type 2"
+  }
+ },
+ "36": {
+  "class_type": "RandomNoise",
+  "inputs": {
+   "noise_seed": 5511
+  },
+  "_meta": {
+   "title": "Seed 2"
+  }
+ },
+ "37": {
+  "class_type": "SamplerCustomAdvanced",
+  "inputs": {
+   "noise": [
+    "36",
+    0
+   ],
+   "guider": [
+    "34",
+    0
+   ],
+   "sampler": [
+    "35",
+    0
+   ],
+   "sigmas": [
+    "33",
+    0
+   ],
+   "latent_image": [
+    "32",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Sample 2"
+  }
+ },
+ "38": {
+  "class_type": "VAEDecode",
+  "inputs": {
+   "samples": [
+    "37",
+    0
+   ],
+   "vae": [
+    "3",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Decode 2"
+  }
+ },
+ "39": {
+  "class_type": "SaveImage",
+  "inputs": {
+   "images": [
+    "38",
+    0
+   ],
+   "filename_prefix": "book/P05_maya/2_rainforest"
+  },
+  "_meta": {
+   "title": "Save rainforest"
+  }
+ },
+ "40": {
+  "class_type": "CLIPTextEncode",
+  "inputs": {
+   "text": "Use the character from the reference image: keep exactly the same face, hairstyle, clothing colors, backpack and proportions. SCENE: Maya discovers an ancient fictional sandstone temple surrounded by desert dunes at sunset. Premium stylized 3D animated film still, cinematic lighting, portrait orientation.",
+   "clip": [
+    "2",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Instruction 3"
+  }
+ },
+ "41": {
+  "class_type": "VAEEncode",
+  "inputs": {
+   "pixels": [
+    "15",
+    0
+   ],
+   "vae": [
+    "3",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Encode reference 1 3"
+  }
+ },
+ "42": {
+  "class_type": "ReferenceLatent",
+  "inputs": {
+   "conditioning": [
+    "40",
+    0
+   ],
+   "latent": [
+    "41",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Set Reference Latent 1 3"
+  }
+ },
+ "43": {
+  "class_type": "ConditioningZeroOut",
+  "inputs": {
+   "conditioning": [
+    "40",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Negative (empty) 3"
+  }
+ },
+ "44": {
+  "class_type": "EmptyFlux2LatentImage",
+  "inputs": {
+   "width": 864,
+   "height": 1152,
+   "batch_size": 1
+  },
+  "_meta": {
+   "title": "Canvas 3"
+  }
+ },
+ "45": {
+  "class_type": "Flux2Scheduler",
+  "inputs": {
+   "steps": 4,
+   "width": 864,
+   "height": 1152
+  },
+  "_meta": {
+   "title": "Scheduler (4 steps) 3"
+  }
+ },
+ "46": {
+  "class_type": "CFGGuider",
+  "inputs": {
+   "model": [
+    "1",
+    0
+   ],
+   "positive": [
+    "42",
+    0
+   ],
+   "negative": [
+    "43",
+    0
+   ],
+   "cfg": 1.0
+  },
+  "_meta": {
+   "title": "Guider (cfg 1) 3"
+  }
+ },
+ "47": {
+  "class_type": "KSamplerSelect",
+  "inputs": {
+   "sampler_name": "euler"
+  },
+  "_meta": {
+   "title": "Sampler type 3"
+  }
+ },
+ "48": {
+  "class_type": "RandomNoise",
+  "inputs": {
+   "noise_seed": 5512
+  },
+  "_meta": {
+   "title": "Seed 3"
+  }
+ },
+ "49": {
+  "class_type": "SamplerCustomAdvanced",
+  "inputs": {
+   "noise": [
+    "48",
+    0
+   ],
+   "guider": [
+    "46",
+    0
+   ],
+   "sampler": [
+    "47",
+    0
+   ],
+   "sigmas": [
+    "45",
+    0
+   ],
+   "latent_image": [
+    "44",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Sample 3"
+  }
+ },
+ "50": {
+  "class_type": "VAEDecode",
+  "inputs": {
+   "samples": [
+    "49",
+    0
+   ],
+   "vae": [
+    "3",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Decode 3"
+  }
+ },
+ "51": {
+  "class_type": "SaveImage",
+  "inputs": {
+   "images": [
+    "50",
+    0
+   ],
+   "filename_prefix": "book/P05_maya/3_temple"
+  },
+  "_meta": {
+   "title": "Save temple"
+  }
+ },
+ "52": {
+  "class_type": "CLIPTextEncode",
+  "inputs": {
+   "text": "Use the character from the reference image: keep exactly the same face, hairstyle, clothing colors, backpack and proportions. SCENE: Maya stands on a snowy mountain ridge while dramatic clouds move across the valley. Premium stylized 3D animated film still, cinematic lighting, portrait orientation.",
+   "clip": [
+    "2",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Instruction 4"
+  }
+ },
+ "53": {
+  "class_type": "VAEEncode",
+  "inputs": {
+   "pixels": [
+    "15",
+    0
+   ],
+   "vae": [
+    "3",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Encode reference 1 4"
+  }
+ },
+ "54": {
+  "class_type": "ReferenceLatent",
+  "inputs": {
+   "conditioning": [
+    "52",
+    0
+   ],
+   "latent": [
+    "53",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Set Reference Latent 1 4"
+  }
+ },
+ "55": {
+  "class_type": "ConditioningZeroOut",
+  "inputs": {
+   "conditioning": [
+    "52",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Negative (empty) 4"
+  }
+ },
+ "56": {
+  "class_type": "EmptyFlux2LatentImage",
+  "inputs": {
+   "width": 864,
+   "height": 1152,
+   "batch_size": 1
+  },
+  "_meta": {
+   "title": "Canvas 4"
+  }
+ },
+ "57": {
+  "class_type": "Flux2Scheduler",
+  "inputs": {
+   "steps": 4,
+   "width": 864,
+   "height": 1152
+  },
+  "_meta": {
+   "title": "Scheduler (4 steps) 4"
+  }
+ },
+ "58": {
+  "class_type": "CFGGuider",
+  "inputs": {
+   "model": [
+    "1",
+    0
+   ],
+   "positive": [
+    "54",
+    0
+   ],
+   "negative": [
+    "55",
+    0
+   ],
+   "cfg": 1.0
+  },
+  "_meta": {
+   "title": "Guider (cfg 1) 4"
+  }
+ },
+ "59": {
+  "class_type": "KSamplerSelect",
+  "inputs": {
+   "sampler_name": "euler"
+  },
+  "_meta": {
+   "title": "Sampler type 4"
+  }
+ },
+ "60": {
+  "class_type": "RandomNoise",
+  "inputs": {
+   "noise_seed": 5513
+  },
+  "_meta": {
+   "title": "Seed 4"
+  }
+ },
+ "61": {
+  "class_type": "SamplerCustomAdvanced",
+  "inputs": {
+   "noise": [
+    "60",
+    0
+   ],
+   "guider": [
+    "58",
+    0
+   ],
+   "sampler": [
+    "59",
+    0
+   ],
+   "sigmas": [
+    "57",
+    0
+   ],
+   "latent_image": [
+    "56",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Sample 4"
+  }
+ },
+ "62": {
+  "class_type": "VAEDecode",
+  "inputs": {
+   "samples": [
+    "61",
+    0
+   ],
+   "vae": [
+    "3",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Decode 4"
+  }
+ },
+ "63": {
+  "class_type": "SaveImage",
+  "inputs": {
+   "images": [
+    "62",
+    0
+   ],
+   "filename_prefix": "book/P05_maya/4_mountain"
+  },
+  "_meta": {
+   "title": "Save mountain"
+  }
+ },
+ "64": {
+  "class_type": "CLIPTextEncode",
+  "inputs": {
+   "text": "Use the character from the reference image: keep exactly the same face, hairstyle, clothing colors, backpack and proportions. SCENE: Maya walks through an imaginative futuristic city illuminated by colorful architectural lights. Premium stylized 3D animated film still, cinematic lighting, portrait orientation.",
+   "clip": [
+    "2",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Instruction 5"
+  }
+ },
+ "65": {
+  "class_type": "VAEEncode",
+  "inputs": {
+   "pixels": [
+    "15",
+    0
+   ],
+   "vae": [
+    "3",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Encode reference 1 5"
+  }
+ },
+ "66": {
+  "class_type": "ReferenceLatent",
+  "inputs": {
+   "conditioning": [
+    "64",
+    0
+   ],
+   "latent": [
+    "65",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Set Reference Latent 1 5"
+  }
+ },
+ "67": {
+  "class_type": "ConditioningZeroOut",
+  "inputs": {
+   "conditioning": [
+    "64",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Negative (empty) 5"
+  }
+ },
+ "68": {
+  "class_type": "EmptyFlux2LatentImage",
+  "inputs": {
+   "width": 864,
+   "height": 1152,
+   "batch_size": 1
+  },
+  "_meta": {
+   "title": "Canvas 5"
+  }
+ },
+ "69": {
+  "class_type": "Flux2Scheduler",
+  "inputs": {
+   "steps": 4,
+   "width": 864,
+   "height": 1152
+  },
+  "_meta": {
+   "title": "Scheduler (4 steps) 5"
+  }
+ },
+ "70": {
+  "class_type": "CFGGuider",
+  "inputs": {
+   "model": [
+    "1",
+    0
+   ],
+   "positive": [
+    "66",
+    0
+   ],
+   "negative": [
+    "67",
+    0
+   ],
+   "cfg": 1.0
+  },
+  "_meta": {
+   "title": "Guider (cfg 1) 5"
+  }
+ },
+ "71": {
+  "class_type": "KSamplerSelect",
+  "inputs": {
+   "sampler_name": "euler"
+  },
+  "_meta": {
+   "title": "Sampler type 5"
+  }
+ },
+ "72": {
+  "class_type": "RandomNoise",
+  "inputs": {
+   "noise_seed": 5514
+  },
+  "_meta": {
+   "title": "Seed 5"
+  }
+ },
+ "73": {
+  "class_type": "SamplerCustomAdvanced",
+  "inputs": {
+   "noise": [
+    "72",
+    0
+   ],
+   "guider": [
+    "70",
+    0
+   ],
+   "sampler": [
+    "71",
+    0
+   ],
+   "sigmas": [
+    "69",
+    0
+   ],
+   "latent_image": [
+    "68",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Sample 5"
+  }
+ },
+ "74": {
+  "class_type": "VAEDecode",
+  "inputs": {
+   "samples": [
+    "73",
+    0
+   ],
+   "vae": [
+    "3",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Decode 5"
+  }
+ },
+ "75": {
+  "class_type": "SaveImage",
+  "inputs": {
+   "images": [
+    "74",
+    0
+   ],
+   "filename_prefix": "book/P05_maya/5_city"
+  },
+  "_meta": {
+   "title": "Save city"
+  }
+ },
+ "76": {
+  "class_type": "CLIPTextEncode",
+  "inputs": {
+   "text": "Use the character from the reference image: keep exactly the same face, hairstyle, clothing colors, backpack and proportions. SCENE: Maya watches a golden sunset from a quiet ocean cliff after completing her adventure. Premium stylized 3D animated film still, cinematic lighting, portrait orientation.",
+   "clip": [
+    "2",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Instruction 6"
+  }
+ },
+ "77": {
+  "class_type": "VAEEncode",
+  "inputs": {
+   "pixels": [
+    "15",
+    0
+   ],
+   "vae": [
+    "3",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Encode reference 1 6"
+  }
+ },
+ "78": {
+  "class_type": "ReferenceLatent",
+  "inputs": {
+   "conditioning": [
+    "76",
+    0
+   ],
+   "latent": [
+    "77",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Set Reference Latent 1 6"
+  }
+ },
+ "79": {
+  "class_type": "ConditioningZeroOut",
+  "inputs": {
+   "conditioning": [
+    "76",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Negative (empty) 6"
+  }
+ },
+ "80": {
+  "class_type": "EmptyFlux2LatentImage",
+  "inputs": {
+   "width": 864,
+   "height": 1152,
+   "batch_size": 1
+  },
+  "_meta": {
+   "title": "Canvas 6"
+  }
+ },
+ "81": {
+  "class_type": "Flux2Scheduler",
+  "inputs": {
+   "steps": 4,
+   "width": 864,
+   "height": 1152
+  },
+  "_meta": {
+   "title": "Scheduler (4 steps) 6"
+  }
+ },
+ "82": {
+  "class_type": "CFGGuider",
+  "inputs": {
+   "model": [
+    "1",
+    0
+   ],
+   "positive": [
+    "78",
+    0
+   ],
+   "negative": [
+    "79",
+    0
+   ],
+   "cfg": 1.0
+  },
+  "_meta": {
+   "title": "Guider (cfg 1) 6"
+  }
+ },
+ "83": {
+  "class_type": "KSamplerSelect",
+  "inputs": {
+   "sampler_name": "euler"
+  },
+  "_meta": {
+   "title": "Sampler type 6"
+  }
+ },
+ "84": {
+  "class_type": "RandomNoise",
+  "inputs": {
+   "noise_seed": 5515
+  },
+  "_meta": {
+   "title": "Seed 6"
+  }
+ },
+ "85": {
+  "class_type": "SamplerCustomAdvanced",
+  "inputs": {
+   "noise": [
+    "84",
+    0
+   ],
+   "guider": [
+    "82",
+    0
+   ],
+   "sampler": [
+    "83",
+    0
+   ],
+   "sigmas": [
+    "81",
+    0
+   ],
+   "latent_image": [
+    "80",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Sample 6"
+  }
+ },
+ "86": {
+  "class_type": "VAEDecode",
+  "inputs": {
+   "samples": [
+    "85",
+    0
+   ],
+   "vae": [
+    "3",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Decode 6"
+  }
+ },
+ "87": {
+  "class_type": "SaveImage",
+  "inputs": {
+   "images": [
+    "86",
+    0
+   ],
+   "filename_prefix": "book/P05_maya/6_ocean"
+  },
+  "_meta": {
+   "title": "Save ocean"
+  }
+ }
+}
