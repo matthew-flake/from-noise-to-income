@@ -18,7 +18,7 @@
 | `workflows/api` | the same in API format for scripts / to samo w formacie API |
 | `inputs` | exercise images / obrazy do ćwiczeń |
 | `scripts` | `series.py` + `topics.csv` – batch series (chapter 15) / seria jednym poleceniem |
-| `materials` | checklists, notes template, licence register, brief and offer templates / checklisty i szablony |
+| `materials` | checklists, notes template, licence register, brief and offer templates (`*_en.md` English, `*_pl.md` Polish) / checklisty i szablony |
 | `docs/graphs` | screenshots of every graph / zrzuty każdego grafu |
 | `samples` | test results as PNG with embedded workflow / wyniki testów z workflow w metadanych |
 | `TESTED.md` | test report (RTX 5060 8 GB) / raport z testów |
