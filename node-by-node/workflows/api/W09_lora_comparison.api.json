@@ -1,0 +1,218 @@
+{
+ "2": {
+  "class_type": "CheckpointLoaderSimple",
+  "inputs": {
+   "ckpt_name": "sd_xl_base_1.0.safetensors"
+  },
+  "_meta": {
+   "title": "Load Checkpoint (SDXL)"
+  }
+ },
+ "3": {
+  "class_type": "LoraLoader",
+  "inputs": {
+   "model": [
+    "2",
+    0
+   ],
+   "clip": [
+    "2",
+    1
+   ],
+   "lora_name": "sd_xl_offset_example-lora_1.0.safetensors",
+   "strength_model": 0.8,
+   "strength_clip": 0.8
+  },
+  "_meta": {
+   "title": "Load LoRA (0.8)"
+  }
+ },
+ "4": {
+  "class_type": "EmptyLatentImage",
+  "inputs": {
+   "width": 1216,
+   "height": 832,
+   "batch_size": 1
+  },
+  "_meta": {
+   "title": "Canvas 1216x832"
+  }
+ },
+ "5": {
+  "class_type": "CLIPTextEncode",
+  "inputs": {
+   "text": "night street food market lit by paper lanterns, steam rising from a noodle stall, cinematic photography, deep shadows, warm highlights",
+   "clip": [
+    "2",
+    1
+   ]
+  },
+  "_meta": {
+   "title": "Prompt (no LoRA)"
+  }
+ },
+ "6": {
+  "class_type": "CLIPTextEncode",
+  "inputs": {
+   "text": "text, watermark, logo, signature, blurry, low quality, deformed, extra objects",
+   "clip": [
+    "2",
+    1
+   ]
+  },
+  "_meta": {
+   "title": "Negative (no LoRA)"
+  }
+ },
+ "7": {
+  "class_type": "CLIPTextEncode",
+  "inputs": {
+   "text": "night street food market lit by paper lanterns, steam rising from a noodle stall, cinematic photography, deep shadows, warm highlights",
+   "clip": [
+    "3",
+    1
+   ]
+  },
+  "_meta": {
+   "title": "Prompt (LoRA)"
+  }
+ },
+ "8": {
+  "class_type": "CLIPTextEncode",
+  "inputs": {
+   "text": "text, watermark, logo, signature, blurry, low quality, deformed, extra objects",
+   "clip": [
+    "3",
+    1
+   ]
+  },
+  "_meta": {
+   "title": "Negative (LoRA)"
+  }
+ },
+ "9": {
+  "class_type": "KSampler",
+  "inputs": {
+   "model": [
+    "2",
+    0
+   ],
+   "seed": 909,
+   "steps": 28,
+   "cfg": 6.0,
+   "sampler_name": "dpmpp_2m",
+   "scheduler": "karras",
+   "positive": [
+    "5",
+    0
+   ],
+   "negative": [
+    "6",
+    0
+   ],
+   "latent_image": [
+    "4",
+    0
+   ],
+   "denoise": 1.0
+  },
+  "_meta": {
+   "title": "Sampler (no LoRA)"
+  }
+ },
+ "10": {
+  "class_type": "KSampler",
+  "inputs": {
+   "model": [
+    "3",
+    0
+   ],
+   "seed": 909,
+   "steps": 28,
+   "cfg": 6.0,
+   "sampler_name": "dpmpp_2m",
+   "scheduler": "karras",
+   "positive": [
+    "7",
+    0
+   ],
+   "negative": [
+    "8",
+    0
+   ],
+   "latent_image": [
+    "4",
+    0
+   ],
+   "denoise": 1.0
+  },
+  "_meta": {
+   "title": "Sampler (LoRA)"
+  }
+ },
+ "11": {
+  "class_type": "VAEDecode",
+  "inputs": {
+   "samples": [
+    "9",
+    0
+   ],
+   "vae": [
+    "2",
+    2
+   ]
+  },
+  "_meta": {
+   "title": "Decode (no LoRA)"
+  }
+ },
+ "12": {
+  "class_type": "VAEDecode",
+  "inputs": {
+   "samples": [
+    "10",
+    0
+   ],
+   "vae": [
+    "2",
+    2
+   ]
+  },
+  "_meta": {
+   "title": "Decode (LoRA)"
+  }
+ },
+ "13": {
+  "class_type": "ImageStitch",
+  "inputs": {
+   "image1": [
+    "11",
+    0
+   ],
+   "direction": "right",
+   "match_image_size": true,
+   "spacing_width": 16,
+   "spacing_color": "white",
+   "image2": [
+    "12",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "No LoRA | LoRA 1"
+  }
+ },
+ "14": {
+  "class_type": "SaveImage",
+  "inputs": {
+   "images": [
+    "13",
+    0
+   ],
+   "filename_prefix": "node_by_node/W09/no_lora_vs_lora"
+  },
+  "_meta": {
+   "title": "Save"
+  }
+ }
+}

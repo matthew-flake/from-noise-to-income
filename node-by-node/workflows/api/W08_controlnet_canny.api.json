@@ -1,0 +1,182 @@
+{
+ "2": {
+  "class_type": "CheckpointLoaderSimple",
+  "inputs": {
+   "ckpt_name": "sd_xl_base_1.0.safetensors"
+  },
+  "_meta": {
+   "title": "Load Checkpoint (SDXL)"
+  }
+ },
+ "3": {
+  "class_type": "LoadImage",
+  "inputs": {
+   "image": "jar.png"
+  },
+  "_meta": {
+   "title": "Reference photo"
+  }
+ },
+ "4": {
+  "class_type": "Canny",
+  "inputs": {
+   "image": [
+    "3",
+    0
+   ],
+   "low_threshold": 0.2,
+   "high_threshold": 0.5
+  },
+  "_meta": {
+   "title": "Canny (edges)"
+  }
+ },
+ "5": {
+  "class_type": "PreviewImage",
+  "inputs": {
+   "images": [
+    "4",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Edge map preview"
+  }
+ },
+ "6": {
+  "class_type": "ControlNetLoader",
+  "inputs": {
+   "control_net_name": "t2i-adapter-canny-sdxl-1.0.fp16.safetensors"
+  },
+  "_meta": {
+   "title": "Load ControlNet Model"
+  }
+ },
+ "7": {
+  "class_type": "CLIPTextEncode",
+  "inputs": {
+   "text": "hand-made stoneware jar with a speckled cream glaze and a brushed copper lid, on a linen cloth, soft daylight from a window, artisan product photography",
+   "clip": [
+    "2",
+    1
+   ]
+  },
+  "_meta": {
+   "title": "Prompt"
+  }
+ },
+ "8": {
+  "class_type": "CLIPTextEncode",
+  "inputs": {
+   "text": "text, watermark, logo, signature, blurry, low quality, deformed, extra objects",
+   "clip": [
+    "2",
+    1
+   ]
+  },
+  "_meta": {
+   "title": "Negative prompt"
+  }
+ },
+ "9": {
+  "class_type": "ControlNetApplyAdvanced",
+  "inputs": {
+   "positive": [
+    "7",
+    0
+   ],
+   "negative": [
+    "8",
+    0
+   ],
+   "control_net": [
+    "6",
+    0
+   ],
+   "image": [
+    "4",
+    0
+   ],
+   "strength": 0.8,
+   "start_percent": 0.0,
+   "end_percent": 0.8,
+   "vae": [
+    "2",
+    2
+   ]
+  },
+  "_meta": {
+   "title": "Apply ControlNet"
+  }
+ },
+ "10": {
+  "class_type": "EmptyLatentImage",
+  "inputs": {
+   "width": 1024,
+   "height": 1024,
+   "batch_size": 1
+  },
+  "_meta": {
+   "title": "Canvas 1024x1024"
+  }
+ },
+ "11": {
+  "class_type": "KSampler",
+  "inputs": {
+   "model": [
+    "2",
+    0
+   ],
+   "seed": 808,
+   "steps": 28,
+   "cfg": 6.0,
+   "sampler_name": "dpmpp_2m",
+   "scheduler": "karras",
+   "positive": [
+    "9",
+    0
+   ],
+   "negative": [
+    "9",
+    1
+   ],
+   "latent_image": [
+    "10",
+    0
+   ],
+   "denoise": 1.0
+  },
+  "_meta": {
+   "title": "Sampler"
+  }
+ },
+ "12": {
+  "class_type": "VAEDecode",
+  "inputs": {
+   "samples": [
+    "11",
+    0
+   ],
+   "vae": [
+    "2",
+    2
+   ]
+  },
+  "_meta": {
+   "title": "VAE Decode"
+  }
+ },
+ "13": {
+  "class_type": "SaveImage",
+  "inputs": {
+   "images": [
+    "12",
+    0
+   ],
+   "filename_prefix": "node_by_node/W08/canny"
+  },
+  "_meta": {
+   "title": "Save"
+  }
+ }
+}

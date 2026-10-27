@@ -1,0 +1,63 @@
+{
+ "2": {
+  "class_type": "LoadImage",
+  "inputs": {
+   "image": "jar.png"
+  },
+  "_meta": {
+   "title": "Image to enlarge"
+  }
+ },
+ "3": {
+  "class_type": "UpscaleModelLoader",
+  "inputs": {
+   "model_name": "4x_NMKD-Siax_200k.pth"
+  },
+  "_meta": {
+   "title": "Load Upscale Model"
+  }
+ },
+ "4": {
+  "class_type": "ImageUpscaleWithModel",
+  "inputs": {
+   "upscale_model": [
+    "3",
+    0
+   ],
+   "image": [
+    "2",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Upscale Image (Using Model)"
+  }
+ },
+ "5": {
+  "class_type": "ImageScaleBy",
+  "inputs": {
+   "image": [
+    "4",
+    0
+   ],
+   "upscale_method": "lanczos",
+   "scale_by": 0.5
+  },
+  "_meta": {
+   "title": "Scale down to 2x"
+  }
+ },
+ "6": {
+  "class_type": "SaveImage",
+  "inputs": {
+   "images": [
+    "5",
+    0
+   ],
+   "filename_prefix": "node_by_node/W06/product_2x"
+  },
+  "_meta": {
+   "title": "Save"
+  }
+ }
+}

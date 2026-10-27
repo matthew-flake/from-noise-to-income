@@ -51,4 +51,11 @@ S = {
  "CheckpointLoaderSimple": ([("ckpt_name","W","COMBO",0,None)],[("MODEL","MODEL"),("CLIP","CLIP"),("VAE","VAE")]),
  "EmptyLatentImage": ([("width","W","INT",0,512),("height","W","INT",0,512),("batch_size","W","INT",0,1)],[("LATENT","LATENT")]),
  "Note": ([("text","W","STRING",0,"")],[]),
+ "LoraLoader": ([("model","L","MODEL",0,None),("clip","L","CLIP",0,None),("lora_name","W","COMBO",0,None),("strength_model","W","FLOAT",0,1.0),("strength_clip","W","FLOAT",0,1.0)],[("MODEL","MODEL"),("CLIP","CLIP")]),
+ "ControlNetLoader": ([("control_net_name","W","COMBO",0,None)],[("CONTROL_NET","CONTROL_NET")]),
+ "ControlNetApplyAdvanced": ([("positive","L","CONDITIONING",0,None),("negative","L","CONDITIONING",0,None),("control_net","L","CONTROL_NET",0,None),("image","L","IMAGE",0,None),("strength","W","FLOAT",0,1.0),("start_percent","W","FLOAT",0,0.0),("end_percent","W","FLOAT",0,1.0),("vae","L","VAE",0,None)],[("positive","CONDITIONING"),("negative","CONDITIONING")]),
+ "Canny": ([("image","L","IMAGE",0,None),("low_threshold","W","FLOAT",0,0.4),("high_threshold","W","FLOAT",0,0.8)],[("IMAGE","IMAGE")]),
+ "LatentUpscaleBy": ([("samples","L","LATENT",0,None),("upscale_method","W","COMBO",0,"nearest-exact"),("scale_by","W","FLOAT",0,1.5)],[("LATENT","LATENT")]),
+ "VAEEncodeForInpaint": ([("pixels","L","IMAGE",0,None),("vae","L","VAE",0,None),("mask","L","MASK",0,None),("grow_mask_by","W","INT",0,6)],[("LATENT","LATENT")]),
+ "InpaintModelConditioning": ([("positive","L","CONDITIONING",0,None),("negative","L","CONDITIONING",0,None),("vae","L","VAE",0,None),("pixels","L","IMAGE",0,None),("mask","L","MASK",0,None),("noise_mask","W","BOOLEAN",0,True)],[("positive","CONDITIONING"),("negative","CONDITIONING"),("LATENT","LATENT")]),
 }

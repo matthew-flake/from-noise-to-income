@@ -1,0 +1,1102 @@
+{
+ "id": "0d495b95-5243-55a8-a33b-726ffb37ace3",
+ "revision": 0,
+ "last_node_id": 19,
+ "last_link_id": 26,
+ "nodes": [
+  {
+   "id": 1,
+   "type": "Note",
+   "pos": [
+    30,
+    100
+   ],
+   "size": [
+    380,
+    336
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [],
+   "title": "Read me",
+   "properties": {},
+   "widgets_values": [
+    "Chapter 13. Every layer has one job:\n- LoRA (0.6): contrast and mood\n- ControlNet Canny (0.7): product shape from the photo\n- second pass (hi-res, denoise 0.45): detail\n- 4x model + scale down: print file.\nTest layers one by one: bypass a node (Ctrl+B) and compare.\n\nLICENCES (as of 26 Oct 2026 - check before selling):\n- SDXL base 1.0: CreativeML Open RAIL++-M - commercial use allowed, with a list of prohibited uses.\nNot legal advice.\n- 4x NMKD-Siax 200k: WTFPL (OpenModelDB). Alternative: Real-ESRGAN x4plus (BSD-3)."
+   ],
+   "color": "#432",
+   "bgcolor": "#653"
+  },
+  {
+   "id": 2,
+   "type": "CheckpointLoaderSimple",
+   "pos": [
+    30,
+    486
+   ],
+   "size": [
+    340,
+    142
+   ],
+   "flags": {},
+   "order": 1,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "MODEL",
+     "type": "MODEL",
+     "links": [
+      1
+     ],
+     "slot_index": 0
+    },
+    {
+     "name": "CLIP",
+     "type": "CLIP",
+     "links": [
+      2
+     ],
+     "slot_index": 1
+    },
+    {
+     "name": "VAE",
+     "type": "VAE",
+     "links": [
+      10,
+      21
+     ],
+     "slot_index": 2
+    }
+   ],
+   "title": "Load Checkpoint (SDXL)",
+   "properties": {
+    "Node name for S&R": "CheckpointLoaderSimple",
+    "models": [
+     {
+      "name": "sd_xl_base_1.0.safetensors",
+      "url": "https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0/resolve/main/sd_xl_base_1.0.safetensors",
+      "directory": "checkpoints"
+     }
+    ]
+   },
+   "widgets_values": [
+    "sd_xl_base_1.0.safetensors"
+   ]
+  },
+  {
+   "id": 3,
+   "type": "LoraLoader",
+   "pos": [
+    30,
+    678
+   ],
+   "size": [
+    340,
+    214
+   ],
+   "flags": {},
+   "order": 2,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "model",
+     "type": "MODEL",
+     "link": 1
+    },
+    {
+     "name": "clip",
+     "type": "CLIP",
+     "link": 2
+    }
+   ],
+   "outputs": [
+    {
+     "name": "MODEL",
+     "type": "MODEL",
+     "links": [
+      11,
+      16
+     ],
+     "slot_index": 0
+    },
+    {
+     "name": "CLIP",
+     "type": "CLIP",
+     "links": [
+      4,
+      5
+     ],
+     "slot_index": 1
+    }
+   ],
+   "title": "Load LoRA (0.6)",
+   "properties": {
+    "Node name for S&R": "LoraLoader",
+    "models": [
+     {
+      "name": "sd_xl_offset_example-lora_1.0.safetensors",
+      "url": "https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0/resolve/main/sd_xl_offset_example-lora_1.0.safetensors",
+      "directory": "loras"
+     }
+    ]
+   },
+   "widgets_values": [
+    "sd_xl_offset_example-lora_1.0.safetensors",
+    0.6,
+    0.6
+   ]
+  },
+  {
+   "id": 4,
+   "type": "ControlNetLoader",
+   "pos": [
+    30,
+    942
+   ],
+   "size": [
+    340,
+    94
+   ],
+   "flags": {},
+   "order": 3,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "CONTROL_NET",
+     "type": "CONTROL_NET",
+     "links": [
+      8
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Load ControlNet Model",
+   "properties": {
+    "Node name for S&R": "ControlNetLoader",
+    "models": [
+     {
+      "name": "t2i-adapter-canny-sdxl-1.0.fp16.safetensors",
+      "url": "https://huggingface.co/TencentARC/t2i-adapter-canny-sdxl-1.0/resolve/main/diffusion_pytorch_model.fp16.safetensors",
+      "directory": "controlnet"
+     }
+    ]
+   },
+   "widgets_values": [
+    "t2i-adapter-canny-sdxl-1.0.fp16.safetensors"
+   ]
+  },
+  {
+   "id": 5,
+   "type": "UpscaleModelLoader",
+   "pos": [
+    30,
+    1086
+   ],
+   "size": [
+    340,
+    94
+   ],
+   "flags": {},
+   "order": 4,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "UPSCALE_MODEL",
+     "type": "UPSCALE_MODEL",
+     "links": [
+      23
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Load Upscale Model",
+   "properties": {
+    "Node name for S&R": "UpscaleModelLoader"
+   },
+   "widgets_values": [
+    "4x_NMKD-Siax_200k.pth"
+   ]
+  },
+  {
+   "id": 6,
+   "type": "LoadImage",
+   "pos": [
+    540,
+    100
+   ],
+   "size": [
+    340,
+    360
+   ],
+   "flags": {},
+   "order": 5,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      3
+     ],
+     "slot_index": 0
+    },
+    {
+     "name": "MASK",
+     "type": "MASK",
+     "links": [],
+     "slot_index": 1
+    }
+   ],
+   "title": "Reference photo",
+   "properties": {
+    "Node name for S&R": "LoadImage"
+   },
+   "widgets_values": [
+    "jar.png",
+    "image"
+   ]
+  },
+  {
+   "id": 7,
+   "type": "Canny",
+   "pos": [
+    540,
+    510
+   ],
+   "size": [
+    340,
+    142
+   ],
+   "flags": {},
+   "order": 6,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "image",
+     "type": "IMAGE",
+     "link": 3
+    }
+   ],
+   "outputs": [
+    {
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      9
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Canny",
+   "properties": {
+    "Node name for S&R": "Canny"
+   },
+   "widgets_values": [
+    0.2,
+    0.5
+   ]
+  },
+  {
+   "id": 8,
+   "type": "CLIPTextEncode",
+   "pos": [
+    920,
+    100
+   ],
+   "size": [
+    420,
+    220
+   ],
+   "flags": {},
+   "order": 7,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "clip",
+     "type": "CLIP",
+     "link": 4
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      6
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Prompt",
+   "properties": {
+    "Node name for S&R": "CLIPTextEncode"
+   },
+   "widgets_values": [
+    "luxury skincare jar in polished black porcelain with a gold lid, on a wet black marble surface, dramatic rim light, dark moody studio, high-end advertising photography"
+   ]
+  },
+  {
+   "id": 9,
+   "type": "CLIPTextEncode",
+   "pos": [
+    920,
+    370
+   ],
+   "size": [
+    420,
+    220
+   ],
+   "flags": {},
+   "order": 8,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "clip",
+     "type": "CLIP",
+     "link": 5
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      7
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Negative prompt",
+   "properties": {
+    "Node name for S&R": "CLIPTextEncode"
+   },
+   "widgets_values": [
+    "text, watermark, logo, signature, blurry, low quality, deformed, extra objects"
+   ]
+  },
+  {
+   "id": 10,
+   "type": "ControlNetApplyAdvanced",
+   "pos": [
+    920,
+    640
+   ],
+   "size": [
+    340,
+    286
+   ],
+   "flags": {},
+   "order": 9,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "positive",
+     "type": "CONDITIONING",
+     "link": 6
+    },
+    {
+     "name": "negative",
+     "type": "CONDITIONING",
+     "link": 7
+    },
+    {
+     "name": "control_net",
+     "type": "CONTROL_NET",
+     "link": 8
+    },
+    {
+     "name": "image",
+     "type": "IMAGE",
+     "link": 9
+    },
+    {
+     "name": "vae",
+     "type": "VAE",
+     "link": 10
+    }
+   ],
+   "outputs": [
+    {
+     "name": "positive",
+     "type": "CONDITIONING",
+     "links": [
+      12,
+      17
+     ],
+     "slot_index": 0
+    },
+    {
+     "name": "negative",
+     "type": "CONDITIONING",
+     "links": [
+      13,
+      18
+     ],
+     "slot_index": 1
+    }
+   ],
+   "title": "Apply ControlNet",
+   "properties": {
+    "Node name for S&R": "ControlNetApplyAdvanced"
+   },
+   "widgets_values": [
+    0.7,
+    0.0,
+    0.8
+   ]
+  },
+  {
+   "id": 11,
+   "type": "EmptyLatentImage",
+   "pos": [
+    1380,
+    100
+   ],
+   "size": [
+    340,
+    142
+   ],
+   "flags": {},
+   "order": 10,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "LATENT",
+     "type": "LATENT",
+     "links": [
+      14
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Canvas 1024x1024",
+   "properties": {
+    "Node name for S&R": "EmptyLatentImage"
+   },
+   "widgets_values": [
+    1024,
+    1024,
+    1
+   ]
+  },
+  {
+   "id": 12,
+   "type": "KSampler",
+   "pos": [
+    1380,
+    292
+   ],
+   "size": [
+    340,
+    310
+   ],
+   "flags": {},
+   "order": 11,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "model",
+     "type": "MODEL",
+     "link": 11
+    },
+    {
+     "name": "positive",
+     "type": "CONDITIONING",
+     "link": 12
+    },
+    {
+     "name": "negative",
+     "type": "CONDITIONING",
+     "link": 13
+    },
+    {
+     "name": "latent_image",
+     "type": "LATENT",
+     "link": 14
+    }
+   ],
+   "outputs": [
+    {
+     "name": "LATENT",
+     "type": "LATENT",
+     "links": [
+      15
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Sampler (pass 1)",
+   "properties": {
+    "Node name for S&R": "KSampler"
+   },
+   "widgets_values": [
+    1111,
+    "fixed",
+    28,
+    6.0,
+    "dpmpp_2m",
+    "karras",
+    1.0
+   ]
+  },
+  {
+   "id": 13,
+   "type": "LatentUpscaleBy",
+   "pos": [
+    1850,
+    100
+   ],
+   "size": [
+    340,
+    142
+   ],
+   "flags": {},
+   "order": 12,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "samples",
+     "type": "LATENT",
+     "link": 15
+    }
+   ],
+   "outputs": [
+    {
+     "name": "LATENT",
+     "type": "LATENT",
+     "links": [
+      19
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Upscale Latent By 1.25",
+   "properties": {
+    "Node name for S&R": "LatentUpscaleBy"
+   },
+   "widgets_values": [
+    "nearest-exact",
+    1.25
+   ]
+  },
+  {
+   "id": 14,
+   "type": "KSampler",
+   "pos": [
+    1850,
+    292
+   ],
+   "size": [
+    340,
+    310
+   ],
+   "flags": {},
+   "order": 13,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "model",
+     "type": "MODEL",
+     "link": 16
+    },
+    {
+     "name": "positive",
+     "type": "CONDITIONING",
+     "link": 17
+    },
+    {
+     "name": "negative",
+     "type": "CONDITIONING",
+     "link": 18
+    },
+    {
+     "name": "latent_image",
+     "type": "LATENT",
+     "link": 19
+    }
+   ],
+   "outputs": [
+    {
+     "name": "LATENT",
+     "type": "LATENT",
+     "links": [
+      20
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Sampler (pass 2)",
+   "properties": {
+    "Node name for S&R": "KSampler"
+   },
+   "widgets_values": [
+    1111,
+    "fixed",
+    20,
+    6.0,
+    "dpmpp_2m",
+    "karras",
+    0.45
+   ]
+  },
+  {
+   "id": 15,
+   "type": "VAEDecode",
+   "pos": [
+    2230,
+    100
+   ],
+   "size": [
+    340,
+    118
+   ],
+   "flags": {},
+   "order": 14,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "samples",
+     "type": "LATENT",
+     "link": 20
+    },
+    {
+     "name": "vae",
+     "type": "VAE",
+     "link": 21
+    }
+   ],
+   "outputs": [
+    {
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      22,
+      24
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "VAE Decode",
+   "properties": {
+    "Node name for S&R": "VAEDecode"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 16,
+   "type": "SaveImage",
+   "pos": [
+    2230,
+    268
+   ],
+   "size": [
+    360,
+    380
+   ],
+   "flags": {},
+   "order": 15,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "images",
+     "type": "IMAGE",
+     "link": 22
+    }
+   ],
+   "outputs": [],
+   "title": "Save 1280",
+   "properties": {
+    "Node name for S&R": "SaveImage"
+   },
+   "widgets_values": [
+    "node_by_node/W10/campaign_1280"
+   ]
+  },
+  {
+   "id": 17,
+   "type": "ImageUpscaleWithModel",
+   "pos": [
+    2630,
+    100
+   ],
+   "size": [
+    340,
+    118
+   ],
+   "flags": {},
+   "order": 16,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "upscale_model",
+     "type": "UPSCALE_MODEL",
+     "link": 23
+    },
+    {
+     "name": "image",
+     "type": "IMAGE",
+     "link": 24
+    }
+   ],
+   "outputs": [
+    {
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      25
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Upscale 4x",
+   "properties": {
+    "Node name for S&R": "ImageUpscaleWithModel"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 18,
+   "type": "ImageScaleBy",
+   "pos": [
+    2630,
+    268
+   ],
+   "size": [
+    340,
+    142
+   ],
+   "flags": {},
+   "order": 17,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "image",
+     "type": "IMAGE",
+     "link": 25
+    }
+   ],
+   "outputs": [
+    {
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      26
+     ],
+     "slot_index": 0
+    }
+   ],
+   "title": "Scale down to 2560 px",
+   "properties": {
+    "Node name for S&R": "ImageScaleBy"
+   },
+   "widgets_values": [
+    "lanczos",
+    0.5
+   ]
+  },
+  {
+   "id": 19,
+   "type": "SaveImage",
+   "pos": [
+    2630,
+    460
+   ],
+   "size": [
+    360,
+    380
+   ],
+   "flags": {},
+   "order": 18,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "images",
+     "type": "IMAGE",
+     "link": 26
+    }
+   ],
+   "outputs": [],
+   "title": "Save 2560",
+   "properties": {
+    "Node name for S&R": "SaveImage"
+   },
+   "widgets_values": [
+    "node_by_node/W10/campaign_2560"
+   ]
+  }
+ ],
+ "links": [
+  [
+   1,
+   2,
+   0,
+   3,
+   0,
+   "MODEL"
+  ],
+  [
+   2,
+   2,
+   1,
+   3,
+   1,
+   "CLIP"
+  ],
+  [
+   3,
+   6,
+   0,
+   7,
+   0,
+   "IMAGE"
+  ],
+  [
+   4,
+   3,
+   1,
+   8,
+   0,
+   "CLIP"
+  ],
+  [
+   5,
+   3,
+   1,
+   9,
+   0,
+   "CLIP"
+  ],
+  [
+   6,
+   8,
+   0,
+   10,
+   0,
+   "CONDITIONING"
+  ],
+  [
+   7,
+   9,
+   0,
+   10,
+   1,
+   "CONDITIONING"
+  ],
+  [
+   8,
+   4,
+   0,
+   10,
+   2,
+   "CONTROL_NET"
+  ],
+  [
+   9,
+   7,
+   0,
+   10,
+   3,
+   "IMAGE"
+  ],
+  [
+   10,
+   2,
+   2,
+   10,
+   4,
+   "VAE"
+  ],
+  [
+   11,
+   3,
+   0,
+   12,
+   0,
+   "MODEL"
+  ],
+  [
+   12,
+   10,
+   0,
+   12,
+   1,
+   "CONDITIONING"
+  ],
+  [
+   13,
+   10,
+   1,
+   12,
+   2,
+   "CONDITIONING"
+  ],
+  [
+   14,
+   11,
+   0,
+   12,
+   3,
+   "LATENT"
+  ],
+  [
+   15,
+   12,
+   0,
+   13,
+   0,
+   "LATENT"
+  ],
+  [
+   16,
+   3,
+   0,
+   14,
+   0,
+   "MODEL"
+  ],
+  [
+   17,
+   10,
+   0,
+   14,
+   1,
+   "CONDITIONING"
+  ],
+  [
+   18,
+   10,
+   1,
+   14,
+   2,
+   "CONDITIONING"
+  ],
+  [
+   19,
+   13,
+   0,
+   14,
+   3,
+   "LATENT"
+  ],
+  [
+   20,
+   14,
+   0,
+   15,
+   0,
+   "LATENT"
+  ],
+  [
+   21,
+   2,
+   2,
+   15,
+   1,
+   "VAE"
+  ],
+  [
+   22,
+   15,
+   0,
+   16,
+   0,
+   "IMAGE"
+  ],
+  [
+   23,
+   5,
+   0,
+   17,
+   0,
+   "UPSCALE_MODEL"
+  ],
+  [
+   24,
+   15,
+   0,
+   17,
+   1,
+   "IMAGE"
+  ],
+  [
+   25,
+   17,
+   0,
+   18,
+   0,
+   "IMAGE"
+  ],
+  [
+   26,
+   18,
+   0,
+   19,
+   0,
+   "IMAGE"
+  ]
+ ],
+ "groups": [
+  {
+   "id": 1,
+   "title": "1 - Models",
+   "bounding": [
+    0,
+    50,
+    440,
+    1180
+   ],
+   "color": "#3f789e",
+   "font_size": 24,
+   "flags": {}
+  },
+  {
+   "id": 2,
+   "title": "2 - Generation",
+   "bounding": [
+    510,
+    50,
+    1240,
+    926
+   ],
+   "color": "#8a6d3b",
+   "font_size": 24,
+   "flags": {}
+  },
+  {
+   "id": 3,
+   "title": "3 - Finishing",
+   "bounding": [
+    1820,
+    50,
+    1200,
+    840
+   ],
+   "color": "#4b7f52",
+   "font_size": 24,
+   "flags": {}
+  }
+ ],
+ "config": {},
+ "extra": {
+  "ds": {
+   "scale": 0.6,
+   "offset": [
+    40,
+    40
+   ]
+  },
+  "info": {
+   "name": "W10 All together: LoRA + ControlNet + hi-res + upscale",
+   "author": "Matthew Flake",
+   "description": "Node by Node / Węzeł po węźle (ed. 10.26) - W10: complete workflow",
+   "license": "MIT (workflow file). Models have their own licences - see MODELS.md."
+  }
+ },
+ "version": 0.4
+}

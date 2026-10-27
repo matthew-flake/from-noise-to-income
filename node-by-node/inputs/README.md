@@ -1,0 +1,12 @@
+# Exercise images / Obrazy do ćwiczeń
+
+Copy these files to `ComfyUI/input` (or upload them in the Load Image node).
+Skopiuj te pliki do `ComfyUI/input` (albo wgraj je w węźle Load Image).
+
+| File | Size | Used by |
+|---|---|---|
+| `jar.png` | 1024×1024 | W03, W04, W06, W08, W10 |
+| `jar_lid_mask.png` | 1024×1024 (white = change) | W04 |
+| `lake.png` | 1344×768 | W05 |
+
+Generated with ComfyUI by the author; free to use for learning and testing.

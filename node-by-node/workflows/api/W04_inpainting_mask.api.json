@@ -1,0 +1,196 @@
+{
+ "2": {
+  "class_type": "CheckpointLoaderSimple",
+  "inputs": {
+   "ckpt_name": "sd_xl_base_1.0.safetensors"
+  },
+  "_meta": {
+   "title": "Load Checkpoint (SDXL)"
+  }
+ },
+ "3": {
+  "class_type": "LoadImage",
+  "inputs": {
+   "image": "jar.png"
+  },
+  "_meta": {
+   "title": "Photo"
+  }
+ },
+ "4": {
+  "class_type": "LoadImage",
+  "inputs": {
+   "image": "jar_lid_mask.png"
+  },
+  "_meta": {
+   "title": "Mask (white = change)"
+  }
+ },
+ "5": {
+  "class_type": "ImageToMask",
+  "inputs": {
+   "image": [
+    "4",
+    0
+   ],
+   "channel": "red"
+  },
+  "_meta": {
+   "title": "Image to mask"
+  }
+ },
+ "6": {
+  "class_type": "GrowMask",
+  "inputs": {
+   "mask": [
+    "5",
+    0
+   ],
+   "expand": 12,
+   "tapered_corners": true
+  },
+  "_meta": {
+   "title": "Grow mask 12 px"
+  }
+ },
+ "7": {
+  "class_type": "CLIPTextEncode",
+  "inputs": {
+   "text": "(matte black:1.2) metal screw lid on a frosted glass cosmetic jar, black lid, smooth surface, soft studio light, product photography",
+   "clip": [
+    "2",
+    1
+   ]
+  },
+  "_meta": {
+   "title": "Prompt"
+  }
+ },
+ "8": {
+  "class_type": "CLIPTextEncode",
+  "inputs": {
+   "text": "text, watermark, logo, signature, blurry, low quality, deformed, extra objects",
+   "clip": [
+    "2",
+    1
+   ]
+  },
+  "_meta": {
+   "title": "Negative prompt"
+  }
+ },
+ "9": {
+  "class_type": "VAEEncode",
+  "inputs": {
+   "pixels": [
+    "3",
+    0
+   ],
+   "vae": [
+    "2",
+    2
+   ]
+  },
+  "_meta": {
+   "title": "VAE Encode"
+  }
+ },
+ "10": {
+  "class_type": "SetLatentNoiseMask",
+  "inputs": {
+   "samples": [
+    "9",
+    0
+   ],
+   "mask": [
+    "6",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Set Latent Noise Mask"
+  }
+ },
+ "11": {
+  "class_type": "KSampler",
+  "inputs": {
+   "model": [
+    "2",
+    0
+   ],
+   "seed": 404,
+   "steps": 28,
+   "cfg": 6.0,
+   "sampler_name": "dpmpp_2m",
+   "scheduler": "karras",
+   "positive": [
+    "7",
+    0
+   ],
+   "negative": [
+    "8",
+    0
+   ],
+   "latent_image": [
+    "10",
+    0
+   ],
+   "denoise": 1.0
+  },
+  "_meta": {
+   "title": "Sampler"
+  }
+ },
+ "12": {
+  "class_type": "VAEDecode",
+  "inputs": {
+   "samples": [
+    "11",
+    0
+   ],
+   "vae": [
+    "2",
+    2
+   ]
+  },
+  "_meta": {
+   "title": "VAE Decode"
+  }
+ },
+ "13": {
+  "class_type": "ImageCompositeMasked",
+  "inputs": {
+   "destination": [
+    "3",
+    0
+   ],
+   "source": [
+    "12",
+    0
+   ],
+   "x": 0,
+   "y": 0,
+   "resize_source": false,
+   "mask": [
+    "6",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Paste masked area only"
+  }
+ },
+ "14": {
+  "class_type": "SaveImage",
+  "inputs": {
+   "images": [
+    "13",
+    0
+   ],
+   "filename_prefix": "node_by_node/W04/new_lid"
+  },
+  "_meta": {
+   "title": "Save"
+  }
+ }
+}

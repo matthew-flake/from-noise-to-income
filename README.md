@@ -13,6 +13,10 @@ publications and are not authorised, sponsored or endorsed by Comfy Org.*
 - After unzipping, you can check every file against `SHA256SUMS.txt` (see *Is it safe?* below).
 - No account, no email, no tracking.
 
+## Also in this repository: *Node by Node* / *Węzeł po węźle*
+
+The folder **`node-by-node/`** is the companion pack for the beginner book *Węzeł po węźle. ComfyUI od pierwszego obrazu do własnego workflow* (Polish edition 10.26, English edition in preparation): 11 tested SDXL workflows on built-in nodes only, exercise images, a series script, checklists and templates. Start with `node-by-node/README.md`.
+
 ## What's inside
 
 ```

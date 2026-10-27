@@ -1,0 +1,5 @@
+file,type,use_for,licence,commercial_use,attribution_required,restrictions,source_url,checked_on,notes
+sd_xl_base_1.0.safetensors,checkpoint,general,CreativeML Open RAIL++-M,yes (with use restrictions),no,see Attachment A of the licence,https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0,2026-10-26,
+sd_xl_offset_example-lora_1.0.safetensors,lora,contrast / night scenes,CreativeML Open RAIL++-M,yes (with use restrictions),no,see Attachment A of the licence,https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0,2026-10-26,
+t2i-adapter-canny-sdxl-1.0.fp16.safetensors,controlnet,shape from edges,Apache 2.0,yes,keep licence notice,,https://huggingface.co/TencentARC/t2i-adapter-canny-sdxl-1.0,2026-10-26,
+4x_NMKD-Siax_200k.pth,upscale,print files,WTFPL,yes,no,,https://openmodeldb.info,2026-10-26,
