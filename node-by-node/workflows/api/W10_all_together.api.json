@@ -71,7 +71,7 @@
  "8": {
   "class_type": "CLIPTextEncode",
   "inputs": {
-   "text": "luxury skincare jar in polished black porcelain with a gold lid, on a wet black marble surface, dramatic rim light, dark moody studio, high-end advertising photography",
+   "text": "(polished black porcelain jar:1.4), plain smooth jar without label, gold lid, luxury skincare packaging, on a wet black marble surface, dramatic rim light, dark moody studio, high-end advertising photography",
    "clip": [
     "3",
     1
@@ -84,7 +84,7 @@
  "9": {
   "class_type": "CLIPTextEncode",
   "inputs": {
-   "text": "text, watermark, logo, signature, blurry, low quality, deformed, extra objects",
+   "text": "white jar, white porcelain, label, lettering, text, watermark, logo, signature, blurry, low quality, deformed, extra objects",
    "clip": [
     "3",
     1
@@ -143,7 +143,7 @@
     "3",
     0
    ],
-   "seed": 1111,
+   "seed": 1114,
    "steps": 28,
    "cfg": 6.0,
    "sampler_name": "dpmpp_2m",
@@ -187,7 +187,7 @@
     "3",
     0
    ],
-   "seed": 1111,
+   "seed": 1114,
    "steps": 20,
    "cfg": 6.0,
    "sampler_name": "dpmpp_2m",

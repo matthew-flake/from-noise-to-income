@@ -239,6 +239,7 @@ def W10():
     g1, g2, g3 = "1 - Models", "2 - Generation", "3 - Finishing"
     wf.note("Chapter 13. Every layer has one job:\n"
             "- LoRA (0.6): contrast and mood\n- ControlNet Canny (0.7): product shape from the photo\n"
+            "- weight 1.4 + 'white jar' in the negative: keeps the porcelain black\n"
             "- second pass (hi-res, denoise 0.45): detail\n- 4x model + scale down: print file.\n"
             "Test layers one by one: bypass a node (Ctrl+B) and compare.\n\n" + LIC + "\n" + LIC_UP, g1)
     ck = base(wf, g1)
@@ -248,14 +249,15 @@ def W10():
     um = wf.add("UpscaleModelLoader", "Load Upscale Model", g1, 0, model_name=UPS)
     im = wf.add("LoadImage", "Reference photo", g2, 0, image="jar.png")
     cn = wf.add("Canny", "Canny", g2, 0, image=im[0], low_threshold=0.2, high_threshold=0.5)
-    p, n = prompts(wf, lo[1], "luxury skincare jar in polished black porcelain with a gold lid, on a wet black marble "
-                   "surface, dramatic rim light, dark moody studio, high-end advertising photography", g2, col=1)
+    p, n = prompts(wf, lo[1], "(polished black porcelain jar:1.4), plain smooth jar without label, gold lid, luxury skincare "
+                   "packaging, on a wet black marble surface, dramatic rim light, dark moody studio, high-end advertising photography",
+                   g2, col=1, neg="white jar, white porcelain, label, lettering, " + NEG)
     ap = wf.add("ControlNetApplyAdvanced", "Apply ControlNet", g2, 1, positive=p[0], negative=n[0], control_net=cl[0],
                 image=cn[0], strength=0.7, start_percent=0.0, end_percent=0.8, vae=ck[2])
     l = wf.add("EmptyLatentImage", "Canvas 1024x1024", g2, 2, width=1024, height=1024, batch_size=1)
-    k1 = sampler(wf, lo[0], ap[0], ap[1], l[0], g2, 2, seed=1111, title="Sampler (pass 1)")
+    k1 = sampler(wf, lo[0], ap[0], ap[1], l[0], g2, 2, seed=1114, title="Sampler (pass 1)")
     up = wf.add("LatentUpscaleBy", "Upscale Latent By 1.25", g3, 0, samples=k1[0], upscale_method="nearest-exact", scale_by=1.25)
-    k2 = sampler(wf, lo[0], ap[0], ap[1], up[0], g3, 0, seed=1111, steps=20, denoise=0.45, title="Sampler (pass 2)")
+    k2 = sampler(wf, lo[0], ap[0], ap[1], up[0], g3, 0, seed=1114, steps=20, denoise=0.45, title="Sampler (pass 2)")
     d = wf.add("VAEDecode", "VAE Decode", g3, 1, samples=k2[0], vae=ck[2])
     save(wf, d[0], "W10/campaign_1280", g3, 1, title="Save 1280")
     u = wf.add("ImageUpscaleWithModel", "Upscale 4x", g3, 2, upscale_model=um[0], image=d[0])

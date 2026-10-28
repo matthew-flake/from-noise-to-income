@@ -13,7 +13,7 @@
    ],
    "size": [
     380,
-    336
+    370
    ],
    "flags": {},
    "order": 0,
@@ -23,7 +23,7 @@
    "title": "Read me",
    "properties": {},
    "widgets_values": [
-    "Chapter 13. Every layer has one job:\n- LoRA (0.6): contrast and mood\n- ControlNet Canny (0.7): product shape from the photo\n- second pass (hi-res, denoise 0.45): detail\n- 4x model + scale down: print file.\nTest layers one by one: bypass a node (Ctrl+B) and compare.\n\nLICENCES (as of 26 Oct 2026 - check before selling):\n- SDXL base 1.0: CreativeML Open RAIL++-M - commercial use allowed, with a list of prohibited uses.\nNot legal advice.\n- 4x NMKD-Siax 200k: WTFPL (OpenModelDB). Alternative: Real-ESRGAN x4plus (BSD-3)."
+    "Chapter 13. Every layer has one job:\n- LoRA (0.6): contrast and mood\n- ControlNet Canny (0.7): product shape from the photo\n- weight 1.4 + 'white jar' in the negative: keeps the porcelain black\n- second pass (hi-res, denoise 0.45): detail\n- 4x model + scale down: print file.\nTest layers one by one: bypass a node (Ctrl+B) and compare.\n\nLICENCES (as of 26 Oct 2026 - check before selling):\n- SDXL base 1.0: CreativeML Open RAIL++-M - commercial use allowed, with a list of prohibited uses.\nNot legal advice.\n- 4x NMKD-Siax 200k: WTFPL (OpenModelDB). Alternative: Real-ESRGAN x4plus (BSD-3)."
    ],
    "color": "#432",
    "bgcolor": "#653"
@@ -33,7 +33,7 @@
    "type": "CheckpointLoaderSimple",
    "pos": [
     30,
-    486
+    520
    ],
    "size": [
     340,
@@ -90,7 +90,7 @@
    "type": "LoraLoader",
    "pos": [
     30,
-    678
+    712
    ],
    "size": [
     340,
@@ -153,7 +153,7 @@
    "type": "ControlNetLoader",
    "pos": [
     30,
-    942
+    976
    ],
    "size": [
     340,
@@ -193,7 +193,7 @@
    "type": "UpscaleModelLoader",
    "pos": [
     30,
-    1086
+    1120
    ],
    "size": [
     340,
@@ -337,7 +337,7 @@
     "Node name for S&R": "CLIPTextEncode"
    },
    "widgets_values": [
-    "luxury skincare jar in polished black porcelain with a gold lid, on a wet black marble surface, dramatic rim light, dark moody studio, high-end advertising photography"
+    "(polished black porcelain jar:1.4), plain smooth jar without label, gold lid, luxury skincare packaging, on a wet black marble surface, dramatic rim light, dark moody studio, high-end advertising photography"
    ]
   },
   {
@@ -376,7 +376,7 @@
     "Node name for S&R": "CLIPTextEncode"
    },
    "widgets_values": [
-    "text, watermark, logo, signature, blurry, low quality, deformed, extra objects"
+    "white jar, white porcelain, label, lettering, text, watermark, logo, signature, blurry, low quality, deformed, extra objects"
    ]
   },
   {
@@ -536,7 +536,7 @@
     "Node name for S&R": "KSampler"
    },
    "widgets_values": [
-    1111,
+    1114,
     "fixed",
     28,
     6.0,
@@ -636,7 +636,7 @@
     "Node name for S&R": "KSampler"
    },
    "widgets_values": [
-    1111,
+    1114,
     "fixed",
     20,
     6.0,
@@ -1049,7 +1049,7 @@
     0,
     50,
     440,
-    1180
+    1214
    ],
    "color": "#3f789e",
    "font_size": 24,

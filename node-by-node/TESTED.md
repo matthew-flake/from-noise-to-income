@@ -19,7 +19,7 @@ Każdy workflow wczytano z `workflows/ui` do okna ComfyUI i uruchomiono przycisk
 | W07_hires_fix | OK | OK | 42 s | 1248×1824 |
 | W08_controlnet_canny | OK | OK | 19 s | 1024×1024 |
 | W09_lora_comparison | OK | OK | 32 s | 2448×832 strip |
-| W10_all_together | OK | OK | 47 s | 1280×1280 + 2560×2560 |
+| W10_all_together | OK | OK | 45 s | 1280×1280 + 2560×2560 (re-tested 28 Oct 2026 after the prompt fix) |
 | W11_series | OK | OK | 16 s | 832×1216 |
 | scripts/series.py + topics.csv (6 topics × 1) | – | OK | 88 s total | 6 × 832×1216 |
 
